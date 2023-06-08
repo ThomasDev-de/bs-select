@@ -1,4 +1,4 @@
-![header](demo/img/header.png)
+![header](demo/img/headerPicture.png)
 `$.fn.bsSelect`
 
 This jQuery plugin converts a simple select element into a bootstrap dropdown element. It offers numerous options,
