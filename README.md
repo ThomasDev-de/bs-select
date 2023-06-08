@@ -25,7 +25,7 @@ Download and include the script at the end of the body tag.
 
 ```html
 
-<script src="jquery.bs-select.js" type="text/javascript">
+<script src="dist/jquery.bs-select.js" type="text/javascript">
 ```
 
 or install with **composer** and include the script at the end of the body tag.
@@ -36,7 +36,7 @@ composer require webcito/bs-select:dev-main
 
 ```html
 
-<script src="/vendor/webcito/bs-select/dist/jquery.bsSelect.js" type="text/javascript">
+<script src="dist/jquery.bs-select.min.js" type="text/javascript">
 ```
 
 ## Set global defaults
@@ -60,7 +60,7 @@ All selects with the attribute `[data-bs-toggle="select"]` are initialized autom
     ...
 </select>
 
-<!-- Or multiselection -->
+<!-- Or multiSelection -->
 <select name="cities" multiple>
     <option value="1">Berlin rocks</option>
     <option value="2">New York</option>

@@ -6,6 +6,7 @@
     <title>jQuery - Bootstrap - Select</title>
     <link href="../vendor/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../vendor/twbs/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!--suppress CssUnusedSymbol -->
     <style>
         .dropdown-item:active,
         .dropdown-item.active{
@@ -40,9 +41,9 @@
             <tr>
                 <td>multiple select with option groups</td>
                 <td><label for="select3"></label><select multiple id="select3" data-show-selection-as-list="false"
-                                                         data-drop-direction="dropend"
-                                                         data-btn-class="btn-outline-danger  btn-sm"></select></td>
-                                                         data-btn-class="btn-outline-danger btn-sm"></select></td>
+                                                         data-drop-direction="dropped"
+                                                         data-btn-class="btn-outline-danger  btn-sm"></select>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -128,6 +129,7 @@
         }
         for (let array in groups) {
             const o = groups[array];
+            // noinspection RequiredAttributes
             const g = $('<optgroup>', {
                 label: `Group ${array + 1}`
             }).appendTo(select3);
