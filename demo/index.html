@@ -10,7 +10,8 @@
 <body class="container py-5" style="opacity: 0">
 <h1><i class="bi bi-menu-button me-5 text-info" style="font-size: 3em"></i> jQuery - Bootstrap - Select</h1>
 <p>
-    This jQuery plugin converts a simple select element into a bootstrap dropdown element. It offers numerous options, methods and events for further processing.
+    This jQuery plugin converts a simple select element into a bootstrap dropdown element. It offers numerous options,
+    methods and events for further processing.
     It was developed on the basis of jQuery 3.6, Bootstrap 5.3 and Bootstrap icons.
 </p>
 <div class="d-flex">
@@ -18,7 +19,7 @@
         <table class="table">
             <tr>
                 <td>single select</td>
-                <td><select id="select1" data-btn-class="btn-primary">
+                <td><label for="select1"></label><select id="select1" data-btn-class="btn-primary">
                     <option value="1">Item 1</option>
                     <option value="2">Item 2</option>
                     <option value="3">Item 3</option>
@@ -26,11 +27,42 @@
             </tr>
             <tr>
                 <td>multiple select</td>
-                <td><select multiple id="select2" data-show-selection-as-list="true"></select></td>
+                <td><label for="select2"></label><select multiple id="select2"
+                                                         data-show-selection-as-list="true"></select></td>
             </tr>
             <tr>
                 <td>multiple select with option groups</td>
-                <td><select multiple id="select3"  data-show-selection-as-list="false" data-drop-direction="dropend"  data-btn-class="btn-outline-danger rounded-pill"></select></td>
+                <td><label for="select3"></label><select multiple id="select3" data-show-selection-as-list="false"
+                                                         data-drop-direction="dropend"
+                                                         data-btn-class="btn-outline-danger rounded-pill"></select></td>
+            </tr>
+            <tr>
+                <td>
+                    playground
+                    <div class="d-flex flex-column align-items-start">
+                        <button id="btnInit" class="btn btn-link">init</button>
+                        <button id="btnShow" class="btn btn-link">show</button>
+                        <button id="btnHide" class="btn btn-link">hide</button>
+                        <button id="btnVal" class="btn btn-link">val (2)</button>
+                        <button id="btnRefresh" class="btn btn-link">refresh</button>
+                        <button id="btnUpdate" class="btn btn-link">update options</button>
+                        <button id="btnDestroy" class="btn btn-link">destroy</button>
+
+
+                    </div>
+                </td>
+                <td><label for="select4"></label>
+                    <select multiple data-bs-toggle="select"
+                            id="select4"
+                            data-show-selection-as-list="false"
+                            data-show-action-menu="false"
+                            data-drop-direction="dropdown-center"
+                            data-btn-class="btn-outline-light rounded-pill">
+                        <option value="1">Item 1</option>
+                        <option value="2">Item 2</option>
+                        <option value="3">Item 3</option>
+                    </select>
+                </td>
             </tr>
         </table>
     </div>
@@ -62,6 +94,7 @@
         const select1 = $('#select1');
         const select2 = $('#select2');
         const select3 = $('#select3');
+        const select4 = $('#select4');
         const groups = [];
         let options = [];
         for (let i = 1, j = 0; i <= 100; i++) {
@@ -73,7 +106,7 @@
             });
             option.appendTo(select2);
             // option.clone().appendTo(select1);
-              options.push(option.clone());
+            options.push(option.clone());
             if (i - 1 !== 0 && ((i - 1) % 10) === 0) {
                 j++;
                 groups.push(options);
@@ -94,6 +127,35 @@
         select1.bsSelect();
         select2.bsSelect();
         select3.bsSelect();
+
+        $('#btnUpdate').on('click', function () {
+            const newOptions = {
+                btnClass: 'btn-success rounded-0',
+                dropDirection: 'dropend'
+            };
+            select4.bsSelect('updateOptions', newOptions)
+        });
+
+        $('#btnInit').on('click', function () {
+            select4.bsSelect()
+        });
+        $('#btnDestroy').on('click', function () {
+            select4.bsSelect('destroy')
+        });
+
+        $('#btnShow').on('click', function () {
+            select4.bsSelect('show')
+        });
+        $('#btnHide').on('click', function () {
+            select4.bsSelect('hide')
+        });
+        $('#btnRefresh').on('click', function () {
+            select4.bsSelect('refresh')
+        });
+
+        $('#btnVal').on('click', function () {
+            select4.bsSelect('val', 2)
+        });
 
         $('body').animate({opacity: 1}, 400);
     }(jQuery));

@@ -55,7 +55,7 @@
          * @param $select
          */
         function show($select) {
-            const $dropdown = getDropDown($select).find('[data-bs-toggle="dropdown"]');
+            const $dropdown = getDropDown($select);
             if ($dropdown.length) {
                 $dropdown.dropdown('show');
             }
@@ -66,7 +66,7 @@
          * @param $select
          */
         function hide($select) {
-            const $dropdown = getDropDown($select).find('[data-bs-toggle="dropdown"]');
+            const $dropdown = getDropDown($select);
             if ($dropdown.length) {
                 $dropdown.dropdown('hide');
             }
@@ -527,19 +527,21 @@
             setDropdownTitle($select);
         }
 
-        function destroy($select, show) {
+        function destroy($select, show, clearData = false) {
             let val = $select.val();
             let $dropdown = getDropDown($select);
             $select.insertBefore($dropdown);
             $select.val(val);
-            $select.removeData('options');
+            if (clearData){
+                $select.removeData('options');
+            }
             $dropdown.remove();
             if (show)
                 $select.show();
         }
 
         function refresh($select) {
-            destroy($select, false);
+            destroy($select, false, false);
             init($select, false);
         }
 
@@ -592,12 +594,14 @@
                         }
                             break;
                         case 'destroy': {
-                            destroy($select, true);
                             trigger($select, 'destroy.bs.select');
+                            destroy($select, true, param);
+
+
                         }
                             break;
                         case 'updateOptions': {
-                            $select.data('options', $.extend(true, $.bsSelect.DEFAULTS, $select.data('options'), param || {}));
+                            $select.data('options', $.extend({}, $.bsSelect.DEFAULTS, $select.data('options'), param || {}));
                             refresh($select);
                             trigger($select, 'update.bs.select');
                         }

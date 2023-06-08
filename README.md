@@ -128,14 +128,14 @@ Methods are called as follows
 $('select').bsSelect('method', param);
 ```
 
-| method            | example                                                                       | description                                                                     |
-|-------------------|-------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
-| `'show'`          | `$('select').bsSelect('show');`                                               | Opens the dropdown                                                              |
-| `'hide'`          | `$('select').bsSelect('hide');`                                               | Closes the dropdown                                                             | 
-| `'val'`           | `$('select').bsSelect('val', 1);`                                             | Changes the value of the select                                                 | 
-| `'updateOptions'` | `$('select').bsSelect('updateOptions', {buttonClass: 'btn btn-danger',...});` | Changes the options of the dropdown.                                            |
-| `'refresh'`       | `$('select').bsSelect('refresh');`                                            | Rebuild the dropdown. This is useful if the options are changed via Javascript. |
-| `'destroy'`       | `$('select').bsSelect('destroy');`                                            | Deletes the dropdown and restores the original select.                          |
+| method            | example                                                                       | description                                                                                                               |
+|-------------------|-------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
+| `'show'`          | `$('select').bsSelect('show');`                                               | Opens the dropdown                                                                                                        |
+| `'hide'`          | `$('select').bsSelect('hide');`                                               | Closes the dropdown                                                                                                       | 
+| `'val'`           | `$('select').bsSelect('val', 1);`                                             | Changes the value of the select                                                                                           | 
+| `'updateOptions'` | `$('select').bsSelect('updateOptions', {buttonClass: 'btn btn-danger',...});` | Changes the options of the dropdown.                                                                                      |
+| `'refresh'`       | `$('select').bsSelect('refresh');`                                            | Rebuild the dropdown. This is useful if the options are changed via Javascript.                                           |
+| `'destroy'`       | `$('select').bsSelect('destroy'[, true]);`                                    | Deletes the dropdown and restores the original select. If parameter is passed true, all data is removed from the element. |
 
 ## Events
 
