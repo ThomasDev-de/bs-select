@@ -14,7 +14,11 @@
         <table class="table">
             <tr>
                 <td>single select</td>
-                <td><select id="select1"></select></td>
+                <td><select id="select1">
+                    <option value="1">Item 1</option>
+                    <option value="2">Item 2</option>
+                    <option value="3">Item 3</option>
+                </select></td>
             </tr>
             <tr>
                 <td>multiple select</td>
@@ -65,8 +69,8 @@
                 'data-icon': 'bi bi-heart-fill',
             });
             option.appendTo(select2);
-            option.clone().appendTo(select1);
-            options.push(option.clone());
+            // option.clone().appendTo(select1);
+              options.push(option.clone());
             if (i - 1 !== 0 && ((i - 1) % 10) === 0) {
                 j++;
                 groups.push(options);

@@ -129,10 +129,15 @@
                 return $dropdown;
             }
 
+
             const settings = $select.data('options');
             const multiple = $select.prop('multiple');
-            let selectedValue = $select.val();
 
+            if (!multiple && !$select.find('option[selected]').length)
+                $select.prop("selectedIndex", -1);
+
+            let selectedValue = $select.val();
+            console.log(selectedValue);
             $dropdown = $('<div>', {
                 class: `btn-group ${WRAPPER_CLASS}`
             }).insertAfter($select);
@@ -284,6 +289,7 @@
                         selectedIcon = isSelected ? 'd-none' : 'd-none';
                     }
                 }
+                // alert(isSelected);
                 const showSubtext = settings.showSubtext && element.data('subtext');
                 const showIcon = element.data('icon');
                 const $subtext = showSubtext ? `<small class="text-muted">${element.data('subtext')}</small>` : '';
