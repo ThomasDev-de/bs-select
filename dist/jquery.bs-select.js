@@ -29,7 +29,7 @@
                 actionMenuBtnClass: 'btn-light',
                 showSelectionAsList: false,
                 showSelectedText: function (count, total) {
-                    return `${count} of ${total} selected`;
+                    return count + ' of ' + total +' selected';
                 },
                 deselectAllText: 'Deselect All',
                 selectAllText: 'Select All',
@@ -203,13 +203,7 @@
             if (multiple) {
                 closeButton = `<button type="button" class="btn-close ms-2" data-bs-dismiss="dropdown" aria-label="Close"></button>`;
                 if (settings.showActionMenu) {
-                    actionMenu = `
-						<div class="d-flex flex-nowrap mt-2 p-0">
-							<a href="#" class="btn-sm text-nowrap btn ${settings.actionMenuBtnClass} js-select-select-all">${settings.selectAllText}</a>
-							<span class="mx-1"></span>
-							<a href="#" class="btn-sm text-nowrap btn ${settings.actionMenuBtnClass} js-select-select-none">${settings.deselectAllText}</a>
-						</div>
-					`;
+                    actionMenu = `<div class="d-flex flex-nowrap mt-2 p-0"><a href="#" class="btn-sm text-nowrap btn ${settings.actionMenuBtnClass} js-select-select-all">${settings.selectAllText}</a><span class="mx-1"></span><a href="#" class="btn-sm text-nowrap btn ${settings.actionMenuBtnClass} js-select-select-none">${settings.deselectAllText}</a></div>`;
                 }
             }
 
@@ -218,14 +212,7 @@
                 toolbarClasses = 'px-2 pb-2 pt-2 border-bottom';
             }
 
-            $(`<div class="d-flex flex-column ${toolbarClasses}">
-                    <div class="d-flex  justify-content-end align-items-center">
-                        ${searchInput}
-                        ${closeButton}
-                    </div>
-                    ${actionMenu}
-                </div>
-            `).appendTo($dropdownMenu);
+            $(`<div class="d-flex flex-column ${toolbarClasses}"><div class="d-flex  justify-content-end align-items-center">${searchInput}${closeButton}</div>${actionMenu}</div>`).appendTo($dropdownMenu);
 
             if (settings.menuPreHtml !== null) {
                 $('<div>', {
@@ -301,15 +288,7 @@
                 $('<div>', {
                     tabindex: i,
                     class: classList,
-                    html: `
-                        <div class="dropdown-item ${selected} ${disabledClass} px-2 d-flex flex-nowrap align-items-center ${itemClass} " data-index="${i}" style="cursor: pointer;">
-                             ${$icon}
-                             <div class="${paddingLeftClass} d-flex flex-column">
-                                 <div>${element.text()}</div>
-                                    ${$subtext}
-                                 </div>
-                             <div class="dropdown-item-select-icon ps-1 ms-auto "><i class="${settings.checkedIcon}"></i></div>
-                        </div>`
+                    html: `<div class="dropdown-item ${selected} ${disabledClass} px-2 d-flex flex-nowrap align-items-center ${itemClass} " data-index="${i}" style="cursor: pointer;">${$icon}<div class="${paddingLeftClass} d-flex flex-column"><div>${element.text()}</div>${$subtext}</div><div class="dropdown-item-select-icon ps-1 ms-auto "><i class="${settings.checkedIcon}"></i></div></div>`
                 }).appendTo($dropdownMenuInner);
 
 
