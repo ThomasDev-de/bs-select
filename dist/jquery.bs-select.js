@@ -405,16 +405,23 @@
          * @param $select
          * @param {string} event
          */
-        function trigger($select, event) {
-            const settings = $select.data('options');
-            $select.trigger(event,  [$select.val()]);
-
-            if (event !== 'all.bs.select') {
-                trigger($select, 'all.bs.select');
+        function trigger($select, event, firesBefore = '') {
+            let params = [];
+            if (event !== 'any.bs.select') {
+                trigger($select, 'any.bs.select',event);
+                params.push($select.val());
+            }
+            else{
+                params.push(firesBefore);
             }
 
+            const settings = $select.data('options');
+            $select.trigger(event,  params);
+
+
+
             if (settings.debug) {
-                console.log('trigger', event, [$select.val()])
+                console.log('trigger', event, params);
                 if (settings.debugElement !== null) {
                     const log = $('<small>', {
                         class: 'js-log border-bottom',
@@ -548,7 +555,7 @@
         }
 
 
-        $.fn.bsSelect = function (options, param) {
+        $.fn.bsSelect = function (options, param ) {
             let callFunction = false;
             let optionsSet = false;
 
@@ -572,7 +579,6 @@
 
                     $select.data('options', setup);
 
-                    console.log('options set',  setup);
 
                 }
 
