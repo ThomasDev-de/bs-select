@@ -5,7 +5,7 @@
 
         $.bsSelect = {
             setDefaults: function (options) {
-                this.DEFAULTS = $.extend(true, this.DEFAULTS, options || {});
+                this.DEFAULTS = $.extend({}, this.DEFAULTS, options || {});
             },
             getDefaults: function () {
                 const defCopy = this.DEFAULTS;
@@ -40,6 +40,37 @@
                 searchText: "Search.."
             }
         };
+
+        /**
+         *
+         * @param $select
+         * @param {string} event
+         */
+        function trigger($select, event) {
+            let params = [];
+            if (event !== 'any.bs.select') {
+                trigger($select, 'any.bs.select');
+                params.push($select.val());
+            }
+            const settings = $select.data('options');
+            $select.trigger(event,  params);
+
+            if (settings.debug) {
+                console.log('trigger', event, params);
+
+                if (settings.debugElement !== null) {
+                    const log = $('<small>', {
+                        class: 'js-log border-bottom',
+                        html: '[' + new Date().toUTCString() + '] trigger <span class="text-warning">' + event + '</span> fired'
+                    }).prependTo(settings.debugElement);
+
+
+                    setTimeout(function(){
+                        log.remove();
+                    },5000);
+                }
+            }
+        }
 
         /**
          * Fetches the dropdown that is superordinate to the select.
@@ -397,46 +428,6 @@
             return $dropdown;
         }
 
-        /**
-         *
-         * @param $select
-         * @param {string} event
-         */
-        function trigger($select, event, firesBefore = '') {
-            let params = [];
-            if (event !== 'any.bs.select') {
-                trigger($select, 'any.bs.select',event);
-                params.push($select.val());
-            }
-            else{
-                params.push(firesBefore);
-            }
-
-            const settings = $select.data('options');
-            $select.trigger(event,  params);
-
-
-
-            if (settings.debug) {
-                console.log('trigger', event, params);
-                if (settings.debugElement !== null) {
-                    const log = $('<small>', {
-                        class: 'js-log border-bottom',
-                        html: '[' + new Date().toUTCString() + '] trigger <span class="text-warning">' + event + '</span> fired'
-                    }).prependTo(settings.debugElement);
-
-
-                    setTimeout(function(){
-                        log.fadeOut(function(){
-                            $(this).remove();
-                        });
-                    },5000);
-                }
-            }
-
-
-        }
-
         function setDropdownTitle($select) {
             const settings = $select.data('options');
             // const multiple = false !== $select.prop('multiple');
@@ -551,7 +542,6 @@
             init($select, false);
         }
 
-
         $.fn.bsSelect = function (options, param ) {
             let callFunction = false;
             let optionsSet = false;
@@ -571,12 +561,8 @@
                 const $select = $(select);
 
                 if (optionsSet) {
-
                     const setup = $.extend({}, $.bsSelect.DEFAULTS, $select.data(), options || {});
-
                     $select.data('options', setup);
-
-
                 }
 
                 init($select, true);
