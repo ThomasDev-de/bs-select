@@ -8,13 +8,17 @@
     <link href="../vendor/twbs/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet">
 </head>
 <body class="container py-5" style="opacity: 0">
-<h1><i class="bi bi-menu-button fs-1"></i> jQuery - Bootstrap - Select</h1>
+<h1><i class="bi bi-menu-button me-5 text-info" style="font-size: 3em"></i> jQuery - Bootstrap - Select</h1>
+<p>
+    This jQuery plugin converts a simple select element into a bootstrap dropdown element. It offers numerous options, methods and events for further processing.
+    It was developed on the basis of jQuery 3.6, Bootstrap 5.3 and Bootstrap icons.
+</p>
 <div class="d-flex">
     <div class="p-3">
         <table class="table">
             <tr>
                 <td>single select</td>
-                <td><select id="select1">
+                <td><select id="select1" data-btn-class="btn-primary">
                     <option value="1">Item 1</option>
                     <option value="2">Item 2</option>
                     <option value="3">Item 3</option>
@@ -22,11 +26,11 @@
             </tr>
             <tr>
                 <td>multiple select</td>
-                <td><select multiple id="select2"></select></td>
+                <td><select multiple id="select2" data-show-selection-as-list="true"></select></td>
             </tr>
             <tr>
                 <td>multiple select with option groups</td>
-                <td><select multiple id="select3"></select></td>
+                <td><select multiple id="select3"  data-show-selection-as-list="false" data-drop-direction="dropend"  data-btn-class="btn-outline-danger rounded-pill"></select></td>
             </tr>
         </table>
     </div>
@@ -45,16 +49,15 @@
             // btnWidth: '300px',
             dropUpCenter: true,
             btnClass: 'btn-outline-warning rounded-0',
-            btnEmptyText: 'Bitte wählen',
-            selectAllText: 'Alles wählen',
-            deselectAllText: 'Nichts auswählen',
-            showSelectionAsList: false,
+            // btnEmptyText: 'Bitte wählen',
+            // selectAllText: 'Alles wählen',
+            // deselectAllText: 'Nichts auswählen',
             showSubtext: true,
             debug: true,
             debugElement: '#debug',
-            showSelectedText: (count, total) => {
-                return `${count} von ${total} ausgewählt`;
-            }
+            // showSelectedText: (count, total) => {
+            //     return `${count} von ${total} ausgewählt`;
+            // }
         });
         const select1 = $('#select1');
         const select2 = $('#select2');

@@ -137,7 +137,7 @@
                 $select.prop("selectedIndex", -1);
 
             let selectedValue = $select.val();
-            console.log(selectedValue);
+
             $dropdown = $('<div>', {
                 class: `btn-group ${WRAPPER_CLASS}`
             }).insertAfter($select);
@@ -532,6 +532,7 @@
             let $dropdown = getDropDown($select);
             $select.insertBefore($dropdown);
             $select.val(val);
+            $select.removeData('options');
             $dropdown.remove();
             if (show)
                 $select.show();
@@ -544,8 +545,6 @@
 
 
         $.fn.bsSelect = function (options, param) {
-
-
             let callFunction = false;
             let optionsSet = false;
 
@@ -564,7 +563,13 @@
                 const $select = $(select);
 
                 if (optionsSet) {
-                    $select.data('options', $.extend(true, $.bsSelect.DEFAULTS, $select.data(), options || {}))
+
+                    const setup = $.extend({}, $.bsSelect.DEFAULTS, $select.data(), options || {});
+
+                    $select.data('options', setup);
+
+                    console.log('options set',  setup);
+
                 }
 
                 init($select, true);
