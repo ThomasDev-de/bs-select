@@ -378,8 +378,12 @@
                     e.preventDefault();
                     const item = $(e.currentTarget);
 
-                    if (!multiple)
-                        $dropdown.find('.dropdown-item.active').removeClass('active');
+                    if (!multiple) {
+                        $dropdown
+                            .find('.dropdown-item.active')
+                            .not(item)
+                            .removeClass('active');
+                    }
 
                     item.toggleClass('active');
 
