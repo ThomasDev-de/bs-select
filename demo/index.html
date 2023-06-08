@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="../vendor/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../vendor/twbs/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet">
+</head>
+<body class="container py-5" style="opacity: 0">
+<h1>jQuery - Bootstrap - Select</h1>
+<div class="d-flex">
+    <div class="p-3">
+        <table class="table">
+            <tr>
+                <td>single select</td>
+                <td><select id="select1"></select></td>
+            </tr>
+            <tr>
+                <td>multiple select</td>
+                <td><select multiple id="select2"></select></td>
+            </tr>
+            <tr>
+                <td>multiple select with option groups</td>
+                <td><select multiple id="select3"></select></td>
+            </tr>
+        </table>
+    </div>
+    <div class="flex-fill d-flex flex-column p-3" data-bs-theme="light">
+        <h4>Console</h4>
+        <div id="debug" class="font-monospace border d-flex flex-column overflow-auto" style="max-height: 500px"></div>
+    </div>
+</div>
+
+<script src="../vendor/components/jquery/jquery.min.js"></script>
+<script src="../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../dist/jquery.bs-select.js"></script>
+<script>
+    (function ($) {
+        $.bsSelect.setDefaults({
+            // btnWidth: '300px',
+            dropUpCenter: true,
+            btnClass: 'btn-outline-warning rounded-0',
+            btnEmptyText: 'Bitte wählen',
+            selectAllText: 'Alles wählen',
+            deselectAllText: 'Nichts auswählen',
+            showSelectionAsList: false,
+            showSubtext: true,
+            debug: true,
+            debugElement: '#debug',
+            showSelectedText: (count, total) => {
+                return `${count} von ${total} ausgewählt`;
+            }
+        });
+        const select1 = $('#select1');
+        const select2 = $('#select2');
+        const select3 = $('#select3');
+        const groups = [];
+        let options = [];
+        for (let i = 1, j = 0; i <= 100; i++) {
+            const option = $('<option>', {
+                value: i - 1,
+                text: `Item ${i}`,
+                'data-subtext': 'subtext ' + (i + 1),
+                'data-icon': 'bi bi-heart-fill',
+            });
+            option.appendTo(select2);
+            option.clone().appendTo(select1);
+            options.push(option.clone());
+            if (i - 1 !== 0 && ((i - 1) % 10) === 0) {
+                j++;
+                groups.push(options);
+                options = [];
+            }
+
+        }
+        for (let array in groups) {
+            const o = groups[array];
+            const g = $('<optgroup>', {
+                label: `Group ${array + 1}`
+            }).appendTo(select3);
+            o.forEach(op => {
+                op.appendTo(g)
+            })
+        }
+
+        select1.bsSelect();
+        select2.bsSelect();
+        select3.bsSelect();
+
+        $('body').animate({opacity: 1}, 400);
+    }(jQuery));
+</script>
+</body>
+</html>
