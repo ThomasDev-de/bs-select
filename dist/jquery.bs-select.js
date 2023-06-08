@@ -409,9 +409,9 @@
          */
         function trigger($select, event, params = []) {
             const settings = $select.data('options');
-            $select.trigger(event, params);
+            $select.trigger(event,  [$select.val()]);
             if (event !== 'all.bs.select') {
-                trigger($select, 'all.bs.select')
+                trigger($select, 'all.bs.select');
             }
             if (settings.debug) {
                 console.log('trigger', event, [$select.val()])
