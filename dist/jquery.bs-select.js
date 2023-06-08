@@ -73,7 +73,6 @@
         }
 
         function setSelectValues($select) {
-            const settings = $select.data('options');
             const $dropdown = getDropDown($select);
             const multiple = $select.prop('multiple');
             let values = [];
@@ -103,8 +102,7 @@
             const options = $select.find('option');
             options.prop('selected', state);
 
-            options.each(function (i, e) {
-                const el = $(e);
+            options.each(function (i) {
                 const $item = dropdown.find('.dropdown-item[data-index="' + i + '"]');
                 if (state) {
                     $item.addClass('active');
@@ -277,16 +275,13 @@
 
                 let isSelected = false;
                 let selected = "";
-                let selectedIcon = "d-none";
                 if (value !== false) {
                     if (multiple) {
                         isSelected = $.inArray(value, selectedValue) > -1;
                         selected = isSelected ? 'active' : '';
-                        selectedIcon = isSelected ? '' : 'd-none';
                     } else {
                         isSelected = selectedValue === value;
                         selected = isSelected ? 'active' : '';
-                        selectedIcon = isSelected ? 'd-none' : 'd-none';
                     }
                 }
                 // alert(isSelected);
@@ -303,7 +298,7 @@
                 }
 
                 const itemClass = settings.menuItemClass === null ? '' : settings.menuItemClass;
-                const item = $('<div>', {
+                $('<div>', {
                     tabindex: i,
                     class: classList,
                     html: `
@@ -409,23 +404,33 @@
          *
          * @param $select
          * @param {string} event
-         * @param {array} params
          */
-        function trigger($select, event, params = []) {
+        function trigger($select, event) {
             const settings = $select.data('options');
             $select.trigger(event,  [$select.val()]);
+
             if (event !== 'all.bs.select') {
                 trigger($select, 'all.bs.select');
             }
+
             if (settings.debug) {
                 console.log('trigger', event, [$select.val()])
                 if (settings.debugElement !== null) {
-
-                    $('<small>', {
+                    const log = $('<small>', {
+                        class: 'js-log border-bottom',
                         html: '[' + new Date().toUTCString() + '] trigger <span class="text-warning">' + event + '</span> fired'
                     }).prependTo(settings.debugElement);
+
+
+                    setTimeout(function(){
+                        log.fadeOut(function(){
+                            $(this).remove();
+                        });
+                    },5000);
                 }
             }
+
+
         }
 
         function setDropdownTitle($select) {
@@ -520,10 +525,7 @@
                 let index = $select.find(`option[value="${value}"]`).index();
                 $dropdown.find(`.dropdown-item[data-index="${index}"]`).addClass('active');
             });
-
             trigger($select, 'change')
-
-
             setDropdownTitle($select);
         }
 
@@ -578,6 +580,14 @@
 
                 if (callFunction) {
                     switch (options) {
+                        case 'selectAll': {
+                            toggleAllItemsState($select, true);
+                        }
+                        break;
+                        case 'selectNone': {
+                            toggleAllItemsState($select, false);
+                        }
+                        break;
                         case 'hide': {
                             hide($select);
                         }

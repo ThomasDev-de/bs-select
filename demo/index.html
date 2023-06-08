@@ -6,6 +6,13 @@
     <title>Bootstrap demo</title>
     <link href="../vendor/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../vendor/twbs/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        .dropdown-item:active,
+        .dropdown-item.active{
+            background-color: #584f4f;
+            color:white;
+        }
+    </style>
 </head>
 <body class="container py-5" style="opacity: 0">
 <h1><i class="bi bi-menu-button me-5 text-info" style="font-size: 3em"></i> jQuery - Bootstrap - Select</h1>
@@ -44,6 +51,8 @@
                         <button id="btnShow" class="btn btn-link">show</button>
                         <button id="btnHide" class="btn btn-link">hide</button>
                         <button id="btnVal" class="btn btn-link">val (2)</button>
+                        <button id="btnAll" class="btn btn-link">selectAll</button>
+                        <button id="btnNone" class="btn btn-link">selectNone</button>
                         <button id="btnRefresh" class="btn btn-link">refresh</button>
                         <button id="btnUpdate" class="btn btn-link">update options</button>
                         <button id="btnDestroy" class="btn btn-link">destroy</button>
@@ -52,8 +61,11 @@
                     </div>
                 </td>
                 <td><label for="select4"></label>
-                    <select multiple data-bs-toggle="select"
+                    <select multiple
+                            data-debug="true"
+                            data-debug-element="#debug"
                             id="select4"
+                            data-bs-toggle="select"
                             data-show-selection-as-list="false"
                             data-show-action-menu="false"
                             data-drop-direction="dropdown-center"
@@ -67,14 +79,13 @@
         </table>
     </div>
     <div class="flex-fill d-flex flex-column p-3" data-bs-theme="light">
-        <h4>Console</h4>
-        <div id="debug" class="font-monospace border d-flex flex-column overflow-auto" style="max-height: 500px"></div>
+        <h4>Console of playground</h4>
+        <div id="debug" class="font-monospace border d-flex flex-column overflow-auto p-3" style="max-height: 500px"></div>
     </div>
 </div>
-
 <script src="../vendor/components/jquery/jquery.min.js"></script>
 <script src="../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../dist/jquery.bs-select.js"></script>
+<script src="../dist/jquery.bs-select.min.js"></script>
 <script>
     (function ($) {
         $.bsSelect.setDefaults({
@@ -85,8 +96,7 @@
             // selectAllText: 'Alles wählen',
             // deselectAllText: 'Nichts auswählen',
             showSubtext: true,
-            debug: true,
-            debugElement: '#debug',
+            // debugElement: '#debug',
             // showSelectedText: (count, total) => {
             //     return `${count} von ${total} ausgewählt`;
             // }
@@ -155,6 +165,13 @@
 
         $('#btnVal').on('click', function () {
             select4.bsSelect('val', 2)
+        });
+
+        $('#btnNone').on('click', function () {
+            select4.bsSelect('selectNone');
+        });
+        $('#btnAll').on('click', function () {
+            select4.bsSelect('selectAll');
         });
 
         $('body').animate({opacity: 1}, 400);
