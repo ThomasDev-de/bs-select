@@ -10,7 +10,7 @@
     }
   ],
   "require": {
-    "components/jquery": "3.6.0",
+    "components/jquery": ">=3.6.0",
     "twbs/bootstrap": ">=v5.3.0",
     "twbs/bootstrap-icons": "v1.10.5"
   }
