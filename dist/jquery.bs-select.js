@@ -1,7 +1,6 @@
 // noinspection JSUnresolvedReference
 
 (function ($) {
-
         const WRAPPER_CLASS = 'js-bs-select-dropdown';
 
         $.bsSelect = {
@@ -17,6 +16,7 @@
             DEFAULTS: {
                 btnWidth: 'fit-content',
                 btnEmptyText: 'Please select..',
+                btnSplit: false,
                 dropDirection: null,
                 menuHeaderClass: 'text-bg-secondary text-uppercase',
                 btnClass: 'btn-outline-dark',
@@ -145,17 +145,35 @@
             }
 
             // add dropdown toggle item
-            $('<button>', {
-                class: `btn ${settings.btnClass} dropdown-toggle d-flex align-items-center js-dropdown-header justify-content-between`,
-                type: 'button',
-                'data-bs-toggle': 'dropdown',
-                'aria-expanded': false,
-                'data-bs-auto-close': multiple ? 'outside' : true,
-                html: `${settings.btnEmptyText}`,
-                css: {
-                    width: settings.btnWidth
-                }
-            }).appendTo($dropdown);
+            if (!settings.btnSplit) {
+                 $('<button>', {
+                    class: `btn ${settings.btnClass} dropdown-toggle d-flex align-items-center js-dropdown-header justify-content-between`,
+                    type: 'button',
+                    'data-bs-toggle': 'dropdown',
+                    'aria-expanded': false,
+                    'data-bs-auto-close': multiple ? 'outside' : true,
+                    html: `${settings.btnEmptyText}`,
+                    css: {
+                        width: settings.btnWidth
+                    }
+                }).appendTo($dropdown);
+            }
+            else{
+                 $('<button>', {
+                    class: `btn ${settings.btnClass} d-flex align-items-center js-dropdown-header justify-content-between`,
+                    type: 'button',
+                    html: `${settings.btnEmptyText}`,
+                    css: {
+                        width: settings.btnWidth
+                    }
+                }).appendTo($dropdown);
+                $('<button>',{
+                    class: `btn ${settings.btnClass} dropdown-toggle dropdown-toggle-split`,
+                    'data-bs-toggle': 'dropdown',
+                    'aria-expanded': false,
+                    'data-bs-auto-close': multiple ? 'outside' : true,
+                }).appendTo($dropdown);
+            }
 
 
             // fix overflow, when dropdown is inside bootstrap-table

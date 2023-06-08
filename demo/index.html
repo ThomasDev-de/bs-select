@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
+    <title>jQuery - Bootstrap - Select</title>
     <link href="../vendor/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../vendor/twbs/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
@@ -41,7 +41,8 @@
                 <td>multiple select with option groups</td>
                 <td><label for="select3"></label><select multiple id="select3" data-show-selection-as-list="false"
                                                          data-drop-direction="dropend"
-                                                         data-btn-class="btn-outline-danger rounded-pill"></select></td>
+                                                         data-btn-class="btn-outline-danger  btn-sm"></select></td>
+                                                         data-btn-class="btn-outline-danger btn-sm"></select></td>
             </tr>
             <tr>
                 <td>
@@ -69,7 +70,7 @@
                             data-show-selection-as-list="false"
                             data-show-action-menu="false"
                             data-drop-direction="dropdown-center"
-                            data-btn-class="btn-outline-light rounded-pill">
+                            data-btn-class="btn-outline-light">
                         <option value="1">Item 1</option>
                         <option value="2">Item 2</option>
                         <option value="3">Item 3</option>
@@ -91,7 +92,7 @@
         $.bsSelect.setDefaults({
             // btnWidth: '300px',
             dropUpCenter: true,
-            btnClass: 'btn-outline-warning rounded-0',
+            btnClass: 'btn-outline-warning',
             // btnEmptyText: 'Bitte wählen',
             // selectAllText: 'Alles wählen',
             // deselectAllText: 'Nichts auswählen',
@@ -140,7 +141,7 @@
 
         $('#btnUpdate').on('click', function () {
             const newOptions = {
-                btnClass: 'btn-success rounded-0',
+                btnClass: 'btn-success',
                 dropDirection: 'dropend'
             };
             select4.bsSelect('updateOptions', newOptions)
