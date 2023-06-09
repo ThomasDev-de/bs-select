@@ -67,7 +67,6 @@
                             data-debug="true"
                             data-debug-element="#debug"
                             id="select4"
-                            data-bs-toggle="select"
                             data-show-selection-as-list="false"
                             data-show-action-menu="false"
                             data-drop-direction="dropdown-center"
@@ -141,6 +140,11 @@
         select1.bsSelect();
         select2.bsSelect();
         select3.bsSelect();
+        select4.bsSelect({
+            onBeforeChange: function(){
+                return confirm('really change?')
+            }
+        });
 
         $('#btnUpdate').on('click', function () {
             const newOptions = {

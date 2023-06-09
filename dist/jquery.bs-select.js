@@ -29,7 +29,7 @@
                 actionMenuBtnClass: 'btn-light',
                 showSelectionAsList: false,
                 showSelectedText: function (count, total) {
-                    return count + ' of ' + total +' selected';
+                    return count + ' of ' + total + ' selected';
                 },
                 deselectAllText: 'Deselect All',
                 selectAllText: 'Select All',
@@ -37,7 +37,10 @@
                 debug: false,
                 debugElement: null,
                 menuItemClass: null,
-                searchText: "Search.."
+                searchText: "Search..",
+                onBeforeChange: function () {
+                    return true;
+                }
             }
         };
 
@@ -53,7 +56,7 @@
                 params.push($select.val());
             }
             const settings = $select.data('options');
-            $select.trigger(event,  params);
+            $select.trigger(event, params);
 
             if (settings.debug) {
                 console.log('trigger', event, params);
@@ -65,9 +68,9 @@
                     }).prependTo(settings.debugElement);
 
 
-                    setTimeout(function(){
+                    setTimeout(function () {
                         log.remove();
-                    },5000);
+                    }, 5000);
                 }
             }
         }
@@ -177,7 +180,7 @@
 
             // add dropdown toggle item
             if (!settings.btnSplit) {
-                 $('<button>', {
+                $('<button>', {
                     class: `btn ${settings.btnClass} dropdown-toggle d-flex align-items-center js-dropdown-header justify-content-between`,
                     type: 'button',
                     'data-bs-toggle': 'dropdown',
@@ -188,9 +191,8 @@
                         width: settings.btnWidth
                     }
                 }).appendTo($dropdown);
-            }
-            else{
-                 $('<button>', {
+            } else {
+                $('<button>', {
                     class: `btn ${settings.btnClass} d-flex align-items-center js-dropdown-header justify-content-between`,
                     type: 'button',
                     html: `${settings.btnEmptyText}`,
@@ -198,7 +200,7 @@
                         width: settings.btnWidth
                     }
                 }).appendTo($dropdown);
-                $('<button>',{
+                $('<button>', {
                     class: `btn ${settings.btnClass} dropdown-toggle dropdown-toggle-split`,
                     'data-bs-toggle': 'dropdown',
                     'aria-expanded': false,
@@ -362,11 +364,15 @@
             $dropdown
                 .on('click', '.js-select-select-all', function (e) {
                     e.preventDefault();
-                    toggleAllItemsState($select, true);
+                    if (settings.onBeforeChange()) {
+                        toggleAllItemsState($select, true);
+                    }
                 })
                 .on('click', '.js-select-select-none', function (e) {
                     e.preventDefault();
-                    toggleAllItemsState($select, false);
+                    if (settings.onBeforeChange()) {
+                        toggleAllItemsState($select, false);
+                    }
                 })
                 .on('hidden.bs.dropdown', function () {
                     // empty search field if exists
@@ -399,27 +405,29 @@
                 })
                 .on('click', '.dropdown-item', function (e) {
                     e.preventDefault();
-                    const item = $(e.currentTarget);
+                    if (settings.onBeforeChange()) {
+                        const item = $(e.currentTarget);
 
-                    if (!multiple) {
-                        $dropdown
-                            .find('.dropdown-item.active')
-                            .not(item)
-                            .removeClass('active');
+                        if (!multiple) {
+                            $dropdown
+                                .find('.dropdown-item.active')
+                                .not(item)
+                                .removeClass('active');
+                        }
+
+                        item.toggleClass('active');
+
+                        const active = $(e.currentTarget).hasClass('active');
+
+                        if (active)
+                            item.find('.dropdown-item-select-icon').show();
+                        else
+                            item.find('.dropdown-item-select-icon').hide();
+
+                        setSelectValues($select);
+                        setDropdownTitle($select);
+                        trigger($select, 'change');
                     }
-
-                    item.toggleClass('active');
-
-                    const active = $(e.currentTarget).hasClass('active');
-
-                    if (active)
-                        item.find('.dropdown-item-select-icon').show();
-                    else
-                        item.find('.dropdown-item-select-icon').hide();
-
-                    setSelectValues($select);
-                    setDropdownTitle($select);
-                    trigger($select, 'change');
                 });
 
             setDropdownTitle($select);
@@ -529,7 +537,7 @@
             let $dropdown = getDropDown($select);
             $select.insertBefore($dropdown);
             $select.val(val);
-            if (clearData){
+            if (clearData) {
                 $select.removeData('options');
             }
             $dropdown.remove();
@@ -542,7 +550,7 @@
             init($select, false);
         }
 
-        $.fn.bsSelect = function (options, param ) {
+        $.fn.bsSelect = function (options, param) {
             let callFunction = false;
             let optionsSet = false;
 
@@ -568,15 +576,20 @@
                 init($select, true);
 
                 if (callFunction) {
+                    const settings = $select.data('options');
                     switch (options) {
                         case 'selectAll': {
-                            toggleAllItemsState($select, true);
+                            if (settings.onBeforeChange()) {
+                                toggleAllItemsState($select, true);
+                            }
                         }
-                        break;
+                            break;
                         case 'selectNone': {
-                            toggleAllItemsState($select, false);
+                            if (settings.onBeforeChange()) {
+                                toggleAllItemsState($select, false);
+                            }
                         }
-                        break;
+                            break;
                         case 'hide': {
                             hide($select);
                         }
@@ -586,10 +599,12 @@
                         }
                             break;
                         case 'val': {
-                            $select.val(param);
-                            val($select);
-                            refresh($select);
-                            trigger($select, 'change.bs.select');
+                            if(settings.onBeforeChange()) {
+                                $select.val(param);
+                                val($select);
+                                refresh($select);
+                                trigger($select, 'change.bs.select');
+                            }
                         }
                             break;
                         case 'destroy': {
