@@ -593,7 +593,6 @@
                 init($select, true);
 
                 if (callFunction) {
-                    const settings = $select.data('options');
                     switch (options) {
                         case 'selectAll': {
                             if (onBeforeChange($select)) {
