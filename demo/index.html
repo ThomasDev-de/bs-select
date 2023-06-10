@@ -151,6 +151,9 @@
                 btnClass: 'btn-success',
                 dropDirection: 'dropup',
                 btnSplit: false,
+                onBeforeChange: function(){
+                    return confirm('really change?')
+                }
             };
             select4.bsSelect('updateOptions', newOptions)
         });

@@ -38,9 +38,7 @@
                 debugElement: null,
                 menuItemClass: null,
                 searchText: "Search..",
-                onBeforeChange: function () {
-                    return true;
-                }
+                onBeforeChange: null
             }
         };
 
@@ -557,14 +555,16 @@
          */
         function onBeforeChange($select){
             const settings = $select.data('options');
-            const ok = settings.onBeforeChange();
-            if(ok){
-                trigger($select, 'acceptChange.bs.select');
+            if(typeof settings.onBeforeChange === 'function') {
+                const ok = settings.onBeforeChange();
+                if (ok) {
+                    trigger($select, 'acceptChange.bs.select');
+                } else {
+                    trigger($select, 'cancelChange.bs.select');
+                }
+                return ok;
             }
-            else{
-                trigger($select, 'cancelChange.bs.select');
-            }
-            return ok;
+            return true;
         }
 
         $.fn.bsSelect = function (options, param) {
