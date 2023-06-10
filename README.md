@@ -143,16 +143,19 @@ $('select').bsSelect('method', param);
 
 ## Events
 
-| event type           | Description                                                                                          |
-|----------------------|------------------------------------------------------------------------------------------------------|
-| hide.bs.select       | Fires immediately when the hide instance method has been called.                                     |
-| hidden.bs.select     | 	Fired when the dropdown has finished being hidden from the user and CSS transitions have completed. |
-| show.bs.select       | Fires immediately when the show instance method is called.                                           |
-| shown.bs.select      | 	Fired when the dropdown has been made visible to the user and CSS transitions have completed.       |
-| refresh.bs.select    | 	Fires when the `refresh` method has been invoked.                                                   |
-| change.bs.select     | 	Fires when the method `val` has been called.                                                        |
-| update.bs.select     | 	Fires when the method `updateOptions` was called.                                                   |
-| destroy.bs.select    | 	Fires when the `destroy` method has been activated.                                                 |
-| selectAll.bs.select  | 	Fires when the select all option has been pressed.                                                  |
-| selectNone.bs.select | 	Fires when the select none option has been pressed.                                                 |
-| any.bs.select        | 	Fires at every event.                                                                               |
+| event type             | Description                                                                                         |
+|------------------------|-----------------------------------------------------------------------------------------------------|
+| hide.bs.select         | Fires immediately when the hide instance method has been called.                                    |
+| hidden.bs.select       | Fired when the dropdown has finished being hidden from the user and CSS transitions have completed. |
+| show.bs.select         | Fires immediately when the show instance method is called.                                          |
+| shown.bs.select        | Fired when the dropdown has been made visible to the user and CSS transitions have completed.       |
+| refresh.bs.select      | Fires when the `refresh` method has been invoked.                                                   |
+| change.bs.select       | Fires when the method `val` has been called.                                                        |
+| acceptChange.bs.select | If the function onBeforeChange returns true, this event is fired.                                   |
+| cancelChange.bs.select | If the function onBeforeChange returns false, this event is fired.                                  |
+| update.bs.select       | Fires when the method `updateOptions` was called.                                                   |
+| destroy.bs.select      | Fires when the `destroy` method has been activated.                                                 |
+| selectAll.bs.select    | Fires when the select all option has been pressed.                                                  |
+| selectNone.bs.select   | Fires when the select none option has been pressed.                                                 |
+
+| any.bs.select | Fires at every event. |

@@ -364,13 +364,13 @@
             $dropdown
                 .on('click', '.js-select-select-all', function (e) {
                     e.preventDefault();
-                    if (settings.onBeforeChange()) {
+                    if (onBeforeChange($select)) {
                         toggleAllItemsState($select, true);
                     }
                 })
                 .on('click', '.js-select-select-none', function (e) {
                     e.preventDefault();
-                    if (settings.onBeforeChange()) {
+                    if (onBeforeChange($select)) {
                         toggleAllItemsState($select, false);
                     }
                 })
@@ -405,7 +405,7 @@
                 })
                 .on('click', '.dropdown-item', function (e) {
                     e.preventDefault();
-                    if (settings.onBeforeChange()) {
+                    if (onBeforeChange($select)) {
                         const item = $(e.currentTarget);
 
                         if (!multiple) {
@@ -550,6 +550,23 @@
             init($select, false);
         }
 
+        /**
+         *
+         * @param $select
+         * @return {*|boolean|boolean}
+         */
+        function onBeforeChange($select){
+            const settings = $select.data('options');
+            const ok = settings.onBeforeChange();
+            if(ok){
+                trigger($select, 'acceptChange.bs.select');
+            }
+            else{
+                trigger($select, 'cancelChange.bs.select');
+            }
+            return ok;
+        }
+
         $.fn.bsSelect = function (options, param) {
             let callFunction = false;
             let optionsSet = false;
@@ -579,13 +596,13 @@
                     const settings = $select.data('options');
                     switch (options) {
                         case 'selectAll': {
-                            if (settings.onBeforeChange()) {
+                            if (onBeforeChange($select)) {
                                 toggleAllItemsState($select, true);
                             }
                         }
                             break;
                         case 'selectNone': {
-                            if (settings.onBeforeChange()) {
+                            if (onBeforeChange($select)) {
                                 toggleAllItemsState($select, false);
                             }
                         }
@@ -599,7 +616,7 @@
                         }
                             break;
                         case 'val': {
-                            if(settings.onBeforeChange()) {
+                            if (onBeforeChange($select)) {
                                 $select.val(param);
                                 val($select);
                                 refresh($select);
