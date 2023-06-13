@@ -18,6 +18,7 @@
                 btnEmptyText: 'Please select..',
                 btnSplit: false,
                 dropDirection: null,
+                dropIconClass: 'bi bi-chevron-down',
                 menuHeaderClass: 'text-bg-secondary text-uppercase',
                 btnClass: 'btn-outline-dark',
                 search: true,
@@ -169,7 +170,7 @@
             let selectedValue = $select.val();
 
             $dropdown = $('<div>', {
-                class: `btn-group ${WRAPPER_CLASS}`,
+                class: `${WRAPPER_CLASS}`,
                 css: {
                     width: settings.btnWidth
                 }
@@ -179,20 +180,25 @@
                 $dropdown.addClass(settings.dropDirection);
             }
 
+            const toggleIconClass = settings.dropIconClass === null ? 'dropdown-toggle' : '';
+            const dropIcon = settings.dropIconClass !== null ? `<i class="ms-2 ${settings.dropIconClass}"></i>` : '';
             // add dropdown toggle item
             if (!settings.btnSplit) {
+
+
                 $('<button>', {
-                    class: `btn ${settings.btnClass} dropdown-toggle d-flex align-items-center js-dropdown-header justify-content-between`,
+                    class: `btn ${settings.btnClass} ${toggleIconClass} d-flex align-items-center flex-nowrap js-dropdown-header justify-content-between`,
                     type: 'button',
                     'data-bs-toggle': 'dropdown',
                     'aria-expanded': false,
                     'data-bs-auto-close': multiple ? 'outside' : true,
-                    html: `${settings.btnEmptyText}`,
+                    html: `<span class="js-selected-text">${settings.btnEmptyText}</span>${dropIcon}`,
                     css: {
                         width: settings.btnWidth
                     }
                 }).appendTo($dropdown);
             } else {
+                $dropdown.addClass('btn-group');
                 $('<button>', {
                     class: `btn ${settings.btnClass} d-flex align-items-center js-dropdown-header justify-content-between`,
                     type: 'button',
@@ -201,11 +207,13 @@
                         width: settings.btnWidth
                     }
                 }).appendTo($dropdown);
+
+
                 $('<button>', {
                     class: `btn ${settings.btnClass} dropdown-toggle dropdown-toggle-split`,
                     'data-bs-toggle': 'dropdown',
                     'aria-expanded': false,
-                    'data-bs-auto-close': multiple ? 'outside' : true,
+                    'data-bs-auto-close': multiple ? 'outside' : true
                 }).appendTo($dropdown);
             }
 
@@ -441,7 +449,7 @@
             const settings = $select.data('options');
             // const multiple = false !== $select.prop('multiple');
             const $dropdown = getDropDown($select);
-            const $titleElement = $dropdown.find('.js-dropdown-header');
+            const $titleElement = $dropdown.find('.js-dropdown-header .js-selected-text');
             let selectedValues = $select.val();
             let title;
             let tooltip = "";
