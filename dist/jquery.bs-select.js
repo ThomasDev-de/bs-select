@@ -169,7 +169,10 @@
             let selectedValue = $select.val();
 
             $dropdown = $('<div>', {
-                class: `btn-group ${WRAPPER_CLASS}`
+                class: `btn-group ${WRAPPER_CLASS}`,
+                css: {
+                    width: settings.btnWidth
+                }
             }).insertAfter($select);
 
             if (settings.dropDirection !== null) {
