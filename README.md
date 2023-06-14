@@ -146,6 +146,7 @@ $('select').bsSelect('method', param);
 
 | event type             | Description                                                                                         |
 |------------------------|-----------------------------------------------------------------------------------------------------|
+| init.bs.select         | Fires when the plugin has been initialised.                                                         |
 | hide.bs.select         | Fires immediately when the hide instance method has been called.                                    |
 | hidden.bs.select       | Fired when the dropdown has finished being hidden from the user and CSS transitions have completed. |
 | show.bs.select         | Fires immediately when the show instance method is called.                                          |
