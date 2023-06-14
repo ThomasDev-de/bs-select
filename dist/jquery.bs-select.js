@@ -151,6 +151,7 @@
             const ev = state ? 'selectAll' : 'selectNone';
             trigger($select, ev + '.bs.select');
             trigger($select, 'change.bs.select');
+            // trigger($select, 'change');
         }
 
         function init($select, fireTrigger = false) {
@@ -578,7 +579,7 @@
             return true;
         }
 
-        $.fn.bsSelect = function (options, ...param) {
+        $.fn.bsSelect = function (options, param) {
             let callFunction = false;
             let optionsSet = false;
 
@@ -627,22 +628,22 @@
                             break;
                         case 'val': {
                             if (onBeforeChange($select)) {
-                                $select.val(param[0]);
+                                $select.val(param);
                                 val($select);
-                                refresh($select);
+                                // refresh($select);
                                 // trigger($select, 'change.bs.select');
                             }
                         }
                             break;
                         case 'destroy': {
                             trigger($select, 'destroy.bs.select');
-                            destroy($select, true, param[0]);
+                            destroy($select, true, param);
 
 
                         }
                             break;
                         case 'updateOptions': {
-                            $select.data('options', $.extend({}, $.bsSelect.DEFAULTS, $select.data('options'), param[0] || {}));
+                            $select.data('options', $.extend({}, $.bsSelect.DEFAULTS, $select.data('options'), param || {}));
                             refresh($select);
                             trigger($select, 'update.bs.select');
                         }

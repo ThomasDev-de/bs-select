@@ -124,7 +124,6 @@
                 groups.push(options);
                 options = [];
             }
-
         }
         for (let array in groups) {
             const o = groups[array];
@@ -138,6 +137,7 @@
         }
 
         select1.bsSelect();
+        select1.bsSelect('val', 1);
         select2.bsSelect();
         select3.bsSelect();
         select4.bsSelect({
@@ -186,7 +186,6 @@
             select4.bsSelect('selectAll');
         });
 
-        console.log(select1.bsSelect('val'));
         $('body').on('change.bs.select', '#select4', function(e, val){
 
         })
