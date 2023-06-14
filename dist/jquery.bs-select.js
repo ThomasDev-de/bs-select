@@ -150,7 +150,7 @@
             setSelectValues($select);
             const ev = state ? 'selectAll' : 'selectNone';
             trigger($select, ev + '.bs.select');
-            trigger($select, 'change');
+            trigger($select, 'change.bs.select');
         }
 
         function init($select, fireTrigger = false) {
@@ -202,7 +202,7 @@
                 $('<button>', {
                     class: `btn ${settings.btnClass} d-flex align-items-center js-dropdown-header justify-content-between`,
                     type: 'button',
-                    html: `${settings.btnEmptyText}`,
+                    html: `<span class="js-selected-text">${settings.btnEmptyText}</span>`,
                     css: {
                         width: settings.btnWidth
                     }
@@ -435,7 +435,7 @@
 
                         setSelectValues($select);
                         setDropdownTitle($select);
-                        trigger($select, 'change');
+                        trigger($select, 'change.bs.select');
                     }
                 });
 
@@ -537,7 +537,7 @@
                 let index = $select.find(`option[value="${value}"]`).index();
                 $dropdown.find(`.dropdown-item[data-index="${index}"]`).addClass('active');
             });
-            trigger($select, 'change')
+            trigger($select, 'change.bs.select');
             setDropdownTitle($select);
         }
 
@@ -578,7 +578,7 @@
             return true;
         }
 
-        $.fn.bsSelect = function (options, param) {
+        $.fn.bsSelect = function (options, ...param) {
             let callFunction = false;
             let optionsSet = false;
 
@@ -627,22 +627,22 @@
                             break;
                         case 'val': {
                             if (onBeforeChange($select)) {
-                                $select.val(param);
+                                $select.val(param[0]);
                                 val($select);
                                 refresh($select);
-                                trigger($select, 'change.bs.select');
+                                // trigger($select, 'change.bs.select');
                             }
                         }
                             break;
                         case 'destroy': {
                             trigger($select, 'destroy.bs.select');
-                            destroy($select, true, param);
+                            destroy($select, true, param[0]);
 
 
                         }
                             break;
                         case 'updateOptions': {
-                            $select.data('options', $.extend({}, $.bsSelect.DEFAULTS, $select.data('options'), param || {}));
+                            $select.data('options', $.extend({}, $.bsSelect.DEFAULTS, $select.data('options'), param[0] || {}));
                             refresh($select);
                             trigger($select, 'update.bs.select');
                         }
