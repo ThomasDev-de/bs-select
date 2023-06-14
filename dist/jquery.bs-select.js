@@ -35,7 +35,7 @@
                 deselectAllText: 'Deselect All',
                 selectAllText: 'Select All',
                 checkedIcon: "bi bi-check-lg",
-                debug: false,
+                debug: true,
                 debugElement: null,
                 menuItemClass: null,
                 searchText: "Search..",
@@ -53,9 +53,12 @@
             if (event !== 'any.bs.select') {
                 trigger($select, 'any.bs.select');
                 params.push($select.val());
+                $select.trigger(event, params);
+            }else{
+                $select.trigger(event);
             }
             const settings = $select.data('options');
-            $select.trigger(event, params);
+
 
             if (settings.debug) {
                 console.log('trigger', event, params);
@@ -441,8 +444,13 @@
                 });
 
             setDropdownTitle($select);
-            if (fireTrigger)
-                trigger($select, 'init.bs.select');
+
+            if (fireTrigger) {
+                setTimeout(function(){
+                    trigger($select, 'init.bs.select');
+                },0)
+
+            }
             return $dropdown;
         }
 
