@@ -35,7 +35,7 @@
                 deselectAllText: 'Deselect All',
                 selectAllText: 'Select All',
                 checkedIcon: "bi bi-check-lg",
-                debug: true,
+                debug: false,
                 debugElement: null,
                 menuItemClass: null,
                 searchText: "Search..",
