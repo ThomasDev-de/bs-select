@@ -27,6 +27,7 @@
                 menuMaxHeight: 300,
                 showSubtext: true,
                 showActionMenu: true,
+                showMultipleAsChecklist: false,
                 actionMenuBtnClass: 'btn-light',
                 showSelectionAsList: false,
                 showSelectedText: function (count, total) {
@@ -136,18 +137,34 @@
         function toggleAllItemsState($select, state = false) {
             const dropdown = getDropDown($select);
             const options = $select.find('option');
+            const settings = $select.data('options');
+            const multiple = false !== $select.prop('multiple');
             options.prop('selected', state);
+            const toggleCheckIcon = multiple && settings.showMultipleAsChecklist;
+
 
             options.each(function (i) {
                 const $item = dropdown.find('.dropdown-item[data-index="' + i + '"]');
                 if (state) {
                     $item.addClass('active');
                     $item.find('.dropdown-item-select-icon').show();
+                    // if (toggleCheckIcon){
+                    //     $item.find('.js-icon-checklist').removeClass('bi-check-square').addClass('bi-square');
+                    // }
                 } else {
                     $item.removeClass('active');
                     $item.find('.dropdown-item-select-icon').hide();
+                    // if (toggleCheckIcon){
+                    //     $item.find('.js-icon-checklist').removeClass('bi-check-square').addClass('bi-square');
+                    // }
                 }
             });
+
+            if (toggleCheckIcon)
+            {
+                dropdown.find('.dropdown-item:not(.active) .js-icon-checklist.bi-check-square').removeClass('bi-check-square').addClass('bi-square');
+                dropdown.find('.dropdown-item.active .js-icon-checklist.bi-square').removeClass('bi-square').addClass('bi-check-square');
+            }
 
             setDropdownTitle($select);
             setSelectValues($select);
@@ -335,12 +352,18 @@
                         selected = isSelected ? 'active' : '';
                     }
                 }
-                // alert(isSelected);
+
                 const showSubtext = settings.showSubtext && element.data('subtext');
+                const showCheckList = multiple && settings.showMultipleAsChecklist;
                 const showIcon = element.data('icon');
                 const $subtext = showSubtext ? `<small class="text-muted">${element.data('subtext')}</small>` : '';
                 const $icon = showIcon ? `<i class="${element.data('icon')}"></i> ` : '';
                 const paddingLeftClass = inOptGroup || $icon !== '' ? 'ps-2' : '';
+
+                let checkElement = '';
+                if (showCheckList){
+                    checkElement = getCheckListIcon(isSelected);
+                }
 
                 if (inOGroup && !inOptGroup) {
                     $(`<hr>`, {
@@ -352,7 +375,7 @@
                 $('<div>', {
                     tabindex: i,
                     class: classList,
-                    html: `<div class="dropdown-item ${selected} ${disabledClass} px-2 d-flex flex-nowrap align-items-center ${itemClass} " data-index="${i}" style="cursor: pointer;">${$icon}<div class="${paddingLeftClass} d-flex flex-column"><div>${element.text()}</div>${$subtext}</div><div class="dropdown-item-select-icon ps-1 ms-auto "><i class="${settings.checkedIcon}"></i></div></div>`
+                    html: `<div class="dropdown-item ${selected} ${disabledClass} px-2 d-flex flex-nowrap align-items-center ${itemClass} " data-index="${i}" style="cursor: pointer;">${checkElement}${$icon}<div class="${paddingLeftClass} d-flex flex-column"><div>${element.text()}</div>${$subtext}</div><div class="dropdown-item-select-icon ps-1 ms-auto "><i class="${settings.checkedIcon}"></i></div></div>`
                 }).appendTo($dropdownMenuInner);
 
 
@@ -431,11 +454,20 @@
                         item.toggleClass('active');
 
                         const active = $(e.currentTarget).hasClass('active');
+                        const toggleCheckIcon = multiple && settings.showMultipleAsChecklist;
 
-                        if (active)
+                        if (active) {
+                            if (toggleCheckIcon){
+                                item.find('.js-icon-checklist').removeClass('bi-square').addClass('bi-check-square');
+                            }
                             item.find('.dropdown-item-select-icon').show();
-                        else
+                        }
+                        else {
+                            if (toggleCheckIcon){
+                                item.find('.js-icon-checklist').removeClass('bi-check-square').addClass('bi-square');
+                            }
                             item.find('.dropdown-item-select-icon').hide();
+                        }
 
                         setSelectValues($select);
                         setDropdownTitle($select);
@@ -452,6 +484,11 @@
 
             }
             return $dropdown;
+        }
+
+        function getCheckListIcon(isSelected)
+        {
+            return isSelected ? `<i class="bi bi-check-square me-2 js-icon-checklist"></i>` : `<i class="bi bi-square me-2 js-icon-checklist"></i>`
         }
 
         function setDropdownTitle($select) {
@@ -535,8 +572,11 @@
         }
 
         function val($select) {
+            const settings = $select.data('options');
+            const multiple = false !== $select.prop('multiple');
             const $dropdown = getDropDown($select);
             $dropdown.find('.dropdown-item.active').removeClass('active');
+            $dropdown.find('.dropdown-item .js-icon-checklist.bi-check-square').removeClass('bi-check-square').addClass('bi-square');
             let selectedValues = $select.val();
             if (!Array.isArray(selectedValues)) {
                 selectedValues = [selectedValues];
@@ -544,8 +584,10 @@
 
             selectedValues.forEach(value => {
                 let index = $select.find(`option[value="${value}"]`).index();
-                $dropdown.find(`.dropdown-item[data-index="${index}"]`).addClass('active');
+                const item = $dropdown.find(`.dropdown-item[data-index="${index}"]`);
+                item.addClass('active');
             });
+            $dropdown.find('.dropdown-item.active .js-icon-checklist.bi-square').removeClass('bi-square').addClass('bi-check-square');
             trigger($select, 'change.bs.select');
             setDropdownTitle($select);
         }

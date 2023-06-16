@@ -139,8 +139,11 @@
         select1.bsSelect();
         select1.bsSelect('val', 1);
         select2.bsSelect();
-        select3.bsSelect();
+        select3.bsSelect({
+            showMultipleAsChecklist: true
+        });
         select4.bsSelect({
+            showMultipleAsChecklist: true
             // onBeforeChange: function(){
             //     return confirm('really change?')
             // }
