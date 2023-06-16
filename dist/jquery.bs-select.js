@@ -19,6 +19,7 @@
                 btnSplit: false,
                 dropDirection: null,
                 dropIconClass: 'bi bi-chevron-down',
+                menuClass: null,
                 menuHeaderClass: 'text-bg-secondary text-uppercase',
                 btnClass: 'btn-outline-dark',
                 search: true,
@@ -271,7 +272,7 @@
             $select.hide();
 
             const $dropdownMenu = $('<div>', {
-                class: 'dropdown-menu mt-1 py-0 '
+                class: 'dropdown-menu ps-1 '+settings.menuClass
             }).appendTo($dropdown);
 
             let searchInput = '';
@@ -282,7 +283,7 @@
             }
 
             if (multiple) {
-                closeButton = `<button type="button" class="btn-close ms-2" data-bs-dismiss="dropdown" aria-label="Close"></button>`;
+                // closeButton = `<button type="button" class="btn-close ms-2" data-bs-dismiss="dropdown" aria-label="Close"></button>`;
                 if (settings.showActionMenu) {
                     actionMenu = `<div class="d-flex flex-nowrap mt-2 p-0"><a href="#" class="btn-sm text-nowrap btn ${settings.actionMenuBtnClass} js-select-select-all">${settings.selectAllText}</a><span class="mx-1"></span><a href="#" class="btn-sm text-nowrap btn ${settings.actionMenuBtnClass} js-select-select-none">${settings.deselectAllText}</a></div>`;
                 }

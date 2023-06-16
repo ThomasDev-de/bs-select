@@ -8,12 +8,12 @@
     <link href="../vendor/twbs/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet">
     <!--suppress CssUnusedSymbol -->
     <style>
-        .dropdown-item:active,
-        .dropdown-item.active{
+         .dropdown-item:active,
+         .dropdown-item.active{
             background-color: transparent;
             color:white;
         }
-        .dropdown-item{
+         .dropdown-item{
             font-size: 11px;
         }
         .dropdown-item .js-icon-checklist {
@@ -157,12 +157,14 @@
 
         $('#btnUpdate').on('click', function () {
             const newOptions = {
-                btnClass: 'btn-outline-info btn-sm rounded-pill border-start border-end border-5 border-top-0 border-bottom-0',
+                btnClass: 'btn-light btn-sm',
                 btnSplit: false,
                 search:false,
-                onBeforeChange: function(){
-                    return confirm('really change?')
-                }
+                dropDirection: '',
+                menuClass: 'shadow p-2 mt-0 rounded-0',
+                // onBeforeChange: function(){
+                //     return confirm('really change?')
+                // }
             };
             select4.bsSelect('updateOptions', newOptions)
         });
