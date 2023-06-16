@@ -10,8 +10,14 @@
     <style>
         .dropdown-item:active,
         .dropdown-item.active{
-            background-color: #584f4f;
+            background-color: transparent;
             color:white;
+        }
+        .dropdown-item{
+            font-size: 11px;
+        }
+        .dropdown-item .js-icon-checklist {
+            font-size: 14px;
         }
     </style>
 </head>
@@ -140,10 +146,10 @@
         select1.bsSelect('val', 1);
         select2.bsSelect();
         select3.bsSelect({
-            showMultipleAsChecklist: true
+            showMultipleCheckboxes: true
         });
         select4.bsSelect({
-            showMultipleAsChecklist: true
+            showMultipleCheckboxes: true
             // onBeforeChange: function(){
             //     return confirm('really change?')
             // }
@@ -151,9 +157,9 @@
 
         $('#btnUpdate').on('click', function () {
             const newOptions = {
-                btnClass: 'btn-success',
-                dropDirection: 'dropup',
+                btnClass: 'btn-outline-info btn-sm rounded-pill border-start border-end border-5 border-top-0 border-bottom-0',
                 btnSplit: false,
+                search:false,
                 onBeforeChange: function(){
                     return confirm('really change?')
                 }

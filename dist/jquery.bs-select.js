@@ -27,7 +27,7 @@
                 menuMaxHeight: 300,
                 showSubtext: true,
                 showActionMenu: true,
-                showMultipleAsChecklist: false,
+                showMultipleCheckboxes: false,
                 actionMenuBtnClass: 'btn-light',
                 showSelectionAsList: false,
                 showSelectedText: function (count, total) {
@@ -140,7 +140,7 @@
             const settings = $select.data('options');
             const multiple = false !== $select.prop('multiple');
             options.prop('selected', state);
-            const toggleCheckIcon = multiple && settings.showMultipleAsChecklist;
+            const toggleCheckIcon = multiple && settings.showMultipleCheckboxes;
 
 
             options.each(function (i) {
@@ -354,15 +354,19 @@
                 }
 
                 const showSubtext = settings.showSubtext && element.data('subtext');
-                const showCheckList = multiple && settings.showMultipleAsChecklist;
+                const showCheckList = multiple && settings.showMultipleCheckboxes;
                 const showIcon = element.data('icon');
                 const $subtext = showSubtext ? `<small class="text-muted">${element.data('subtext')}</small>` : '';
                 const $icon = showIcon ? `<i class="${element.data('icon')}"></i> ` : '';
                 const paddingLeftClass = inOptGroup || $icon !== '' ? 'ps-2' : '';
 
                 let checkElement = '';
+                let checkElementPre = "";
                 if (showCheckList){
                     checkElement = getCheckListIcon(isSelected);
+                }
+                else{
+                    checkElementPre = `<i class="${settings.checkedIcon}"></i>`;
                 }
 
                 if (inOGroup && !inOptGroup) {
@@ -375,7 +379,7 @@
                 $('<div>', {
                     tabindex: i,
                     class: classList,
-                    html: `<div class="dropdown-item ${selected} ${disabledClass} px-2 d-flex flex-nowrap align-items-center ${itemClass} " data-index="${i}" style="cursor: pointer;">${checkElement}${$icon}<div class="${paddingLeftClass} d-flex flex-column"><div>${element.text()}</div>${$subtext}</div><div class="dropdown-item-select-icon ps-1 ms-auto "><i class="${settings.checkedIcon}"></i></div></div>`
+                    html: `<div class="dropdown-item ${selected} ${disabledClass} px-2 d-flex flex-nowrap align-items-center ${itemClass} " data-index="${i}" style="cursor: pointer;">${checkElement}${$icon}<div class="${paddingLeftClass} d-flex flex-column"><div>${element.text()}</div>${$subtext}</div><div class="dropdown-item-select-icon ps-1 ms-auto ">${checkElementPre}</div></div>`
                 }).appendTo($dropdownMenuInner);
 
 
@@ -454,7 +458,7 @@
                         item.toggleClass('active');
 
                         const active = $(e.currentTarget).hasClass('active');
-                        const toggleCheckIcon = multiple && settings.showMultipleAsChecklist;
+                        const toggleCheckIcon = multiple && settings.showMultipleCheckboxes;
 
                         if (active) {
                             if (toggleCheckIcon){
