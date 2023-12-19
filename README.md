@@ -160,5 +160,4 @@ $('select').bsSelect('method', param);
 | destroy.bs.select      | Fires when the `destroy` method has been activated.                                                 |
 | selectAll.bs.select    | Fires when the select all option has been pressed.                                                  |
 | selectNone.bs.select   | Fires when the select none option has been pressed.                                                 |
-
 | any.bs.select | Fires at every event. |
