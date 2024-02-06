@@ -56,7 +56,7 @@
                 trigger($select, 'any.bs.select');
                 params.push($select.val());
                 $select.trigger(event, params);
-            }else{
+            } else {
                 $select.trigger(event);
             }
             const settings = $select.data('options');
@@ -161,8 +161,7 @@
                 }
             });
 
-            if (toggleCheckIcon)
-            {
+            if (toggleCheckIcon) {
                 dropdown.find('.dropdown-item:not(.active) .js-icon-checklist.bi-check-square').removeClass('bi-check-square').addClass('bi-square');
                 dropdown.find('.dropdown-item.active .js-icon-checklist.bi-square').removeClass('bi-square').addClass('bi-check-square');
             }
@@ -177,6 +176,7 @@
 
         function init($select, fireTrigger = false) {
             let $dropdown = getDropDown($select);
+            const isSelectDisabled = $select.hasClass('disabled');
 
             if ($dropdown.length) {
                 return $dropdown;
@@ -206,8 +206,6 @@
             const dropIcon = settings.dropIconClass !== null ? `<i class="ms-2 ${settings.dropIconClass}"></i>` : '';
             // add dropdown toggle item
             if (!settings.btnSplit) {
-
-
                 $('<button>', {
                     class: `btn ${settings.btnClass} ${toggleIconClass} d-flex align-items-center flex-nowrap js-dropdown-header justify-content-between`,
                     type: 'button',
@@ -272,7 +270,7 @@
             $select.hide();
 
             const $dropdownMenu = $('<div>', {
-                class: 'dropdown-menu ps-1 '+settings.menuClass
+                class: 'dropdown-menu ps-1 ' + settings.menuClass
             }).appendTo($dropdown);
 
             let searchInput = '';
@@ -331,10 +329,13 @@
                     return;
                 }
                 // I am an option element
+                const elementHasDisabledClass = element.hasClass('disabled');
+
                 const classList = element.get(0).className.trim();
+
                 const value = element.prop('value');
                 const inOptGroup = element.closest('optgroup').length !== 0;
-                const isDisabled = element.prop('disabled');
+                const isDisabled = element.prop('disabled') || elementHasDisabledClass;
                 const disabledClass = isDisabled ? 'disabled' : '';
 
                 if (!value || value === "") {
@@ -363,10 +364,9 @@
 
                 let checkElement = '';
                 let checkElementPre = "";
-                if (showCheckList){
+                if (showCheckList) {
                     checkElement = getCheckListIcon(isSelected);
-                }
-                else{
+                } else {
                     checkElementPre = `<i class="${settings.checkedIcon}"></i>`;
                 }
 
@@ -446,6 +446,11 @@
                 })
                 .on('click', '.dropdown-item', function (e) {
                     e.preventDefault();
+                    const dropdownItem = $(e.currentTarget);
+                    // if (dropdownItem.hasClass('disabled')){
+                    //
+                    //     return false;
+                    // }
                     if (onBeforeChange($select)) {
                         const item = $(e.currentTarget);
 
@@ -462,13 +467,12 @@
                         const toggleCheckIcon = multiple && settings.showMultipleCheckboxes;
 
                         if (active) {
-                            if (toggleCheckIcon){
+                            if (toggleCheckIcon) {
                                 item.find('.js-icon-checklist').removeClass('bi-square').addClass('bi-check-square');
                             }
                             item.find('.dropdown-item-select-icon').show();
-                        }
-                        else {
-                            if (toggleCheckIcon){
+                        } else {
+                            if (toggleCheckIcon) {
                                 item.find('.js-icon-checklist').removeClass('bi-check-square').addClass('bi-square');
                             }
                             item.find('.dropdown-item-select-icon').hide();
@@ -483,16 +487,15 @@
             setDropdownTitle($select);
 
             if (fireTrigger) {
-                setTimeout(function(){
+                setTimeout(function () {
                     trigger($select, 'init.bs.select');
-                },0)
+                }, 0)
 
             }
             return $dropdown;
         }
 
-        function getCheckListIcon(isSelected)
-        {
+        function getCheckListIcon(isSelected) {
             return isSelected ? `<i class="bi bi-check-square me-2 js-icon-checklist"></i>` : `<i class="bi bi-square me-2 js-icon-checklist"></i>`
         }
 
@@ -577,11 +580,14 @@
         }
 
         function val($select) {
+
             const settings = $select.data('options');
             const multiple = false !== $select.prop('multiple');
             const $dropdown = getDropDown($select);
             $dropdown.find('.dropdown-item.active').removeClass('active');
             $dropdown.find('.dropdown-item .js-icon-checklist.bi-check-square').removeClass('bi-check-square').addClass('bi-square');
+            const disabledDropdownIcons = $dropdown.find('.dropdown-item.disabled');
+            disabledDropdownIcons.removeClass('disabled');
             let selectedValues = $select.val();
             if (!Array.isArray(selectedValues)) {
                 selectedValues = [selectedValues];
@@ -593,8 +599,11 @@
                 item.addClass('active');
             });
             $dropdown.find('.dropdown-item.active .js-icon-checklist.bi-square').removeClass('bi-square').addClass('bi-check-square');
+
+            setSelectValues($select);
             trigger($select, 'change.bs.select');
             setDropdownTitle($select);
+            disabledDropdownIcons.addClass('disabled');
         }
 
         function destroy($select, show, clearData = false) {
@@ -620,9 +629,9 @@
          * @param $select
          * @return {*|boolean|boolean}
          */
-        function onBeforeChange($select){
+        function onBeforeChange($select) {
             const settings = $select.data('options');
-            if(typeof settings.onBeforeChange === 'function') {
+            if (typeof settings.onBeforeChange === 'function') {
                 const ok = settings.onBeforeChange();
                 if (ok) {
                     trigger($select, 'acceptChange.bs.select');
@@ -685,16 +694,12 @@
                             if (onBeforeChange($select)) {
                                 $select.val(param);
                                 val($select);
-                                // refresh($select);
-                                // trigger($select, 'change.bs.select');
                             }
                         }
                             break;
                         case 'destroy': {
                             trigger($select, 'destroy.bs.select');
                             destroy($select, true, param);
-
-
                         }
                             break;
                         case 'updateOptions': {
