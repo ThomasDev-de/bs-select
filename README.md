@@ -36,7 +36,7 @@ composer require webcito/bs-select:dev-main
 
 ```html
 
-<script src="dist/jquery.bs-select.min.js" type="text/javascript">
+<script src="/vendor/webcito/bs-select/dist/jquery.bs-select.min.js" type="text/javascript">
 ```
 
 ## Set global defaults
