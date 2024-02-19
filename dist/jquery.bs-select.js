@@ -335,7 +335,7 @@
 
                 const value = element.prop('value');
                 const inOptGroup = element.closest('optgroup').length !== 0;
-                const isDisabled = element.prop('disabled') || elementHasDisabledClass;
+                const isDisabled = isSelectDisabled || element.prop('disabled') || elementHasDisabledClass;
                 const disabledClass = isDisabled ? 'disabled' : '';
 
                 // if (!value || value === "") {
