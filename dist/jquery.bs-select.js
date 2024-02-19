@@ -338,10 +338,10 @@
                 const isDisabled = element.prop('disabled') || elementHasDisabledClass;
                 const disabledClass = isDisabled ? 'disabled' : '';
 
-                if (!value || value === "") {
+                // if (!value || value === "") {
                     // Ignore options without value
-                    return;
-                }
+                    // return;
+                // }
 
                 let isSelected = false;
                 let selected = "";
