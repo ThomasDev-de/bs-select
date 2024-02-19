@@ -83,7 +83,8 @@ All selects with the attribute `[data-bs-toggle="select"]` are initialized autom
     </optgroup>
     ...
 </select>
-
+<!-- load jQuery and Bootstrap before -->
+<script src="dist/jquery.bs-select.js" type="text/javascript">
 <script>
     $('select').bsSelect();
 </script>
