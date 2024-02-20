@@ -1,5 +1,35 @@
-// noinspection JSUnresolvedReference
-
+/**
+ * This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
+ * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
+ *
+ * The plugin methods are:
+ *
+ * - setDefaults(options): This function is used to set the default options by extending the current defaults with the
+ *   provided parameter options.
+ * - getDefaults(): Returns a copy of the current default settings with debug and debugElement properties removed.
+ *
+ * The default settings are stored in a DEFAULTS object.
+ *
+ * The script also includes a number of helper functions intended to manage dropdown behaviours. They include triggering of
+ * events, fetching dropdown associated with a select element, showing and hiding dropdowns, changing select values,
+ * toggling the state of all items in a dropdown, initializing a dropdown menu and so on.
+ *
+ * When "firing" or "triggering" events, the function trigger is called, which emits events on the dropdown select with
+ * additional logic for debugging events.
+ *
+ * The select values are managed with setSelectValues, which sets the values for a select element based on the currently
+ * active element in the corresponding dropdown.
+ *
+ * All items in the select dropdown can be toggled with toggleAllItemsState, which is a helper that toggles all options in
+ * a dropdown to a provided state.
+ *
+ * init is used to initialize the dropdown for a select element.
+ *
+ * The specific details of how each function operates depend on the context in which they're called, the existing DOM and
+ * the provided options. These functions are used within the context of a Bootstrap dropdown menu to provide additional
+ * functionalities such as selecting and deselecting all, updating select values based on dropdown changes, debugging
+ * events and other enhancements.
+ */
 (function ($) {
         const WRAPPER_CLASS = 'js-bs-select-dropdown';
 
