@@ -310,6 +310,19 @@
 
             // add events
             $dropdown
+                .on('keyup', '[type="search"]', function (e) {
+                    switch (e.key) {
+                        case 'Enter':
+                            const item = getDropDown($select).find('.dropdown-item:visible:first');
+                            if(item.length){
+                                item.trigger('click');
+                                hide($select);
+                            }
+                            break;
+                        default:
+                            // Space for more keyboard events
+                    }
+                })
                 .on('hide.bs.dropdown', function () {
                     trigger($select, 'hide.bs.select');
                 })
@@ -435,7 +448,7 @@
                 $('<div>', {
                     tabindex: i,
                     class: classList,
-                    html: `<div class="dropdown-item ${selected} ${disabledClass} px-2 d-flex flex-nowrap align-items-center ${itemClass} " data-index="${i}" style="cursor: pointer;">${checkElement}${$icon}<div class="${paddingLeftClass} d-flex flex-column"><div>${element.text()}</div>${$subtext}</div><div class="dropdown-item-select-icon ps-1 ms-auto ">${checkElementPre}</div></div>`
+                    html: `<a href="#" class="dropdown-item ${selected} ${disabledClass} px-2 d-flex flex-nowrap align-items-center ${itemClass} " data-index="${i}" style="cursor: pointer;">${checkElement}${$icon}<div class="${paddingLeftClass} d-flex flex-column"><div>${element.text()}</div>${$subtext}</div><div class="dropdown-item-select-icon ps-1 ms-auto ">${checkElementPre}</div></a>`
                 }).appendTo($dropdownMenuInner);
 
 
