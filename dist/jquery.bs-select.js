@@ -557,6 +557,7 @@
             if (fireTrigger) {
                 setTimeout(function () {
                     trigger($select, 'init.bs.select');
+                    $dropdown.show();
                 }, 0)
 
             }
