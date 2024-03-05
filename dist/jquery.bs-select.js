@@ -252,12 +252,18 @@
 
             let selectedValue = $select.val();
 
+            const hasTheme = $select.closest('[data-bs-theme]').length > 0;
+
             $dropdown = $('<div>', {
                 class: `${WRAPPER_CLASS}`,
                 css: {
                     width: settings.btnWidth
                 }
             }).insertAfter($select);
+
+            if (hasTheme){
+                $dropdown.attr('data-bs-theme', $select.closest('[data-bs-theme]').data('bsTheme'));
+            }
 
             if (settings.dropDirection !== null) {
                 $dropdown.addClass(settings.dropDirection);
