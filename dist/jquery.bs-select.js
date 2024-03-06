@@ -346,6 +346,19 @@
                     }
                 });
 
+            /**
+             * If the select has been assigned to a label, create a click event to open the select
+             */
+            if($select.attr('id')){
+                const selectId = $select.attr('id');
+                const label = $(`label[for="${selectId}"]`);
+                if (label.length){
+                    label.on('click', function(){
+                        show($(`select[id="${selectId}"]`));
+                    })
+                }
+            }
+
             $select.appendTo($dropdown);
             $select.val(selectedValue);
             $select.hide();
