@@ -354,7 +354,8 @@
                 const label = $(`label[for="${selectId}"]`);
                 if (label.length){
                     label.on('click', function(){
-                        show($(`select[id="${selectId}"]`));
+                        const closestDropDown = getDropDown($(`select[id="${selectId}"]`));
+                        closestDropDown.trigger('click');
                     })
                 }
             }
