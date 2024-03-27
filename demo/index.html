@@ -45,7 +45,7 @@
                             <option value="2">Item 2</option>
                             <option value="3">Item 3</option>
                         </select>
-<!--                        <button type="submit">test submit</button>-->
+                        <!--                        <button type="submit">test submit</button>-->
                     </td>
                 </tr>
                 <tr>
@@ -106,7 +106,7 @@
 </form>
 <script src="../vendor/components/jquery/jquery.min.js"></script>
 <script src="../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../dist/jquery.bs-select.min.js"></script>
+<script src="../dist/jquery.bs-select.js"></script>
 <script>
     (function ($) {
         $.bsSelect.setDefaults({
@@ -155,12 +155,9 @@
             })
         }
 
-        select1.bsSelect({
-            onBeforeChange($select) {
-                alert($select.length);
-                return true;
-            }
-        });
+        select1.bsSelect();
+
+
         select1.bsSelect('val', 1);
 
         select2.bsSelect();
@@ -173,6 +170,15 @@
             //     return confirm('really change?')
             // }
         });
+
+        select4.on('keydown.bs.select', function (e, $select, keyEvent) {
+            const target = $(keyEvent.target);
+            const isSearchbox = target.is('input[type="search"]');
+            // const isDropdownItem = target.hasClass('dropdown-item');
+            if (keyEvent.code === 'Enter' && isSearchbox) {
+                    keyEvent.preventDefault();
+            }
+        })
 
         $('#btnUpdate').on('click', function () {
             const newOptions = {

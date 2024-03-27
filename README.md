@@ -85,8 +85,8 @@ All selects with the attribute `[data-bs-toggle="select"]` are initialized autom
 </select>
 <!-- load jQuery and Bootstrap before -->
 <script src="dist/jquery.bs-select.js" type="text/javascript">
-<script>
-    $('select').bsSelect();
+    <script>
+        $('select').bsSelect();
 </script>
 ```
 
@@ -124,6 +124,7 @@ All selects with the attribute `[data-bs-toggle="select"]` are initialized autom
 | selectAllText          | [data-select-all-text]        | `string`         | `Select All`                        | *If showActionMenu is true, the language of the two buttons can be set here.*                                                                                                                                                     |
 | checkedIcon            | [data-checked-icon]           | `string`         | `bi bi-check-lg`                    | *Class used to style the select icon.*                                                                                                                                                                                            |
 | onBeforeChange         |                               | `null\|function` | `($select) => { return true; }`     | *This function is called before the values are changed. If the function returns true, the change is made, otherwise nothing is changed.*                                                                                          |
+| onKeyDown              |                               | `null\|function` | `($select, keyEvent) => { // }`     | *Called when the pressed key is not a dropdown command (arrowUp,arrowDown,ESCAPE)*                                                                                                                                                |
 
 ## Methods
 
@@ -161,4 +162,5 @@ $('select').bsSelect('method', param);
 | destroy.bs.select      | Fires when the `destroy` method has been activated.                                                 |
 | selectAll.bs.select    | Fires when the select all option has been pressed.                                                  |
 | selectNone.bs.select   | Fires when the select none option has been pressed.                                                 |
-| any.bs.select | Fires at every event. |
+| any.bs.select          | Fires at every event.                                                                               |
+| keydown.bs.select      | Fires when the pressed key is not a dropdown command (arrowUp,arrowDown,ESCAPE)                     |

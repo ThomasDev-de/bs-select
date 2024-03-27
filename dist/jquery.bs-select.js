@@ -76,7 +76,8 @@
                 debugElement: null,
                 menuItemClass: null,
                 searchText: "Search..",
-                onBeforeChange: null
+                onBeforeChange: null,
+                onKeyDown: null
             }
         };
 
@@ -87,11 +88,18 @@
          * @param {jQuery} $select - The select element to trigger the event on.
          * @param {string} event - The name of the event to trigger.
          */
-        function trigger($select, event) {
+        function trigger($select, event, addParams = []) {
             let params = [];
             if (event !== 'any.bs.select') {
                 trigger($select, 'any.bs.select');
+                if (addParams.length){
+                    addParams.forEach(p => {
+                        params.push(p);
+                    })
+                }else{
                 params.push($select.val());
+
+                }
                 $select.trigger(event, params);
             } else {
                 $select.trigger(event);
@@ -316,9 +324,22 @@
 
             // add events
             $dropdown
-                .on('keyup', '[type="search"]', function (e) {
-                    switch (e.key) {
+                .on('keydown', function (e) {
+                    // fired when key is not a dropdown command (UP | DOWN | ESCAPE)
+                    const target = $(e.target);
+                    const isSearchField = target.is('input[type="search"]');
+                    const $wrap = $(e.currentTarget);
+                    const $selectElement = $wrap.find('select');
+                    const settings = $selectElement.data('options');
+                    if (typeof settings.onKeyDown === 'function') {
+                        settings.onKeyDown($selectElement, e);
+                    }
+                    trigger($selectElement, 'keydown.bs.select', [$selectElement, e]);
+                })
+                .on('keydown', '[type="search"]', function (e) {
+                    switch (e.code) {
                         case 'Enter':
+                            e.preventDefault();
                             const item = getDropDown($select).find('.dropdown-item:visible:first');
                             if(item.length){
                                 item.trigger('click');
