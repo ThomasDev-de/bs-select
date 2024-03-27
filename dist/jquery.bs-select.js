@@ -758,7 +758,7 @@
         function onBeforeChange($select) {
             const settings = $select.data('options');
             if (typeof settings.onBeforeChange === 'function') {
-                const ok = settings.onBeforeChange();
+                const ok = settings.onBeforeChange($select);
                 if (ok) {
                     trigger($select, 'acceptChange.bs.select');
                 } else {

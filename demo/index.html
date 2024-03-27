@@ -31,75 +31,79 @@
     methods and events for further processing.
     It was developed on the basis of jQuery 3.6, Bootstrap 5.3 and Bootstrap icons.
 </p>
-<div class="d-flex">
-    <div class="p-3">
-        <table class="table">
-            <tr>
-                <td>single select</td>
-                <td>
-                    <label for="select1" class="d-none"></label>
-                    <select id="select1" data-btn-class="btn-primary">
-                        <option value="1" disabled>Item 1</option>
-                        <option value="2">Item 2</option>
-                        <option value="3">Item 3</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>multiple select</td>
-                <td><label for="select2" class="d-none"></label><select multiple id="select2"
-                                                                        data-show-selection-as-list="true"></select>
-                </td>
-            </tr>
-            <tr>
-                <td>multiple select with option groups</td>
-                <td><label for="select3" class="d-none"></label>
-                    <select multiple id="select3" data-show-selection-as-list="false"
-                            data-drop-direction="dropped"
-                            data-btn-class="btn-outline-danger  btn-sm"></select>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    playground
-                    <div class="d-flex flex-column align-items-start">
-                        <button id="btnInit" class="btn btn-link">init</button>
-                        <button id="btnShow" class="btn btn-link">show</button>
-                        <button id="btnHide" class="btn btn-link">hide</button>
-                        <button id="btnVal" class="btn btn-link">val (2)</button>
-                        <button id="btnAll" class="btn btn-link">selectAll</button>
-                        <button id="btnNone" class="btn btn-link">selectNone</button>
-                        <button id="btnRefresh" class="btn btn-link">refresh</button>
-                        <button id="btnUpdate" class="btn btn-link">update options</button>
-                        <button id="btnDestroy" class="btn btn-link">destroy</button>
+<form action="test.php" method="get">
+    <div class="d-flex">
+        <div class="p-3">
+            <table class="table">
+                <tr>
+                    <td>single select</td>
+                    <td>
+
+                        <label for="select1" class="d-none"></label>
+                        <select id="select1" data-btn-class="btn-primary" name="test1">
+                            <option value="1" disabled>Item 1</option>
+                            <option value="2">Item 2</option>
+                            <option value="3">Item 3</option>
+                        </select>
+<!--                        <button type="submit">test submit</button>-->
+                    </td>
+                </tr>
+                <tr>
+                    <td>multiple select</td>
+                    <td><label for="select2" class="d-none"></label><select multiple id="select2"
+                                                                            data-show-selection-as-list="true"></select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>multiple select with option groups</td>
+                    <td><label for="select3" class="d-none"></label>
+                        <select multiple id="select3" data-show-selection-as-list="false"
+                                data-drop-direction="dropped"
+                                data-btn-class="btn-outline-danger  btn-sm"></select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        playground
+                        <div class="d-flex flex-column align-items-start">
+                            <button id="btnInit" class="btn btn-link">init</button>
+                            <button id="btnShow" class="btn btn-link">show</button>
+                            <button id="btnHide" class="btn btn-link">hide</button>
+                            <button id="btnVal" class="btn btn-link">val (2)</button>
+                            <button id="btnAll" class="btn btn-link">selectAll</button>
+                            <button id="btnNone" class="btn btn-link">selectNone</button>
+                            <button id="btnRefresh" class="btn btn-link">refresh</button>
+                            <button id="btnUpdate" class="btn btn-link">update options</button>
+                            <button id="btnDestroy" class="btn btn-link">destroy</button>
 
 
-                    </div>
-                </td>
-                <td><label for="select4" class="d-none"></label>
-                    <select multiple
-                            data-debug="true"
-                            data-debug-element="#debug"
-                            id="select4"
-                            data-show-selection-as-list="false"
-                            data-show-action-menu="false"
-                            data-drop-direction="dropdown-center"
-                            data-btn-split="true"
-                            data-btn-class="btn-outline-light">
-                        <option value="1">Item 1</option>
-                        <option value="2">Item 2</option>
-                        <option value="3">Item 3</option>
-                    </select>
-                </td>
-            </tr>
-        </table>
+                        </div>
+                    </td>
+                    <td><label for="select4" class="d-none"></label>
+                        <select multiple
+                                data-debug="true"
+                                data-debug-element="#debug"
+                                id="select4"
+                                data-show-selection-as-list="false"
+                                data-show-action-menu="false"
+                                data-drop-direction="dropdown-center"
+                                data-btn-split="true"
+                                data-btn-class="btn-outline-light">
+                            <option value="1">Item 1</option>
+                            <option value="2">Item 2</option>
+                            <option value="3">Item 3</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="flex-fill d-flex flex-column p-3" data-bs-theme="light">
+            <h4>Console of playground</h4>
+            <div id="debug" class="font-monospace border d-flex flex-column overflow-auto p-3"
+                 style="max-height: 500px"></div>
+        </div>
     </div>
-    <div class="flex-fill d-flex flex-column p-3" data-bs-theme="light">
-        <h4>Console of playground</h4>
-        <div id="debug" class="font-monospace border d-flex flex-column overflow-auto p-3"
-             style="max-height: 500px"></div>
-    </div>
-</div>
+</form>
 <script src="../vendor/components/jquery/jquery.min.js"></script>
 <script src="../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../dist/jquery.bs-select.min.js"></script>
@@ -151,7 +155,12 @@
             })
         }
 
-        select1.bsSelect();
+        select1.bsSelect({
+            onBeforeChange($select) {
+                alert($select.length);
+                return true;
+            }
+        });
         select1.bsSelect('val', 1);
 
         select2.bsSelect();
