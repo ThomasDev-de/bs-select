@@ -87,18 +87,18 @@
          *
          * @param {jQuery} $select - The select element to trigger the event on.
          * @param {string} event - The name of the event to trigger.
+         * @param {array} addParams - Additional trigger parameters.
          */
         function trigger($select, event, addParams = []) {
             let params = [];
             if (event !== 'any.bs.select') {
                 trigger($select, 'any.bs.select');
-                if (addParams.length){
+                if (addParams.length) {
                     addParams.forEach(p => {
                         params.push(p);
                     })
-                }else{
-                params.push($select.val());
-
+                } else {
+                    params.push($select.val());
                 }
                 $select.trigger(event, params);
             } else {
@@ -126,7 +126,7 @@
 
         /**
          * Fetches the dropdown that is superordinate to the select.
-         * @param {JQuery} $select - The select element.
+         * @param {Window.jQuery} $select - The select element.
          * @returns {JQuery} - The dropdown element.
          */
         function getDropDown($select) {
@@ -165,6 +165,9 @@
          * @param {jQuery} $select - The dropdown select element.
          */
         function setSelectValues($select) {
+            /**
+             * @type {JQuery}
+             */
             const $dropdown = getDropDown($select);
             const multiple = $select.prop('multiple');
             let values = [];
@@ -239,12 +242,15 @@
         /**
          * Initializes a dropdown menu for a select element.
          *
-         * @param {jQuery} $select - The select element to initialize the dropdown for.
+         * @param {JQuery} $select - The select element to initialize the dropdown for.
          * @param {boolean} fireTrigger - (Optional) Whether or not to fire the trigger event. Default is false.
          *
-         * @return {jQuery} - The initialized dropdown menu.
+         * @return {JQuery} - The initialized dropdown menu.
          */
         function init($select, fireTrigger = false) {
+            /**
+             * @type {JQuery}
+             */
             let $dropdown = getDropDown($select);
             const isSelectDisabled = $select.hasClass('disabled') || $select.is('[disabled]');
 
@@ -270,7 +276,7 @@
             }).insertAfter($select);
 
             // if (hasTheme){
-                // $dropdown.attr('data-bs-theme', $select.data('bsTheme') || $select.closest('[data-bs-theme]').data('bsTheme'));
+            // $dropdown.attr('data-bs-theme', $select.data('bsTheme') || $select.closest('[data-bs-theme]').data('bsTheme'));
             // }
 
             if (settings.dropDirection !== null) {
@@ -326,8 +332,8 @@
             $dropdown
                 .on('keydown', function (e) {
                     // fired when key is not a dropdown command (UP | DOWN | ESCAPE)
-                    const target = $(e.target);
-                    const isSearchField = target.is('input[type="search"]');
+                    // const target = $(e.target);
+                    // const isSearchField = target.is('input[type="search"]');
                     const $wrap = $(e.currentTarget);
                     const $selectElement = $wrap.find('select');
                     const settings = $selectElement.data('options');
@@ -341,13 +347,13 @@
                         case 'Enter':
                             e.preventDefault();
                             const item = getDropDown($select).find('.dropdown-item:visible:first');
-                            if(item.length){
+                            if (item.length) {
                                 item.trigger('click');
                                 hide($select);
                             }
                             break;
                         default:
-                            // Space for more keyboard events
+                        // Space for more keyboard events
                     }
                 })
                 .on('hide.bs.dropdown', function () {
@@ -361,6 +367,9 @@
                 })
                 .on('shown.bs.dropdown', function () {
                     trigger($select, 'shown.bs.select');
+                    /**
+                     * @type {JQuery}
+                     */
                     const searchElement = getDropDown($select).find('[type="search"]');
                     if (searchElement.length) {
                         searchElement.focus()
@@ -370,11 +379,11 @@
             /**
              * If the select has been assigned to a label, create a click event to open the select
              */
-            if($select.attr('id')){
+            if ($select.attr('id')) {
                 const selectId = $select.attr('id');
                 const label = $(`label[for="${selectId}"]`);
-                if (label.length){
-                    label.on('click', function(){
+                if (label.length) {
+                    label.on('click', function () {
                         const closestDropDown = getDropDown($(`select[id="${selectId}"]`));
                         closestDropDown.trigger('click');
                     })
@@ -555,7 +564,7 @@
                 })
                 .on('click', '.dropdown-item', function (e) {
                     e.preventDefault();
-                    const dropdownItem = $(e.currentTarget);
+                    // const dropdownItem = $(e.currentTarget);
                     // if (dropdownItem.hasClass('disabled')){
                     //
                     //     return false;
@@ -708,8 +717,8 @@
          * @*/
         function val($select) {
 
-            const settings = $select.data('options');
-            const multiple = false !== $select.prop('multiple');
+            // const settings = $select.data('options');
+            // const multiple = false !== $select.prop('multiple');
             const $dropdown = getDropDown($select);
             $dropdown.find('.dropdown-item.active').removeClass('active');
             $dropdown.find('.dropdown-item .js-icon-checklist.bi-check-square').removeClass('bi-check-square').addClass('bi-square');
@@ -758,7 +767,7 @@
         /**
          * Refreshes the given select element by destroying and reinitializing it.
          *
-         * @param {HTMLElement} $select - The select element to refresh.
+         * @param {jQuery} $select - The select element to refresh.
          *
          * @return {void}
          */
@@ -795,6 +804,7 @@
          *
          * @namespace bsSelect
          * @param {object} options - The plugin options.
+         * @param {null|object|int|string|float|boolean} param - The method values.
          * @returns {object} - The jQuery object.
          *
          * @see https://github.com/ThomasDev-de/bs-select
