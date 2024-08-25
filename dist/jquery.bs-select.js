@@ -386,7 +386,7 @@
             $select.hide();
 
             const $dropdownMenu = $('<div>', {
-                class: 'dropdown-menu ps-1 ' + settings.menuClass
+                class: 'dropdown-menu ps-1 ' + settings.menuClass ?? ''
             }).appendTo($dropdown);
 
             let searchInput = '';
