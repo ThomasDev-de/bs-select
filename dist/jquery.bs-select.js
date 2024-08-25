@@ -260,7 +260,7 @@
 
             let selectedValue = $select.val();
 
-            const hasTheme = $select.data('bsTheme') || $select.closest('[data-bs-theme]').length > 0;
+            // const hasTheme = $select.data('bsTheme') || $select.closest('[data-bs-theme]').length > 0;
 
             $dropdown = $('<div>', {
                 class: `${WRAPPER_CLASS}`,
@@ -269,9 +269,9 @@
                 }
             }).insertAfter($select);
 
-            if (hasTheme){
-                $dropdown.attr('data-bs-theme', $select.data('bsTheme') || $select.closest('[data-bs-theme]').data('bsTheme'));
-            }
+            // if (hasTheme){
+                // $dropdown.attr('data-bs-theme', $select.data('bsTheme') || $select.closest('[data-bs-theme]').data('bsTheme'));
+            // }
 
             if (settings.dropDirection !== null) {
                 $dropdown.addClass(settings.dropDirection);
