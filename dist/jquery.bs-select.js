@@ -269,7 +269,7 @@
             // const hasTheme = $select.data('bsTheme') || $select.closest('[data-bs-theme]').length > 0;
 
             $dropdown = $('<div>', {
-                class: `${WRAPPER_CLASS}`,
+                class: `${WRAPPER_CLASS} position-relative`,
                 css: {
                     width: settings.btnWidth
                 }
@@ -394,7 +394,10 @@
             $select.val(selectedValue);
             $select.css({
                 'position': 'absolute',
-                'left': '-9999px'
+                'left': '0',
+                'opacity': '0',
+                'height': '0',
+                'width': '0'
             })
             // $select.hide();
 
@@ -767,7 +770,10 @@
             if (show)
                 $select.css({
                     'position': '',
-                    'left': ''
+                    'left': '',
+                    'opacity': '',
+                    'height': '',
+                    'width': ''
                 })
         }
 
