@@ -180,7 +180,8 @@
             }
         })
 
-        $('#btnUpdate').on('click', function () {
+        $('#btnUpdate').on('click', function (e) {
+            e.preventDefault();
             const newOptions = {
                 btnClass: 'btn-light',
                 btnSplit: false,
@@ -193,31 +194,39 @@
             select4.bsSelect('updateOptions', newOptions)
         });
 
-        $('#btnInit').on('click', function () {
+        $('#btnInit').on('click', function (e) {
+            e.preventDefault();
             select4.bsSelect()
         });
-        $('#btnDestroy').on('click', function () {
+        $('#btnDestroy').on('click', function (e) {
+            e.preventDefault();
             select4.bsSelect('destroy')
         });
 
-        $('#btnShow').on('click', function () {
+        $('#btnShow').on('click', function (e) {
+            e.preventDefault();
             select4.bsSelect('show')
         });
-        $('#btnHide').on('click', function () {
+        $('#btnHide').on('click', function (e) {
+            e.preventDefault();
             select4.bsSelect('hide')
         });
-        $('#btnRefresh').on('click', function () {
+        $('#btnRefresh').on('click', function (e) {
+            e.preventDefault();
             select4.bsSelect('refresh')
         });
 
-        $('#btnVal').on('click', function () {
+        $('#btnVal').on('click', function (e) {
+            e.preventDefault();
             select4.bsSelect('val', 2)
         });
 
-        $('#btnNone').on('click', function () {
+        $('#btnNone').on('click', function (e) {
+            e.preventDefault();
             select4.bsSelect('selectNone');
         });
-        $('#btnAll').on('click', function () {
+        $('#btnAll').on('click', function (e) {
+            e.preventDefault();
             select4.bsSelect('selectAll');
         });
         $('body').animate({opacity: 1}, 0);

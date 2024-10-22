@@ -392,7 +392,11 @@
 
             $select.appendTo($dropdown);
             $select.val(selectedValue);
-            $select.hide();
+            $select.css({
+                'position': 'absolute',
+                'left': '-9999px'
+            })
+            // $select.hide();
 
             const $dropdownMenu = $('<div>', {
                 class: 'dropdown-menu ps-1 ' + settings.menuClass ?? ''
@@ -761,7 +765,10 @@
             }
             $dropdown.remove();
             if (show)
-                $select.show();
+                $select.css({
+                    'position': '',
+                    'left': ''
+                })
         }
 
         /**
