@@ -164,6 +164,7 @@
          * @param {jQuery} $select - The dropdown select element.
          */
         function setSelectValues($select) {
+            console.log('bsSelect:setSelectValues', $select.val());
             /**
              * @type {JQuery}
              */
@@ -229,9 +230,9 @@
                 dropdown.find('.dropdown-item:not(.active) .js-icon-checklist.bi-check-square').removeClass('bi-check-square').addClass('bi-square');
                 dropdown.find('.dropdown-item.active .js-icon-checklist.bi-square').removeClass('bi-square').addClass('bi-check-square');
             }
-
-            setDropdownTitle($select);
             setSelectValues($select);
+            setDropdownTitle($select);
+
             const ev = state ? 'selectAll' : 'selectNone';
             trigger($select, ev + '.bs.select');
             trigger($select, 'change.bs.select');
@@ -392,6 +393,19 @@
 
         }
 
+        function isValueEmpty(value) {
+            if (value === null || value === undefined) {
+                return true; // Null or undefined
+            }
+            if (Array.isArray(value)) {
+                return value.length === 0; // Empty array
+            }
+            if (typeof value === 'string') {
+                return value.trim().length === 0; // Empty string (including only spaces)
+            }
+            return false; // All other values are considered non-empty (including numbers)
+        }
+
         /**
          * Initializes a dropdown menu for a select element.
          *
@@ -402,7 +416,7 @@
          */
         function init($select, fireTrigger = false) {
 
-
+            console.log('bsSelect:init ->', $select.val());
             /**
              * @type {JQuery}
              */
@@ -415,10 +429,12 @@
 
             const settings = $select.data('options');
             const multiple = $select.prop('multiple');
+            console.log('bsSelect:init  selectedValue ++++->', $select.val());
 
-            if (!multiple && !$select.find('option[selected]').length)
+            if (!multiple && isValueEmpty($select.val())) {
                 $select.prop("selectedIndex", -1);
-
+            }
+            console.log('bsSelect:init  selectedValue ++++->', $select.val());
             let selectedValue = $select.val();
 
 
@@ -479,54 +495,8 @@
                     .closest('.fixed-table-body')
                     .addClass('overflow-visible');
             }
-            setupDropdown($dropdown, $select, multiple)
-            // add events
-            // $dropdown
-            //     .on('keydown', function (e) {
-            //         // fired when key is not a dropdown command (UP | DOWN | ESCAPE)
-            //         // const target = $(e.target);
-            //         // const isSearchField = target.is('input[type="search"]');
-            //         const $wrap = $(e.currentTarget);
-            //         const $selectElement = $wrap.find('select');
-            //         const settings = $selectElement.data('options');
-            //         if (typeof settings.onKeyDown === 'function') {
-            //             settings.onKeyDown($selectElement, e);
-            //         }
-            //         trigger($selectElement, 'keydown.bs.select', [$selectElement, e]);
-            //     })
-            //     .on('keydown', '[type="search"]', function (e) {
-            //         switch (e.code) {
-            //             case 'Enter':
-            //                 e.preventDefault();
-            //                 const item = getDropDown($select).find('.dropdown-item:visible:first');
-            //                 if (item.length) {
-            //                     item.trigger('click');
-            //                     hide($select);
-            //                 }
-            //                 break;
-            //             default:
-            //             // Space for more keyboard events
-            //         }
-            //     })
-            //     .on('hide.bs.dropdown', function () {
-            //         trigger($select, 'hide.bs.select');
-            //     })
-            //     .on('hidden.bs.dropdown', function () {
-            //         trigger($select, 'hidden.bs.select');
-            //     })
-            //     .on('show.bs.dropdown', function () {
-            //         trigger($select, 'show.bs.select');
-            //     })
-            //     .on('shown.bs.dropdown', function () {
-            //         trigger($select, 'shown.bs.select');
-            //         /**
-            //          * @type {JQuery}
-            //          */
-            //         const searchElement = getDropDown($select).find('[type="search"]');
-            //         if (searchElement.length) {
-            //             searchElement.focus()
-            //         }
-            //     });
+
+            setupDropdown($dropdown, $select, multiple);
 
             /**
              * If the select has been assigned to a label, create a click event to open the select
@@ -664,6 +634,8 @@
                 inOGroup = inOptGroup;
                 i++;
             });
+
+            console.log('bsSelect:init before setSelectValues', $select.val());
 
             setSelectValues($select);
 
@@ -829,15 +801,19 @@
          * @return {undefined}
          */
         function destroy($select, show, clearData = false) {
+            console.log('bsSelect:destroy');
             let val = $select.val();
+            console.log('bsSelect:destroy value before: ', val);
             let $dropdown = getDropDown($select);
             $select.insertBefore($dropdown);
             $select.val(val);
+            console.log('bsSelect:destroy value after: ', $select.val());
             if (clearData) {
                 $select.removeData('options');
             }
             $dropdown.remove();
-            if (show)
+            if (show) {
+
                 $select.css({
                     'position': '',
                     'left': '',
@@ -845,6 +821,7 @@
                     'height': '',
                     'width': ''
                 })
+            }
         }
 
         /**
