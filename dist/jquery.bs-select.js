@@ -280,20 +280,27 @@
                         searchField.val(null).trigger('keyup');
                     }
                 })
-                .on('keyup input', '[type="search"]', function () {
-                    const searchPattern = $(this).val().trim();
-                    const searchElements = $dropdown.find('[data-index]');
-                    if (searchPattern !== '') {
-                        searchElements.each(function (index, value) {
+                .on('keyup input', '[type="search"]', function (e) {
 
+                    const searchField = $(e.currentTarget);
+                    const searchPattern = searchField.val().trim();
+                    console.log('bsSelect:search',searchPattern);
+                    const searchElements = $dropdown.find('[data-index]');
+                    console.log('bsSelect:search elements:',searchElements.length);
+                    if (!isValueEmpty(searchPattern)) {
+                        const search = searchPattern.toUpperCase();
+                        searchElements.each(function (index, value) {
                             let currentName = $(value).text().trim();
-                            if (currentName.toUpperCase().indexOf(searchPattern.toUpperCase()) > -1) {
+                            if (currentName.toUpperCase().indexOf(search) > -1) {
+                                console.log('bsSelect:search elements found:',currentName);
                                 $(value).removeClass('d-none');
                             } else {
+                                console.log('bsSelect:search elements not found:',currentName);
                                 $(value).addClass('d-none');
                             }
                         });
                     } else {
+                        console.log('bsSelect:search is empty');
                         searchElements.removeClass('d-none');
                     }
                 })
