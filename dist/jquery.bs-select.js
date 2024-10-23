@@ -32,7 +32,6 @@
  */
 (function ($) {
         const WRAPPER_CLASS = 'js-bs-select-dropdown';
-
         /**
          * Represents a Bootstrap Select plugin.
          *
@@ -108,7 +107,7 @@
 
 
             if (settings.debug) {
-                console.log('trigger', event, params);
+                // console.log('trigger', event, params);
 
                 if (settings.debugElement !== null) {
                     const log = $('<small>', {
@@ -239,6 +238,154 @@
             // trigger($select, 'change');
         }
 
+        function getBootstrapMajorVersion() {
+            if (typeof $.fn.modal === 'undefined' || typeof $.fn.modal.Constructor === 'undefined') {
+                console.error('Bootstrap Modal Plugin ist nicht verfügbar');
+                return;
+            }
+
+            const bootstrapVersion = $.fn.modal.Constructor.VERSION;
+            // Extrahieren der Hauptversionsnummer
+            return parseInt(bootstrapVersion.split('.')[0]);
+        }
+
+        function setupDropdown($dropdown, selectElement, multiple) {
+            var $dropdownToggle = $dropdown.find('.dropdown-toggle');
+            const autoclose = $dropdownToggle.data('autoClose') || $dropdownToggle.data('bsAutoClose') || "true";
+
+            $dropdown
+                .on('click', '.js-select-select-all', function (e) {
+                    e.preventDefault();
+                    if (onBeforeChange(selectElement)) {
+                        toggleAllItemsState(selectElement, true);
+                    }
+                })
+                .on('click', '.js-select-select-none', function (e) {
+                    e.preventDefault();
+                    if (onBeforeChange(selectElement)) {
+                        toggleAllItemsState(selectElement, false);
+                    }
+                })
+                .on('hidden.bs.dropdown', function () {
+                    // empty search field if exists
+                    let searchField = $(this).find('[type="search"]');
+                    if (searchField.length) {
+                        searchField.val(null).trigger('keyup');
+                    }
+                })
+                .on('keyup input', '[type="search"]', function () {
+                    const searchPattern = $(this).val().trim();
+                    const searchElements = $dropdown.find('[data-index]');
+                    if (searchPattern !== '') {
+                        searchElements.each(function (index, value) {
+
+                            let currentName = $(value).text().trim();
+                            if (currentName.toUpperCase().indexOf(searchPattern.toUpperCase()) > -1) {
+                                $(value).removeClass('d-none');
+                            } else {
+                                $(value).addClass('d-none');
+                            }
+                        });
+                    } else {
+                        searchElements.removeClass('d-none');
+                    }
+                })
+                .on('click', '[data-dismiss="dropdown"], [data-bs-dismiss="dropdown"]', function (e) {
+                    const btn = $(e.currentTarget);
+                    const dd = btn.closest('.' + WRAPPER_CLASS);
+                    dd.find('[data-bs-toggle="dropdown"],[data-toggle="dropdown"]').dropdown('hide');
+                })
+                .on('click', '.dropdown-item', function (e) {
+                    e.preventDefault();
+                    const settings = selectElement.data('options');
+
+                    if (onBeforeChange(selectElement)) {
+
+                        const item = $(e.currentTarget);
+
+                        if (!multiple) {
+                            $dropdown
+                                .find('.dropdown-item.active')
+                                .not(item)
+                                .removeClass('active');
+                        }
+
+                        item.toggleClass('active');
+
+                        const active = $(e.currentTarget).hasClass('active');
+                        const toggleCheckIcon = multiple && settings.showMultipleCheckboxes;
+
+                        if (active) {
+                            if (toggleCheckIcon) {
+                                item.find('.js-icon-checklist').removeClass('bi-square').addClass('bi-check-square');
+                            }
+                            item.find('.dropdown-item-select-icon').show();
+                        } else {
+                            if (toggleCheckIcon) {
+                                item.find('.js-icon-checklist').removeClass('bi-check-square').addClass('bi-square');
+                            }
+                            item.find('.dropdown-item-select-icon').hide();
+                        }
+
+                        setSelectValues(selectElement);
+                        setDropdownTitle(selectElement);
+                        trigger(selectElement, 'change.bs.select');
+
+                        // Bedingung überprüfen und sicherstellen, dass es nicht geschlossen wird wenn:
+                        // Boostrap 4 & autoclose
+                        const BS_V = getBootstrapMajorVersion();
+                        if (BS_V === 4 && (autoclose === "true" || autoclose === "outside")) {
+                            e.stopPropagation();
+                        }
+                    }
+                })
+                .on('keydown', function (e) {
+                    const $wrap = $(e.currentTarget);
+                    const $selectElement = $wrap.find('select');
+                    const settings = $selectElement.data('options');
+                    if (typeof settings.onKeyDown === 'function') {
+                        settings.onKeyDown($selectElement, e);
+                    }
+                    trigger($selectElement, 'keydown.bs.select', [$selectElement, e]);
+                })
+                .on('keydown', '[type="search"]', function (e) {
+                    switch (e.code) {
+                        case 'Enter':
+                            e.preventDefault();
+                            const item = $dropdown.find('.dropdown-item:visible:first');
+                            if (item.length) {
+                                item.trigger('click');
+                                $dropdown.removeClass('show');
+                                $dropdown.find('.dropdown-menu').removeClass('show');
+                            }
+                            break;
+                        default:
+                        // Space for more keyboard events
+                    }
+                })
+                .on('hide.bs.dropdown', function () {
+                    const $select = $dropdown.find('select');
+                    trigger($select, 'hide.bs.select');
+                })
+                .on('hidden.bs.dropdown', function () {
+                    const $select = $dropdown.find('select');
+                    trigger($select, 'hidden.bs.select');
+                })
+                .on('show.bs.dropdown', function () {
+                    const $select = $dropdown.find('select');
+                    trigger($select, 'show.bs.select');
+                })
+                .on('shown.bs.dropdown', function () {
+                    const $select = $dropdown.find('select');
+                    trigger($select, 'shown.bs.select');
+                    const searchElement = $dropdown.find('[type="search"]');
+                    if (searchElement.length) {
+                        searchElement.focus();
+                    }
+                });
+
+        }
+
         /**
          * Initializes a dropdown menu for a select element.
          *
@@ -248,6 +395,8 @@
          * @return {JQuery} - The initialized dropdown menu.
          */
         function init($select, fireTrigger = false) {
+
+
             /**
              * @type {JQuery}
              */
@@ -266,7 +415,6 @@
 
             let selectedValue = $select.val();
 
-            // const hasTheme = $select.data('bsTheme') || $select.closest('[data-bs-theme]').length > 0;
 
             $dropdown = $('<div>', {
                 class: `${WRAPPER_CLASS} position-relative`,
@@ -275,22 +423,19 @@
                 }
             }).insertAfter($select);
 
-            // if (hasTheme){
-            // $dropdown.attr('data-bs-theme', $select.data('bsTheme') || $select.closest('[data-bs-theme]').data('bsTheme'));
-            // }
-
             if (settings.dropDirection !== null) {
                 $dropdown.addClass(settings.dropDirection);
             }
 
             const toggleIconClass = settings.dropIconClass === null ? 'dropdown-toggle' : '';
-            const dropIcon = settings.dropIconClass !== null ? `<i class="ms-2 ${settings.dropIconClass}"></i>` : '';
+            const dropIcon = settings.dropIconClass !== null ? `<i class="ms-2 ml-2 ${settings.dropIconClass}"></i>` : '';
             // add dropdown toggle item
             if (!settings.btnSplit) {
                 $('<button>', {
                     class: `btn ${settings.btnClass} ${toggleIconClass} d-flex align-items-center flex-nowrap js-dropdown-header justify-content-between`,
                     type: 'button',
                     'data-bs-toggle': 'dropdown',
+                    'data-toggle': 'dropdown',
                     'aria-expanded': false,
                     'data-bs-auto-close': multiple ? 'outside' : true,
                     html: `<span class="js-selected-text">${settings.btnEmptyText}</span>${dropIcon}`,
@@ -312,6 +457,7 @@
                 $('<button>', {
                     class: `btn ${settings.btnClass} dropdown-toggle dropdown-toggle-split`,
                     'data-bs-toggle': 'dropdown',
+                    'data-toggle': 'dropdown',
                     'aria-expanded': false,
                     'data-bs-auto-close': multiple ? 'outside' : true
                 }).appendTo($dropdown);
@@ -327,54 +473,54 @@
                     .closest('.fixed-table-body')
                     .addClass('overflow-visible');
             }
-
+            setupDropdown($dropdown, $select, multiple)
             // add events
-            $dropdown
-                .on('keydown', function (e) {
-                    // fired when key is not a dropdown command (UP | DOWN | ESCAPE)
-                    // const target = $(e.target);
-                    // const isSearchField = target.is('input[type="search"]');
-                    const $wrap = $(e.currentTarget);
-                    const $selectElement = $wrap.find('select');
-                    const settings = $selectElement.data('options');
-                    if (typeof settings.onKeyDown === 'function') {
-                        settings.onKeyDown($selectElement, e);
-                    }
-                    trigger($selectElement, 'keydown.bs.select', [$selectElement, e]);
-                })
-                .on('keydown', '[type="search"]', function (e) {
-                    switch (e.code) {
-                        case 'Enter':
-                            e.preventDefault();
-                            const item = getDropDown($select).find('.dropdown-item:visible:first');
-                            if (item.length) {
-                                item.trigger('click');
-                                hide($select);
-                            }
-                            break;
-                        default:
-                        // Space for more keyboard events
-                    }
-                })
-                .on('hide.bs.dropdown', function () {
-                    trigger($select, 'hide.bs.select');
-                })
-                .on('hidden.bs.dropdown', function () {
-                    trigger($select, 'hidden.bs.select');
-                })
-                .on('show.bs.dropdown', function () {
-                    trigger($select, 'show.bs.select');
-                })
-                .on('shown.bs.dropdown', function () {
-                    trigger($select, 'shown.bs.select');
-                    /**
-                     * @type {JQuery}
-                     */
-                    const searchElement = getDropDown($select).find('[type="search"]');
-                    if (searchElement.length) {
-                        searchElement.focus()
-                    }
-                });
+            // $dropdown
+            //     .on('keydown', function (e) {
+            //         // fired when key is not a dropdown command (UP | DOWN | ESCAPE)
+            //         // const target = $(e.target);
+            //         // const isSearchField = target.is('input[type="search"]');
+            //         const $wrap = $(e.currentTarget);
+            //         const $selectElement = $wrap.find('select');
+            //         const settings = $selectElement.data('options');
+            //         if (typeof settings.onKeyDown === 'function') {
+            //             settings.onKeyDown($selectElement, e);
+            //         }
+            //         trigger($selectElement, 'keydown.bs.select', [$selectElement, e]);
+            //     })
+            //     .on('keydown', '[type="search"]', function (e) {
+            //         switch (e.code) {
+            //             case 'Enter':
+            //                 e.preventDefault();
+            //                 const item = getDropDown($select).find('.dropdown-item:visible:first');
+            //                 if (item.length) {
+            //                     item.trigger('click');
+            //                     hide($select);
+            //                 }
+            //                 break;
+            //             default:
+            //             // Space for more keyboard events
+            //         }
+            //     })
+            //     .on('hide.bs.dropdown', function () {
+            //         trigger($select, 'hide.bs.select');
+            //     })
+            //     .on('hidden.bs.dropdown', function () {
+            //         trigger($select, 'hidden.bs.select');
+            //     })
+            //     .on('show.bs.dropdown', function () {
+            //         trigger($select, 'show.bs.select');
+            //     })
+            //     .on('shown.bs.dropdown', function () {
+            //         trigger($select, 'shown.bs.select');
+            //         /**
+            //          * @type {JQuery}
+            //          */
+            //         const searchElement = getDropDown($select).find('[type="search"]');
+            //         if (searchElement.length) {
+            //             searchElement.focus()
+            //         }
+            //     });
 
             /**
              * If the select has been assigned to a label, create a click event to open the select
@@ -402,14 +548,14 @@
             // $select.hide();
 
             const $dropdownMenu = $('<div>', {
-                class: 'dropdown-menu ps-1 ' + settings.menuClass ?? ''
+                class: 'dropdown-menu pl-1 ps-1 ' + settings.menuClass ?? ''
             }).appendTo($dropdown);
 
             let searchInput = '';
             let closeButton = '';
             let actionMenu = '';
             if (true === settings.search) {
-                searchInput = `<input type="search" autocomplete="off" class="form-control form-control-sm me-auto" placeholder="${settings.searchText}">`;
+                searchInput = `<input type="search" autocomplete="off" class="form-control form-control-sm mr-auto me-auto mr-auto" placeholder="${settings.searchText}">`;
             }
 
             if (multiple) {
@@ -484,7 +630,7 @@
                 const showIcon = element.data('icon');
                 const $subtext = showSubtext ? `<small class="text-muted">${element.data('subtext')}</small>` : '';
                 const $icon = showIcon ? `<i class="${element.data('icon')}"></i> ` : '';
-                const paddingLeftClass = inOptGroup || $icon !== '' ? 'ps-2' : '';
+                const paddingLeftClass = inOptGroup || $icon !== '' ? 'ps-2 pl-2' : '';
 
                 let checkElement = '';
                 let checkElementPre = "";
@@ -505,7 +651,7 @@
                 $('<div>', {
                     tabindex: i,
                     class: classList,
-                    html: `<a href="#" class="dropdown-item ${selected} ${disabledClass} px-2 d-flex flex-nowrap align-items-center ${itemClass} " data-index="${i}" style="cursor: pointer;">${checkElement}${$icon}<div class="${paddingLeftClass} d-flex flex-column"><div>${element.text()}</div>${$subtext}</div><div class="dropdown-item-select-icon ps-1 ms-auto ">${checkElementPre}</div></a>`
+                    html: `<a href="#" class="dropdown-item ${selected} ${disabledClass} px-2 d-flex flex-nowrap align-items-center ${itemClass} " data-index="${i}" style="cursor: pointer;">${checkElement}${$icon}<div class="${paddingLeftClass} d-flex flex-column"><div>${element.text()}</div>${$subtext}</div><div class="dropdown-item-select-icon pl-1 ps-1 ml-auto ms-auto ">${checkElementPre}</div></a>`
                 }).appendTo($dropdownMenuInner);
 
 
@@ -527,88 +673,6 @@
                 }).appendTo($dropdownMenuInner);
             }
 
-            $dropdown
-                .on('click', '.js-select-select-all', function (e) {
-                    e.preventDefault();
-                    if (onBeforeChange($select)) {
-                        toggleAllItemsState($select, true);
-                    }
-                })
-                .on('click', '.js-select-select-none', function (e) {
-                    e.preventDefault();
-                    if (onBeforeChange($select)) {
-                        toggleAllItemsState($select, false);
-                    }
-                })
-                .on('hidden.bs.dropdown', function () {
-                    // empty search field if exists
-                    let searchField = $(this).find('[type="search"]');
-                    if (searchField.length) {
-                        searchField.val(null).trigger('keyup');
-                    }
-                })
-                .on('keyup input', '[type="search"]', function () {
-                    const searchPattern = $(this).val().trim();
-                    const searchElements = $dropdown.find('[data-index]');
-                    if (searchPattern !== '') {
-                        searchElements.each(function (index, value) {
-
-                            let currentName = $(value).text().trim();
-                            if (currentName.toUpperCase().indexOf(searchPattern.toUpperCase()) > -1) {
-                                $(value).removeClass('d-none');
-                            } else {
-                                $(value).addClass('d-none');
-                            }
-                        });
-                    } else {
-                        searchElements.removeClass('d-none');
-                    }
-                })
-                .on('click', '[data-bs-dismiss="dropdown"]', function (e) {
-                    const btn = $(e.currentTarget);
-                    const dd = btn.closest('.' + WRAPPER_CLASS);
-                    dd.find('[data-bs-toggle="dropdown"]').dropdown('hide');
-                })
-                .on('click', '.dropdown-item', function (e) {
-                    e.preventDefault();
-                    // const dropdownItem = $(e.currentTarget);
-                    // if (dropdownItem.hasClass('disabled')){
-                    //
-                    //     return false;
-                    // }
-                    if (onBeforeChange($select)) {
-                        const item = $(e.currentTarget);
-
-                        if (!multiple) {
-                            $dropdown
-                                .find('.dropdown-item.active')
-                                .not(item)
-                                .removeClass('active');
-                        }
-
-                        item.toggleClass('active');
-
-                        const active = $(e.currentTarget).hasClass('active');
-                        const toggleCheckIcon = multiple && settings.showMultipleCheckboxes;
-
-                        if (active) {
-                            if (toggleCheckIcon) {
-                                item.find('.js-icon-checklist').removeClass('bi-square').addClass('bi-check-square');
-                            }
-                            item.find('.dropdown-item-select-icon').show();
-                        } else {
-                            if (toggleCheckIcon) {
-                                item.find('.js-icon-checklist').removeClass('bi-check-square').addClass('bi-square');
-                            }
-                            item.find('.dropdown-item-select-icon').hide();
-                        }
-
-                        setSelectValues($select);
-                        setDropdownTitle($select);
-                        trigger($select, 'change.bs.select');
-                    }
-                });
-
             setDropdownTitle($select);
 
             if (fireTrigger) {
@@ -628,7 +692,7 @@
          * @return {string} - The HTML string representing the checklist icon.
          */
         function getCheckListIcon(isSelected) {
-            return isSelected ? `<i class="bi bi-check-square me-2 js-icon-checklist"></i>` : `<i class="bi bi-square me-2 js-icon-checklist"></i>`
+            return isSelected ? `<i class="bi bi-check-square mr-2 me-2 js-icon-checklist"></i>` : `<i class="bi bi-square me-2 mr-2 js-icon-checklist"></i>`
         }
 
         /**
@@ -661,7 +725,7 @@
                             `<i class="${$option.data('icon')}"></i> `
                             : '';
 
-                        title = `<span>${$icon}${$option.text()}</span><small class="text-muted ms-2">${$subtext}</small>`;
+                        title = `<span>${$icon}${$option.text()}</span><small class="text-muted ms-2 ml-2">${$subtext}</small>`;
                         tooltip = $option.text();
                     } else {
                         // Several option was selected
@@ -687,7 +751,7 @@
                                     `<i class="${$option.data('icon')}"></i> `
                                     : '';
 
-                                texts.push(`<div><span>${$icon}${$option.text()}</span><small class="text-muted ms-2">${$subtext}</small></div>`);
+                                texts.push(`<div><span>${$icon}${$option.text()}</span><small class="text-muted ms-2 ml-2">${$subtext}</small></div>`);
                                 tooltips.push($option.text());
                             })
                             title = `<div class="d-flex flex-column">${texts.join('')}</div>`;
@@ -701,7 +765,7 @@
                         title = settings.btnEmptyText;
                     } else {
                         let $subtext = settings.showSubtext && $option.data('subtext') ?
-                            `<small class="text-muted ms-2">${$option.data('subtext')}`
+                            `<small class="text-muted ms-2 ml-2">${$option.data('subtext')}`
                             : '';
                         let $icon = $option.data('icon') ?
                             `<i class="${$option.data('icon')}"></i> `
@@ -907,7 +971,9 @@
             });
         };
 
-        $('[data-bs-toggle="select"]').bsSelect();
+        $(document).ready(function () {
+            $('[data-bs-toggle="select"],[data-toggle="select"]').bsSelect();
+        });
     }
     (jQuery)
 );
