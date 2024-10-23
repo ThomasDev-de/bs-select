@@ -277,6 +277,8 @@
                     // empty search field if exists
                     let searchField = $(this).find('[type="search"]');
                     if (searchField.length) {
+                        const searchElements = $dropdown.find('[data-index]');
+                        searchElements.removeClass('d-none').addClass('d-flex');
                         searchField.val(null).trigger('keyup');
                     }
                 })
@@ -286,6 +288,7 @@
                     const searchPattern = searchField.val().trim();
                     console.log('bsSelect:search',searchPattern);
                     const searchElements = $dropdown.find('[data-index]');
+                    searchElements.removeClass('d-none').addClass('d-flex');
                     console.log('bsSelect:search elements:',searchElements.length);
                     if (!isValueEmpty(searchPattern)) {
                         const search = searchPattern.toUpperCase();
@@ -293,10 +296,10 @@
                             let currentName = $(value).text().trim();
                             if (currentName.toUpperCase().indexOf(search) > -1) {
                                 console.log('bsSelect:search elements found:',currentName);
-                                $(value).removeClass('d-none');
+                                $(value).removeClass('d-none').addClass('d-flex');
                             } else {
                                 console.log('bsSelect:search elements not found:',currentName);
-                                $(value).addClass('d-none');
+                                $(value).addClass('d-none').removeClass('d-flex');
                             }
                         });
                     } else {
