@@ -111,22 +111,17 @@
 </form>
 <script src="../vendor/components/jquery/jquery.min.js"></script>
 <script src="../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+<script  src="../dist/locale/de-DE.min.js"></script>
 <script src="../dist/jquery.bs-select.min.js"></script>
+
 <script>
     $(document).ready(function () {
         (function ($) {
             $.bsSelect.setDefaults({
-                // btnWidth: '300px',
                 dropUpCenter: true,
                 btnClass: 'btn-outline-warning',
-                // btnEmptyText: 'Bitte wählen',
-                // selectAllText: 'Alles wählen',
-                // deselectAllText: 'Nichts auswählen',
                 showSubtext: true,
-                // debugElement: '#debug',
-                // showSelectedText: (count, total) => {
-                //     return `${count} von ${total} ausgewählt`;
-                // }
             });
             const select1 = $('#select1');
             const select2 = $('#select2');

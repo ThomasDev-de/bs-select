@@ -31,6 +31,19 @@
  * events and other enhancements.
  */
 (function ($) {
+
+        const defaultTranslations = {
+            btnEmptyText: "Please select..",
+            deselectAllText: "Deselect All",
+            selectAllText: "Select All",
+            searchText: "Search..",
+            showSelectedText: function (count, total) {
+                return count + ' of ' + total + ' selected';
+            },
+        };
+
+        const translations = window.bsSelectTranslations || defaultTranslations;
+
         const WRAPPER_CLASS = 'js-bs-select-dropdown';
         /**
          * Represents a Bootstrap Select plugin.
@@ -49,7 +62,7 @@
             },
             DEFAULTS: {
                 btnWidth: 'fit-content',
-                btnEmptyText: 'Please select..',
+                btnEmptyText: translations.btnEmptyText,
                 btnSplit: false,
                 dropDirection: null,
                 dropIconClass: 'bi bi-chevron-down',
@@ -65,16 +78,14 @@
                 showMultipleCheckboxes: false,
                 actionMenuBtnClass: 'btn-light',
                 showSelectionAsList: false,
-                showSelectedText: function (count, total) {
-                    return count + ' of ' + total + ' selected';
-                },
-                deselectAllText: 'Deselect All',
-                selectAllText: 'Select All',
+                showSelectedText: translations.showSelectedText,
+                deselectAllText: translations.deselectAllText,
+                selectAllText: translations.selectAllText,
                 checkedIcon: "bi bi-check-lg",
                 debug: false,
                 debugElement: null,
                 menuItemClass: null,
-                searchText: "Search..",
+                searchText: translations.searchText,
                 onBeforeChange: null,
                 onKeyDown: null
             }

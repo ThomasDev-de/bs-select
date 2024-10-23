@@ -1,4 +1,4 @@
-![header](demo/img/headerPicture.png)
+
 `$.fn.bsSelect`
 
 This jQuery plugin converts a simple select element into a bootstrap dropdown element. It offers numerous options,
@@ -16,26 +16,26 @@ It was developed on the basis of jQuery 3.6, Bootstrap 5.3 and Bootstrap icons.
 
 ## Requirements
 
-- bootstrap >=5.3
-- jQuery 3.6 // Only tested with this version
+- bootstrap 4 or 5
+- jQuery
 
 ## Installation
 
 Download and include the script at the end of the body tag.
 
 ```html
-
+<script src="dist/locale/de-DE.min.js" type="text/javascript"><!-- optional -->
 <script src="dist/jquery.bs-select.js" type="text/javascript">
 ```
 
 or install with **composer** and include the script at the end of the body tag.
 
 ```shell
-composer require webcito/bs-select:dev-main
+composer require webcito/bs-select
 ```
 
 ```html
-
+<script src="/vendor/webcito/bs-select/dist/locale/de-DE.min.js" type="text/javascript"> <!-- optional -->
 <script src="/vendor/webcito/bs-select/dist/jquery.bs-select.min.js" type="text/javascript">
 ```
 
@@ -50,7 +50,7 @@ $.bsSelect.getDefaults();
 
 ## Usage
 
-All selects with the attribute `[data-bs-toggle="select"]` are initialized automatically.
+All selects with the attribute `[data-bs-toggle="select"]` or `[data-toggle="select"]` are initialized automatically.
 
 ```html
 <!-- Simple selection -->
