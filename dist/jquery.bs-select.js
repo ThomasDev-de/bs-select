@@ -252,18 +252,24 @@
         function setupDropdown($dropdown, selectElement, multiple) {
             var $dropdownToggle = $dropdown.find('.dropdown-toggle');
             const autoclose = $dropdownToggle.data('autoClose') || $dropdownToggle.data('bsAutoClose') || "true";
-
+            const BS_V = getBootstrapMajorVersion();
             $dropdown
                 .on('click', '.js-select-select-all', function (e) {
                     e.preventDefault();
                     if (onBeforeChange(selectElement)) {
                         toggleAllItemsState(selectElement, true);
+                        if (BS_V === 4 && multiple && (autoclose === "true" || autoclose === "outside")) {
+                            e.stopPropagation();
+                        }
                     }
                 })
                 .on('click', '.js-select-select-none', function (e) {
                     e.preventDefault();
                     if (onBeforeChange(selectElement)) {
                         toggleAllItemsState(selectElement, false);
+                        if (BS_V === 4 && multiple && (autoclose === "true" || autoclose === "outside")) {
+                            e.stopPropagation();
+                        }
                     }
                 })
                 .on('hidden.bs.dropdown', function () {
@@ -331,9 +337,9 @@
                         setDropdownTitle(selectElement);
                         trigger(selectElement, 'change.bs.select');
 
-                        // Bedingung überprüfen und sicherstellen, dass es nicht geschlossen wird wenn:
+                        // Check condition and make sure it is not closed if:
                         // Boostrap 4 & autoclose
-                        const BS_V = getBootstrapMajorVersion();
+
                         if (BS_V === 4 && multiple && (autoclose === "true" || autoclose === "outside")) {
                             e.stopPropagation();
                         }
