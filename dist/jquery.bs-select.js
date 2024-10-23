@@ -334,7 +334,7 @@
                         // Bedingung überprüfen und sicherstellen, dass es nicht geschlossen wird wenn:
                         // Boostrap 4 & autoclose
                         const BS_V = getBootstrapMajorVersion();
-                        if (BS_V === 4 && (autoclose === "true" || autoclose === "outside")) {
+                        if (BS_V === 4 && multiple && (autoclose === "true" || autoclose === "outside")) {
                             e.stopPropagation();
                         }
                     }
