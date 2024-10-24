@@ -1,3 +1,5 @@
+// noinspection JSCheckFunctionSignatures,JSUnresolvedReference
+
 /**
  * This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
@@ -95,7 +97,7 @@
          *
          * Triggers the specified event on the given select element.
          *
-         * @param {jQuery} $select - The select element to trigger the event on.
+         * @param {JQuery} $select - The select element to trigger the event on.
          * @param {string} event - The name of the event to trigger.
          * @param {array} addParams - Additional trigger parameters.
          */
@@ -106,7 +108,7 @@
                 if (addParams.length) {
                     addParams.forEach(p => {
                         params.push(p);
-                    })
+                    });
                 } else {
                     params.push($select.val());
                 }
@@ -136,7 +138,7 @@
 
         /**
          * Fetches the dropdown that is superordinate to the select.
-         * @param {Window.jQuery} $select - The select element.
+         * @param {JQuery} $select - The select element.
          * @returns {JQuery} - The dropdown element.
          */
         function getDropDown($select) {
@@ -172,7 +174,7 @@
         /**
          * Sets the selected values in a dropdown select element.
          *
-         * @param {jQuery} $select - The dropdown select element.
+         * @param {JQuery} $select - The dropdown select element.
          */
         function setSelectValues($select) {
             const settings = $select.data('options');
@@ -265,7 +267,7 @@
         }
 
         function setupDropdown($dropdown, selectElement, multiple) {
-            var $dropdownToggle = $dropdown.find('.dropdown-toggle');
+            const $dropdownToggle = $dropdown.find('.dropdown-toggle');
             const autoclose = $dropdownToggle.data('autoClose') || $dropdownToggle.data('bsAutoClose') || "true";
             const BS_V = getBootstrapMajorVersion();
             $dropdown
@@ -373,7 +375,7 @@
                         setDropdownTitle(selectElement);
                         trigger(selectElement, 'change.bs.select');
 
-                        // Check condition and make sure it is not closed if:
+                        // Check the condition and make sure it is not closed if:
                         // Boostrap 4 & autoclose
 
                         if (BS_V === 4 && multiple && (autoclose === "true" || autoclose === "outside")) {
@@ -444,7 +446,7 @@
         /**
          * Initializes a dropdown menu for a select element.
          *
-         * @param {JQuery} $select - The select element to initialize the dropdown for.
+         * @param {Window.jQuery} $select - The select element to initialize the dropdown for.
          * @param {boolean} fireTrigger - (Optional) Whether or not to fire the trigger event. Default is false.
          *
          * @return {JQuery} - The initialized dropdown menu.
@@ -543,7 +545,7 @@
                     label.on('click', function () {
                         const closestDropDown = getDropDown($(`select[id="${selectId}"]`));
                         closestDropDown.trigger('click');
-                    })
+                    });
                 }
             }
 
@@ -555,8 +557,7 @@
                 'opacity': '0',
                 'height': '0',
                 'width': '0'
-            })
-            // $select.hide();
+            });
 
             const $dropdownMenu = $('<div>', {
                 class: 'dropdown-menu pl-1 ps-1 ' + settings.menuClass ?? ''
@@ -613,7 +614,7 @@
                     $('<h6>', {
                         class: `dropdown-header text-start my-0 w-100 rounded-0 py-1 ${settings.menuHeaderClass}`,
                         text: element.attr('label')
-                    }).appendTo($dropdownMenuInner)
+                    }).appendTo($dropdownMenuInner);
                     return;
                 }
                 // I am an option element
@@ -690,8 +691,7 @@
                 setTimeout(function () {
                     trigger($select, 'init.bs.select');
                     $dropdown.show();
-                }, 0)
-
+                }, 0);
             }
             return $dropdown;
         }
@@ -703,13 +703,13 @@
          * @return {string} - The HTML string representing the checklist icon.
          */
         function getCheckListIcon(isSelected) {
-            return isSelected ? `<i class="bi bi-check-square mr-2 me-2 js-icon-checklist"></i>` : `<i class="bi bi-square me-2 mr-2 js-icon-checklist"></i>`
+            return isSelected ? `<i class="bi bi-check-square mr-2 me-2 js-icon-checklist"></i>` : `<i class="bi bi-square me-2 mr-2 js-icon-checklist"></i>`;
         }
 
         /**
          * Sets the dropdown title based on the selected values in the given select element.
          *
-         * @param {jQuery} $select - The select element.
+         * @param {JQuery} $select - The select element.
          */
         function setDropdownTitle($select) {
             const settings = $select.data('options');
@@ -764,7 +764,7 @@
 
                                 texts.push(`<div><span>${$icon}${$option.text()}</span><small class="text-muted ms-2 ml-2">${$subtext}</small></div>`);
                                 tooltips.push($option.text());
-                            })
+                            });
                             title = `<div class="d-flex flex-column">${texts.join('')}</div>`;
                             tooltip += tooltips.join(',');
                         }
@@ -860,7 +860,7 @@
                     'opacity': '',
                     'height': '',
                     'width': ''
-                })
+                });
             }
         }
 
@@ -994,7 +994,7 @@
             });
         };
 
-        $(document).ready(function () {
+        document.addEventListener("DOMContentLoaded", () => {
             $('[data-bs-toggle="select"],[data-toggle="select"]').bsSelect();
         });
     }

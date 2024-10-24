@@ -1,0 +1,16 @@
+{
+  "esversion": 11,
+  "node": true,
+  "browser": true,
+  "curly": true,
+  "undef": true,
+  "unused": true,
+  "sub": true,
+  "expr": true,
+  "moz": true,
+  "globals": {
+    "jQuery": true,
+    "$": true,
+    "bootstrap": true
+  }
+}
