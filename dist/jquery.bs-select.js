@@ -967,7 +967,7 @@
                                 }
                             }
                             if (typeof param === 'function') {
-                                param(result);
+                                param(result, value);
                             }
                         }
                             break;
@@ -1005,6 +1005,11 @@
                             break;
                         case 'updateOptions': {
                             $select.data('options', $.extend({}, $.bsSelect.DEFAULTS, $select.data('options'), param || {}));
+                            refresh($select);
+                            trigger($select, 'update.bs.select');
+                        }
+                        case 'setBtnClass': {
+                            $select.data('options', $.extend({}, $.bsSelect.DEFAULTS, $select.data('options'),  {btnClass: param}));
                             refresh($select);
                             trigger($select, 'update.bs.select');
                         }

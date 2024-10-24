@@ -157,6 +157,11 @@
             }
 
             select1.bsSelect();
+            select1.on('change.bs.select', function (e) {
+                select1.bsSelect('getSelectedText', function(text){
+                    console.log('getSelectedText:', text);
+                })
+            })
 
 
             select1.bsSelect('val', 1);

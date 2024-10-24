@@ -1,4 +1,3 @@
-
 `$.fn.bsSelect`
 
 This jQuery plugin converts a simple select element into a bootstrap dropdown element. It offers numerous options,
@@ -24,6 +23,7 @@ It was developed on the basis of jQuery 3.6, Bootstrap 5.3 and Bootstrap icons.
 Download and include the script at the end of the body tag.
 
 ```html
+
 <script src="dist/locale/de-DE.min.js" type="text/javascript"><!-- optional -->
 <script src="dist/jquery.bs-select.js" type="text/javascript">
 ```
@@ -35,6 +35,7 @@ composer require webcito/bs-select
 ```
 
 ```html
+
 <script src="/vendor/webcito/bs-select/dist/locale/de-DE.min.js" type="text/javascript"> <!-- optional -->
 <script src="/vendor/webcito/bs-select/dist/jquery.bs-select.min.js" type="text/javascript">
 ```
@@ -134,16 +135,18 @@ Methods are called as follows
 $('select').bsSelect('method', param);
 ```
 
-| method            | example                                                                       | description                                                                                                               |
-|-------------------|-------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
-| `'show'`          | `$('select').bsSelect('show');`                                               | Opens the dropdown                                                                                                        |
-| `'hide'`          | `$('select').bsSelect('hide');`                                               | Closes the dropdown                                                                                                       | 
-| `'val'`           | `$('select').bsSelect('val', 1);`                                             | Changes the value of the select                                                                                           | 
-| `'selectAll'`     | `$('select').bsSelect('selectAll');`                                          | Selects all values                                                                                                        | 
-| `'selectNone'`    | `$('select').bsSelect('selectNone');`                                         | deselects all values                                                                                                      | 
-| `'updateOptions'` | `$('select').bsSelect('updateOptions', {buttonClass: 'btn btn-danger',...});` | Changes the options of the dropdown.                                                                                      |
-| `'refresh'`       | `$('select').bsSelect('refresh');`                                            | Rebuild the dropdown. This is useful if the options are changed via Javascript.                                           |
-| `'destroy'`       | `$('select').bsSelect('destroy'[, true]);`                                    | Deletes the dropdown and restores the original select. If parameter is passed true, all data is removed from the element. |
+| method              | example                                                                       | description                                                                                                               |
+|---------------------|-------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
+| `'show'`            | `$('select').bsSelect('show');`                                               | Opens the dropdown                                                                                                        |
+| `'hide'`            | `$('select').bsSelect('hide');`                                               | Closes the dropdown                                                                                                       | 
+| `'val'`             | `$('select').bsSelect('val', 1);`                                             | Changes the value of the select                                                                                           | 
+| `'selectAll'`       | `$('select').bsSelect('selectAll');`                                          | Selects all values                                                                                                        | 
+| `'selectNone'`      | `$('select').bsSelect('selectNone');`                                         | deselects all values                                                                                                      | 
+| `'updateOptions'`   | `$('select').bsSelect('updateOptions', {buttonClass: 'btn btn-danger',...});` | Changes the settings of the dropdown.                                                                                     |
+| `'setBtnClass'`     | `$('select').bsSelect('setBtnClass', 'btn btn-danger');`                      | Behaves like `updateOptions`. The btnClass option is overwritten.                                                         |
+| `'refresh'`         | `$('select').bsSelect('refresh');`                                            | Rebuild the dropdown. This is useful if the options are changed via Javascript.                                           |
+| `'getSelectedText'` | `$('select').bsSelect('getSelectedText', (text, value) => {});`               | Retrieves the text based on the selections of the select                                                                  |
+| `'destroy'`         | `$('select').bsSelect('destroy'[, true]);`                                    | Deletes the dropdown and restores the original select. If parameter is passed true, all data is removed from the element. |
 
 ## Events
 
@@ -158,7 +161,7 @@ $('select').bsSelect('method', param);
 | change.bs.select       | Fires when the method `val` has been called.                                                        |
 | acceptChange.bs.select | If the function onBeforeChange returns true, this event is fired.                                   |
 | cancelChange.bs.select | If the function onBeforeChange returns false, this event is fired.                                  |
-| update.bs.select       | Fires when the method `updateOptions` was called.                                                   |
+| update.bs.select       | Fires when the method `updateOptions` or `setBtnClass` was called.                                  |
 | destroy.bs.select      | Fires when the `destroy` method has been activated.                                                 |
 | selectAll.bs.select    | Fires when the select all option has been pressed.                                                  |
 | selectNone.bs.select   | Fires when the select none option has been pressed.                                                 |
