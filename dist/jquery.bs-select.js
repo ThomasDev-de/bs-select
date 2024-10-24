@@ -1008,6 +1008,7 @@
                             refresh($select);
                             trigger($select, 'update.bs.select');
                         }
+                        break;
                         case 'setBtnClass': {
                             $select.data('options', $.extend({}, $.bsSelect.DEFAULTS, $select.data('options'),  {btnClass: param}));
                             refresh($select);
