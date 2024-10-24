@@ -193,6 +193,9 @@
                     // }
                 };
                 select4.bsSelect('updateOptions', newOptions)
+                select4.bsSelect('getSelectedText', function(text){
+                    console.log(text);
+                })
             });
 
             $('#btnInit').on('click', function (e) {

@@ -942,8 +942,34 @@
 
                 init($select, true);
 
+
+
                 if (callFunction) {
+
                     switch (options) {
+                        case 'getSelectedText': {
+                            let result; // Variable zum Speichern des Ergebnisses
+                            const value = $select.val();
+                            if (isValueEmpty(value)){
+                                result = "";
+                            }else {
+                                if (typeof value === 'string') {
+                                    result = $select.find('[value="' + value + '"]').text();
+                                }
+                                if (Array.isArray(value)) {
+                                    const texts = [];
+                                    value.forEach(val => {
+                                        texts.push($select.find('[value="' + val + '"]').text());
+                                    })
+                                    result = texts.join(', ');
+                                } else {
+                                    result = '';
+                                }
+                            }
+                            if (typeof param === 'function'){
+                                param(result);
+                            }
+                        } break;
                         case 'selectAll': {
                             if (onBeforeChange($select)) {
                                 toggleAllItemsState($select, true);
