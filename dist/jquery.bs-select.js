@@ -118,7 +118,7 @@
 
 
             if (settings.debug) {
-                // console.log('trigger', event, params);
+                console.log('trigger', event, params);
 
                 if (settings.debugElement !== null) {
                     const log = $('<small>', {
@@ -175,7 +175,10 @@
          * @param {jQuery} $select - The dropdown select element.
          */
         function setSelectValues($select) {
-            console.log('bsSelect:setSelectValues', $select.val());
+            const settings = $select.data('options');
+            if (settings.debug) {
+                console.log('bsSelect:setSelectValues', $select.val());
+            }
             /**
              * @type {JQuery}
              */
@@ -294,27 +297,38 @@
                     }
                 })
                 .on('keyup input', '[type="search"]', function (e) {
+                    const settings = selectElement.data('options');
 
                     const searchField = $(e.currentTarget);
                     const searchPattern = searchField.val().trim();
-                    console.log('bsSelect:search',searchPattern);
+                    if (settings.debug) {
+                        console.log('bsSelect:search', searchPattern);
+                    }
                     const searchElements = $dropdown.find('[data-index]');
                     searchElements.removeClass('d-none').addClass('d-flex');
-                    console.log('bsSelect:search elements:',searchElements.length);
+                    if (settings.debug) {
+                        console.log('bsSelect:search elements:', searchElements.length);
+                    }
                     if (!isValueEmpty(searchPattern)) {
                         const search = searchPattern.toUpperCase();
                         searchElements.each(function (index, value) {
                             let currentName = $(value).text().trim();
                             if (currentName.toUpperCase().indexOf(search) > -1) {
-                                console.log('bsSelect:search elements found:',currentName);
+                                if (settings.debug) {
+                                    console.log('bsSelect:search elements found:', currentName);
+                                }
                                 $(value).removeClass('d-none').addClass('d-flex');
                             } else {
-                                console.log('bsSelect:search elements not found:',currentName);
+                                if (settings.debug) {
+                                    console.log('bsSelect:search elements not found:', currentName);
+                                }
                                 $(value).addClass('d-none').removeClass('d-flex');
                             }
                         });
                     } else {
-                        console.log('bsSelect:search is empty');
+                        if (settings.debug) {
+                            console.log('bsSelect:search is empty');
+                        }
                         searchElements.removeClass('d-none');
                     }
                 })
@@ -436,8 +450,12 @@
          * @return {JQuery} - The initialized dropdown menu.
          */
         function init($select, fireTrigger = false) {
+            const settings = $select.data('options');
+            const multiple = $select.prop('multiple');
 
-            console.log('bsSelect:init ->', $select.val());
+            if (settings.debug) {
+                console.log('bsSelect:init with value:', $select.val());
+            }
             /**
              * @type {JQuery}
              */
@@ -448,14 +466,10 @@
                 return $dropdown;
             }
 
-            const settings = $select.data('options');
-            const multiple = $select.prop('multiple');
-            console.log('bsSelect:init  selectedValue ++++->', $select.val());
-
             if (!multiple && isValueEmpty($select.val())) {
                 $select.prop("selectedIndex", -1);
             }
-            console.log('bsSelect:init  selectedValue ++++->', $select.val());
+
             let selectedValue = $select.val();
 
 
@@ -656,8 +670,6 @@
                 i++;
             });
 
-            console.log('bsSelect:init before setSelectValues', $select.val());
-
             setSelectValues($select);
 
             if (settings.menuAppendHtml !== null) {
@@ -822,13 +834,20 @@
          * @return {undefined}
          */
         function destroy($select, show, clearData = false) {
-            console.log('bsSelect:destroy');
+            const settings = $select.data('options');
+            if (settings.debug) {
+                console.log('bsSelect:destroy');
+            }
             let val = $select.val();
-            console.log('bsSelect:destroy value before: ', val);
+            if (settings.debug) {
+                console.log('bsSelect:destroy value before: ', val);
+            }
             let $dropdown = getDropDown($select);
             $select.insertBefore($dropdown);
             $select.val(val);
-            console.log('bsSelect:destroy value after: ', $select.val());
+            if (settings.debug) {
+                console.log('bsSelect:destroy value after: ', $select.val());
+            }
             if (clearData) {
                 $select.removeData('options');
             }
