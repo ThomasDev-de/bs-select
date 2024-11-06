@@ -307,7 +307,11 @@
                         console.log('bsSelect:search', searchPattern);
                     }
                     const searchElements = $dropdown.find('[data-index]');
+                    const dropdownHeaders = $dropdown.find('.dropdown-header'); // Elemente für dropdown-header
+
                     searchElements.removeClass('d-none').addClass('d-flex');
+                    dropdownHeaders.removeClass('d-none'); // Setzt dropdown-header auf sichtbar
+
                     if (settings.debug) {
                         console.log('bsSelect:search elements:', searchElements.length);
                     }
@@ -327,11 +331,15 @@
                                 $(value).addClass('d-none').removeClass('d-flex');
                             }
                         });
+
+                        // Blendet dropavio-header aus, wenn ein Suchstring vorhanden ist
+                        dropdownHeaders.addClass('d-none');
                     } else {
                         if (settings.debug) {
                             console.log('bsSelect:search is empty');
                         }
                         searchElements.removeClass('d-none');
+                        dropdownHeaders.removeClass('d-none'); // Zeigt dropdown-header an, wenn kein Suchstring vorhanden ist
                     }
                 })
                 .on('click', '[data-dismiss="dropdown"], [data-bs-dismiss="dropdown"]', function (e) {
