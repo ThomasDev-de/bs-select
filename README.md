@@ -147,6 +147,8 @@ $('select').bsSelect('method', param);
 | `'refresh'`         | `$('select').bsSelect('refresh');`                                            | Rebuild the dropdown. This is useful if the options are changed via Javascript.                                           |
 | `'getSelectedText'` | `$('select').bsSelect('getSelectedText', (text, value) => {});`               | Retrieves the text based on the selections of the select                                                                  |
 | `'destroy'`         | `$('select').bsSelect('destroy'[, true]);`                                    | Deletes the dropdown and restores the original select. If parameter is passed true, all data is removed from the element. |
+| `'toggleDisabled'`  | `$('select').bsSelect('toggleDisabled');`                                     | Toggles the status of the dropdown button                                                                                 |
+| `'setDisabled'`     | `$('select').bsSelect('setDisabled', true);`                                  | Set the dropdown disabled (true) otherwise enabled (false)                                                                |
 
 ## Events
 

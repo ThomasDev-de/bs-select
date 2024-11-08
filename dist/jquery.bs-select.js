@@ -885,6 +885,43 @@
         }
 
         /**
+         * Toggles the disabled state of a dropdown button associated with the provided select element.
+         *
+         * @param {jQuery} $select - The jQuery object representing the select element.
+         * @return {void}
+         */
+        function toggleDisabled($select) {
+            const dropDown = getDropDown($select);
+            const btn = dropDown.find('[data-bs-toggle="dropdown"],[data-toggle="dropdown"]');
+            if (btn.hasClass('disabled')) {
+                btn.removeClass('disabled');
+            }
+            else{
+                btn.addClass('disabled');
+            }
+        }
+
+
+        /**
+         * Sets the disabled status of a dropdown menu.
+         *
+         * @param {jQuery} $select - The jQuery object representing the dropdown selector.
+         * @param {boolean} status - A boolean indicating whether to disable (true) or enable (false) the dropdown.
+         * @return {void} This function does not return a value.
+         */
+        function setDisabled($select, status) {
+            const dropDown = getDropDown($select);
+            const btn = dropDown.find('[data-bs-toggle="dropdown"],[data-toggle="dropdown"]');
+            if (status) {
+                btn.addClass('disabled');
+            }
+            else{
+                btn.removeClass('disabled');
+            }
+        }
+
+
+        /**
          * Executes the onBeforeChange function provided in the settings object.
          * If the function exists and returns true, triggers the 'acceptChange.bs.select' event.
          * If the function exists and returns false, triggers the 'cancelChange.bs.select' event.
@@ -1021,6 +1058,14 @@
                             $select.data('options', $.extend({}, $.bsSelect.DEFAULTS, $select.data('options'),  {btnClass: param}));
                             refresh($select);
                             trigger($select, 'update.bs.select');
+                        }
+                            break;
+                        case 'toggleDisabled': {
+                           toggleDisabled($select);
+                        }
+                            break;
+                        case 'setDisabled': {
+                           setDisabled($select, param);
                         }
                             break;
                         case 'refresh': {
