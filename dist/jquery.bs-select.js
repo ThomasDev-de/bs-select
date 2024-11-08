@@ -417,14 +417,19 @@
                 })
                 .on('hide.bs.dropdown', function () {
                     const $select = $dropdown.find('select');
-                    trigger($select, 'hide.bs.select');
+                    const valueBefore = $select.data('valueBefore');
+                    const currentValue = $select.val();
+                    const valueChanged = hasValueChanged(valueBefore, currentValue);
+                    trigger($select, 'hide.bs.select', [valueChanged]);
                 })
                 .on('hidden.bs.dropdown', function () {
                     const $select = $dropdown.find('select');
+                    $select.removeData('valueBefore');
                     trigger($select, 'hidden.bs.select');
                 })
                 .on('show.bs.dropdown', function () {
                     const $select = $dropdown.find('select');
+                    $select.data('valueBefore', $select.val());
                     trigger($select, 'show.bs.select');
                 })
                 .on('shown.bs.dropdown', function () {
@@ -436,6 +441,39 @@
                     }
                 });
 
+        }
+
+        function arraysEqual(arr1, arr2) {
+            if (arr1.length !== arr2.length) {
+                return false;
+            }
+
+            const sortedArr1 = [...arr1].sort();
+            const sortedArr2 = [...arr2].sort();
+
+            for (let i = 0; i < sortedArr1.length; i++) {
+                if (sortedArr1[i] !== sortedArr2[i]) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        function hasValueChanged(valueBefore, currentValue) {
+            // Prüfen, ob sich der Wert geändert hat
+            if (Array.isArray(valueBefore) && Array.isArray(currentValue)) {
+                // Vergleichen von Arrays
+                return !arraysEqual(valueBefore, currentValue);
+            }
+
+            if (typeof valueBefore === 'object' && typeof currentValue === 'object') {
+                // Vergleichen von Objekten (inklusive null)
+                return JSON.stringify(valueBefore) !== JSON.stringify(currentValue);
+            }
+
+            // Vergleichen von primitiven Typen (int, string, float, null)
+            return valueBefore !== currentValue;
         }
 
         function isValueEmpty(value) {
