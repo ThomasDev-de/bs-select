@@ -152,20 +152,21 @@ $('select').bsSelect('method', param);
 
 ## Events
 
-| event type             | Description                                                                                         |
-|------------------------|-----------------------------------------------------------------------------------------------------|
-| init.bs.select         | Fires when the plugin has been initialised.                                                         |
-| hide.bs.select         | Fires immediately when the hide instance method has been called.                                    |
-| hidden.bs.select       | Fired when the dropdown has finished being hidden from the user and CSS transitions have completed. |
-| show.bs.select         | Fires immediately when the show instance method is called.                                          |
-| shown.bs.select        | Fired when the dropdown has been made visible to the user and CSS transitions have completed.       |
-| refresh.bs.select      | Fires when the `refresh` method has been invoked.                                                   |
-| change.bs.select       | Fires when the method `val` has been called.                                                        |
-| acceptChange.bs.select | If the function onBeforeChange returns true, this event is fired.                                   |
-| cancelChange.bs.select | If the function onBeforeChange returns false, this event is fired.                                  |
-| update.bs.select       | Fires when the method `updateOptions` or `setBtnClass` was called.                                  |
-| destroy.bs.select      | Fires when the `destroy` method has been activated.                                                 |
-| selectAll.bs.select    | Fires when the select all option has been pressed.                                                  |
-| selectNone.bs.select   | Fires when the select none option has been pressed.                                                 |
-| any.bs.select          | Fires at every event.                                                                               |
-| keydown.bs.select      | Fires when the pressed key is not a dropdown command (arrowUp,arrowDown,ESCAPE)                     |
+| event type               | Description                                                                                            |
+|--------------------------|--------------------------------------------------------------------------------------------------------|
+| init.bs.select           | Fires when the plugin has been initialised.                                                            |
+| hide.bs.select           | Fires immediately when the hide instance method has been called.                                       |
+| hidden.bs.select         | Fired when the dropdown has finished being hidden from the user and CSS transitions have completed.    |
+| show.bs.select           | Fires immediately when the show instance method is called.                                             |
+| shown.bs.select          | Fired when the dropdown has been made visible to the user and CSS transitions have completed.          |
+| refresh.bs.select        | Fires when the `refresh` method has been invoked.                                                      |
+| change.bs.select         | Fires when the method `val` has been called.                                                           |
+| acceptChange.bs.select   | If the function onBeforeChange returns true, this event is fired.                                      |
+| cancelChange.bs.select   | If the function onBeforeChange returns false, this event is fired.                                     |
+| update.bs.select         | Fires when the method `updateOptions` or `setBtnClass` was called.                                     |
+| destroy.bs.select        | Fires when the `destroy` method has been activated.                                                    |
+| selectAll.bs.select      | Fires when the select all option has been pressed.                                                     |
+| selectNone.bs.select     | Fires when the select none option has been pressed.                                                    |
+| any.bs.select            | Fires at every event.                                                                                  |
+| keydown.bs.select        | Fires when the pressed key is not a dropdown command (arrowUp,arrowDown,ESCAPE)                        |
+| toggleDisabled.bs.select | Fires when the disable status changes. Returns the new status as a parameter. fn(e, (boolean)status){} |

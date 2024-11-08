@@ -894,10 +894,10 @@
             const dropDown = getDropDown($select);
             const btn = dropDown.find('[data-bs-toggle="dropdown"],[data-toggle="dropdown"]');
             if (btn.hasClass('disabled')) {
-                btn.removeClass('disabled');
+                setDisabled($select, false);
             }
             else{
-                btn.addClass('disabled');
+                setDisabled($select, true);
             }
         }
 
@@ -918,6 +918,7 @@
             else{
                 btn.removeClass('disabled');
             }
+            trigger($select, 'toggleDisabled.bs.select', [status]);
         }
 
 
