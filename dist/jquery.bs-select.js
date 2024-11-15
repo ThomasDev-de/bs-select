@@ -1119,6 +1119,13 @@
                             }
                         }
                             break;
+                        case 'clear': {
+                                $select.val(null);
+                                $select.find('option,optgroup').remove();
+                                refresh($select);
+                                trigger($select, 'clear.bs.select');
+                        }
+                            break;
                         case 'selectLast': {
                             if (onBeforeChange($select)) {
                                 $select.val(null);

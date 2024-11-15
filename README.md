@@ -144,6 +144,7 @@ $('select').bsSelect('method', param);
 | `'selectFirst'`     | `$('select').bsSelect('selectFirst');`                                        | Selects the first option element                                                                                          | 
 | `'selectLast'`      | `$('select').bsSelect('selectLast');`                                         | Selects the last option element                                                                                           | 
 | `'selectNone'`      | `$('select').bsSelect('selectNone');`                                         | deselects all values                                                                                                      | 
+| `'clear'`           | `$('select').bsSelect('clear');`                                              | Empties the Select                                                                                                        | 
 | `'updateOptions'`   | `$('select').bsSelect('updateOptions', {buttonClass: 'btn btn-danger',...});` | Changes the settings of the dropdown.                                                                                     |
 | `'setBtnClass'`     | `$('select').bsSelect('setBtnClass', 'btn btn-danger');`                      | Behaves like `updateOptions`. The btnClass option is overwritten.                                                         |
 | `'refresh'`         | `$('select').bsSelect('refresh');`                                            | Rebuild the dropdown. This is useful if the options are changed via Javascript.                                           |
@@ -163,6 +164,7 @@ $('select').bsSelect('method', param);
 | shown.bs.select          | Fired when the dropdown has been made visible to the user and CSS transitions have completed.                                    |
 | refresh.bs.select        | Fires when the `refresh` method has been invoked.                                                                                |
 | change.bs.select         | Fires when the method `val` has been called. Additional parameters are [valueBefore, valueAfter]                                 |
+| clear.bs.select          | Fires when the `clear` method has been called.                                                                                   |
 | acceptChange.bs.select   | If the function onBeforeChange returns true, this event is fired.                                                                |
 | cancelChange.bs.select   | If the function onBeforeChange returns false, this event is fired.                                                               |
 | update.bs.select         | Fires when the method `updateOptions` or `setBtnClass` was called.                                                               |
