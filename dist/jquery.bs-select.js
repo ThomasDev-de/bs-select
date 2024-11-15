@@ -580,13 +580,13 @@
             // add dropdown toggle item
             if (!settings.btnSplit) {
                 $('<button>', {
-                    class: `btn ${settings.btnClass} ${toggleIconClass} d-flex align-items-center flex-nowrap js-dropdown-header justify-content-between`,
+                    class: `btn ${settings.btnClass} ${toggleIconClass} d-flex flex-nowrap align-items-start flex-nowrap js-dropdown-header justify-content-between`,
                     type: 'button',
                     'data-bs-toggle': 'dropdown',
                     'data-toggle': 'dropdown',
                     'aria-expanded': false,
                     'data-bs-auto-close': multiple ? 'outside' : true,
-                    html: `<span class="js-selected-text">${settings.btnEmptyText}</span>${dropIcon}`,
+                    html: `<span class="js-selected-text text-truncate text-nowrap d-inline-block">${settings.btnEmptyText}</span>${dropIcon}`,
                     css: {
                         width: settings.btnWidth
                     }
@@ -594,9 +594,9 @@
             } else {
                 $dropdown.addClass('btn-group');
                 $('<button>', {
-                    class: `btn ${settings.btnClass} d-flex align-items-center js-dropdown-header justify-content-between`,
+                    class: `btn ${settings.btnClass} d-flex flex-nowrap align-items-start js-dropdown-header justify-content-between`,
                     type: 'button',
-                    html: `<span class="js-selected-text">${settings.btnEmptyText}</span>`,
+                    html: `<span class="js-selected-text d-inline-block text-truncate text-nowrap">${settings.btnEmptyText}</span>`,
                     css: {
                         width: settings.btnWidth
                     }
