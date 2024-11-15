@@ -1004,7 +1004,6 @@
             trigger($select, 'toggleDisabled.bs.select', [status]);
         }
 
-
         /**
          * Executes the onBeforeChange function provided in the settings object.
          * If the function exists and returns true, triggers the 'acceptChange.bs.select' event.
