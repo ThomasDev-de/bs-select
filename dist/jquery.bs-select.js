@@ -1111,6 +1111,22 @@
                             }
                         }
                             break;
+                        case 'selectFirst': {
+                            if (onBeforeChange($select)) {
+                                $select.val(null);
+                                $select.find('option').first().attr('selected', true);
+                                val($select);
+                            }
+                        }
+                            break;
+                        case 'selectLast': {
+                            if (onBeforeChange($select)) {
+                                $select.val(null);
+                                $select.find('option').last().attr('selected', true);
+                                val($select);
+                            }
+                        }
+                            break;
                         case 'hide': {
                             hide($select);
                         }
