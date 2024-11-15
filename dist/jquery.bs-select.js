@@ -172,40 +172,61 @@
         }
 
         /**
-         * Sets the selected values in a dropdown select element.
+         * Retrieves selected values from a dropdown associated with a given select element.
          *
-         * @param {JQuery} $select - The dropdown select element.
+         * @param {jQuery} $select - The jQuery object representing the select element.
+         * @return {Array|string|null} An array of selected values if the select allows multiple selections,
+         *                             a single value if the select allows only one selection,
+         *                             or null if no value is selected.
          */
-        function setSelectValues($select) {
-            const settings = $select.data('options');
-            if (settings.debug) {
-                console.log('bsSelect:setSelectValues', $select.val());
-            }
-            /**
-             * @type {JQuery}
-             */
+        function getSelectedValuesFromDropdown($select){
+            // Retrieve the dropdown element related to the given select element
             const $dropdown = getDropDown($select);
+            // Check if the select element allows multiple selections
             const multiple = $select.prop('multiple');
+            // Initialize an array to store selected values
             let values = [];
-
+            // Hide the selection icon for all dropdown items that are not active
             $dropdown.find('.dropdown-item:not(.active)').find('.dropdown-item-select-icon').hide();
-
+            // Iterate over all active dropdown items
             $dropdown.find('.dropdown-item.active').each(function (i, element) {
+                // Get the value of the corresponding option element in the select element based on the data-index attribute of the dropdown item
                 let val = $select.find('option:eq(' + $(element).data('index') + ')').prop('value');
+                // If the value is not false, add it to the values array and show the selection icon
                 if (val !== false) {
                     values.push(val);
                     $(element).find('.dropdown-item-select-icon').show();
                 }
             });
 
-            // update select
+            // Return the appropriate value based on the select element's multiple attribute
             if (multiple) {
-                $select.val(values);
-            } else if (values.length) {
-                $select.val(values[0]);
+                // If the select element allows multiple selections, return the array of selected values
+                return values;
+            } else if (!isValueEmpty(values)) {
+                // If there is at least one selected value, return the first one
+                return values[0];
             } else {
-                $select.val(null);
+                // If no values are selected, return null
+                return null;
             }
+        }
+
+        /**
+         * Sets the values of a select element based on its data options.
+         *
+         * @param {jQuery} $select - The jQuery object representing the select element.
+         * @return {void}
+         */
+        function setSelectValues($select) {
+            const settings = $select.data('options');
+            if (settings.debug) {
+                console.log('bsSelect:setSelectValues', $select.val());
+            }
+
+            const multiple = $select.prop('multiple');
+            let values = getSelectedValuesFromDropdown($select);
+            $select.val(values);
         }
 
         /**
@@ -218,6 +239,7 @@
          */
         function toggleAllItemsState($select, state = false) {
             const dropdown = getDropDown($select);
+            const beforeValues = $select.val();
             const options = $select.find('option');
             const settings = $select.data('options');
             const multiple = false !== $select.prop('multiple');
@@ -251,7 +273,8 @@
 
             const ev = state ? 'selectAll' : 'selectNone';
             trigger($select, ev + '.bs.select');
-            trigger($select, 'change.bs.select');
+            const afterValues = getSelectedValuesFromDropdown($select);
+            trigger($select, 'change.bs.select', [beforeValues, afterValues]);
             // trigger($select, 'change');
         }
 
@@ -350,6 +373,8 @@
                 .on('click', '.dropdown-item', function (e) {
                     e.preventDefault();
                     const settings = selectElement.data('options');
+                    const active = $(e.currentTarget).hasClass('active');
+                    const beforeValues = selectElement.val();
 
                     if (onBeforeChange(selectElement)) {
 
@@ -364,24 +389,32 @@
 
                         item.toggleClass('active');
 
-                        const active = $(e.currentTarget).hasClass('active');
                         const toggleCheckIcon = multiple && settings.showMultipleCheckboxes;
 
                         if (active) {
                             if (toggleCheckIcon) {
-                                item.find('.js-icon-checklist').removeClass('bi-square').addClass('bi-check-square');
+                                item
+                                    .find('.js-icon-checklist')
+                                    .removeClass('bi-square')
+                                    .addClass('bi-check-square');
                             }
+
                             item.find('.dropdown-item-select-icon').show();
                         } else {
                             if (toggleCheckIcon) {
-                                item.find('.js-icon-checklist').removeClass('bi-check-square').addClass('bi-square');
+                                item
+                                    .find('.js-icon-checklist')
+                                    .removeClass('bi-check-square')
+                                    .addClass('bi-square');
                             }
+
                             item.find('.dropdown-item-select-icon').hide();
                         }
 
                         setSelectValues(selectElement);
+                        const afterValues = getSelectedValuesFromDropdown(selectElement);
                         setDropdownTitle(selectElement);
-                        trigger(selectElement, 'change.bs.select');
+                        trigger(selectElement, 'change.bs.select', [beforeValues, afterValues]);
 
                         // Check the condition and make sure it is not closed if:
                         // Boostrap 4 & autoclose
@@ -476,6 +509,16 @@
             return valueBefore !== currentValue;
         }
 
+        /**
+         * Checks if the given value is empty. A value is considered empty if it is:
+         * - null
+         * - undefined
+         * - an empty array
+         * - a string containing only whitespace characters
+         *
+         * @param {*} value - The value to be checked for emptiness.
+         * @return {boolean} - Returns `true` if the value is empty, otherwise `false`.
+         */
         function isValueEmpty(value) {
             if (value === null || value === undefined) {
                 return true; // Null or undefined
@@ -848,6 +891,7 @@
             // const settings = $select.data('options');
             // const multiple = false !== $select.prop('multiple');
             const $dropdown = getDropDown($select);
+            const beforeValues = $select.val();
             $dropdown.find('.dropdown-item.active').removeClass('active');
             $dropdown.find('.dropdown-item .js-icon-checklist.bi-check-square').removeClass('bi-check-square').addClass('bi-square');
             const disabledDropdownIcons = $dropdown.find('.dropdown-item.disabled');
@@ -865,7 +909,8 @@
             $dropdown.find('.dropdown-item.active .js-icon-checklist.bi-square').removeClass('bi-square').addClass('bi-check-square');
 
             setSelectValues($select);
-            trigger($select, 'change.bs.select');
+            const afterValues = getSelectedValuesFromDropdown($select);
+            trigger($select, 'change.bs.select', [beforeValues, afterValues]);
             setDropdownTitle($select);
             disabledDropdownIcons.addClass('disabled');
         }
