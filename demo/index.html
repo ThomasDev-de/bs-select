@@ -78,6 +78,8 @@
                             <button id="btnNone" class="btn btn-link">selectNone</button>
                             <button id="btnRefresh" class="btn btn-link">refresh</button>
                             <button id="btnUpdate" class="btn btn-link">update options</button>
+                            <button id="toggleDisabled" class="btn btn-link">toggleDisabled</button>
+                            <button id="setValueDisabled" class="btn btn-link">setItemsDisabled [2,3]</button>
                             <button id="btnDestroy" class="btn btn-link">destroy</button>
 
 
@@ -201,6 +203,22 @@
                 select4.bsSelect('getSelectedText', function(text){
                     console.log(text);
                 })
+            });
+            $('#setValueDisabled').on('click', function (e) {
+                e.preventDefault();
+
+                select4.bsSelect('setItemsDisabled', {
+                    value: [2,3],
+                    setSelected: false,
+                    enableOther: true
+                })
+
+            });
+            $('#toggleDisabled').on('click', function (e) {
+                e.preventDefault();
+
+                select4.bsSelect('toggleDisabled')
+
             });
 
             $('#btnInit').on('click', function (e) {

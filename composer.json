@@ -1,6 +1,6 @@
 {
   "name": "webcito/bs-select",
-  "version": "2.1.14",
+  "version": "2.1.15",
   "description": "A jQuery-based plugin for creating customizable Bootstrap-style select dropdowns with various features including search, multi-select, and dynamic updates.",
   "minimum-stability": "stable",
   "license": "MIT",

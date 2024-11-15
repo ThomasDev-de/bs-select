@@ -1041,6 +1041,46 @@
             trigger($select, 'toggleDisabled.bs.select', [status]);
         }
 
+        function setItemsDisabled($select, object) {
+            if (typeof object === 'object') {
+
+                if (!object.hasOwnProperty('value')) {
+                    object.value = [];
+                }
+
+                if (!object.hasOwnProperty('enableOther')) {
+                    object.enableOther = false;
+                }
+
+                if (!object.hasOwnProperty('setSelected')) {
+                    object.setSelected = null;
+                }
+
+                if (!Array.isArray(object.value)) {
+                    object.value = [object.value];
+                }
+
+
+                destroy($select, false, false);
+
+                if (object.enableOther) {
+                    $select.find('option').prop('disabled', false); // Enable all options
+                }
+
+                object.value.forEach(val => {
+                    const option = $select.find(`option[value="${val}"]`);
+
+                    if (object.setSelected !== null) {
+                        option.prop('selected', object.setSelected);
+                    }
+
+                    option.prop('disabled', true);
+                });
+
+                init($select, false);
+            }
+        }
+
         /**
          * Executes the onBeforeChange function provided in the settings object.
          * If the function exists and returns true, triggers the 'acceptChange.bs.select' event.
@@ -1069,7 +1109,7 @@
          *
          * @namespace bsSelect
          * @param {object} options - The plugin options.
-         * @param {null|object|int|string|float|boolean} param - The method values.
+         * @param {null|object|int|string|float|boolean|array} param - The method values.
          * @returns {object} - The jQuery object.
          *
          * @see https://github.com/ThomasDev-de/bs-select
@@ -1209,6 +1249,10 @@
                             break;
                         case 'setDisabled': {
                             setDisabled($select, param);
+                        }
+                            break;
+                        case 'setItemsDisabled': {
+                            setItemsDisabled($select, param);
                         }
                             break;
                         case 'refresh': {
