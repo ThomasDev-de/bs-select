@@ -81,6 +81,16 @@
                 actionMenuBtnClass: 'btn-light',
                 showSelectionAsList: false,
                 showSelectedText: translations.showSelectedText,
+                formatSelectedText(title, subtext) {
+                    // Check whether subtext is empty and set accordingly
+                    subtext = isValueEmpty(subtext) ? '' : `<small class="text-muted">${subtext}</small>`;
+
+                    // Return the formatted HTML string
+                    return `<div class="d-flex flex-column align-items-start">
+                                <span>${title}</span>
+                                    ${subtext}
+                            </div>`;
+                },
                 deselectAllText: translations.deselectAllText,
                 selectAllText: translations.selectAllText,
                 checkedIcon: "bi bi-check-lg",
@@ -97,7 +107,7 @@
          *
          * Triggers the specified event on the given select element.
          *
-         * @param {JQuery} $select - The select element to trigger the event on.
+         * @param {$} $select - The select element to trigger the event on.
          * @param {string} event - The name of the event to trigger.
          * @param {array} addParams - Additional trigger parameters.
          */
@@ -138,8 +148,8 @@
 
         /**
          * Fetches the dropdown that is superordinate to the select.
-         * @param {JQuery} $select - The select element.
-         * @returns {JQuery} - The dropdown element.
+         * @param {$} $select - The select element.
+         * @returns {$} - The dropdown element.
          */
         function getDropDown($select) {
             return $select.closest(`.${WRAPPER_CLASS}`);
@@ -224,7 +234,6 @@
                 console.log('bsSelect:setSelectValues', $select.val());
             }
 
-            const multiple = $select.prop('multiple');
             let values = getSelectedValuesFromDropdown($select);
             $select.val(values);
         }
@@ -245,6 +254,7 @@
             const multiple = false !== $select.prop('multiple');
             options.prop('selected', state);
             const toggleCheckIcon = multiple && settings.showMultipleCheckboxes;
+            const $dropdownMenuInner = dropdown.find('.js-menu-dropdown-inner');
 
 
             options.each(function (i) {
@@ -252,15 +262,9 @@
                 if (state) {
                     $item.addClass('active');
                     $item.find('.dropdown-item-select-icon').show();
-                    // if (toggleCheckIcon){
-                    //     $item.find('.js-icon-checklist').removeClass('bi-check-square').addClass('bi-square');
-                    // }
                 } else {
                     $item.removeClass('active');
                     $item.find('.dropdown-item-select-icon').hide();
-                    // if (toggleCheckIcon){
-                    //     $item.find('.js-icon-checklist').removeClass('bi-check-square').addClass('bi-square');
-                    // }
                 }
             });
 
@@ -270,7 +274,7 @@
             }
             setSelectValues($select);
             setDropdownTitle($select);
-
+            $dropdownMenuInner.scrollTop(0);
             const ev = state ? 'selectAll' : 'selectNone';
             trigger($select, ev + '.bs.select');
             const afterValues = getSelectedValuesFromDropdown($select);
@@ -293,6 +297,8 @@
             const $dropdownToggle = $dropdown.find('.dropdown-toggle');
             const autoclose = $dropdownToggle.data('autoClose') || $dropdownToggle.data('bsAutoClose') || "true";
             const BS_V = getBootstrapMajorVersion();
+
+
             $dropdown
                 .on('click', '.js-select-select-all', function (e) {
                     e.preventDefault();
@@ -307,6 +313,7 @@
                     e.preventDefault();
                     if (onBeforeChange(selectElement)) {
                         toggleAllItemsState(selectElement, false);
+
                         if (BS_V === 4 && multiple && (autoclose === "true" || autoclose === "outside")) {
                             e.stopPropagation();
                         }
@@ -354,8 +361,6 @@
                                 $(value).addClass('d-none').removeClass('d-flex');
                             }
                         });
-
-                        // Blendet dropavio-header aus, wenn ein Suchstring vorhanden ist
                         dropdownHeaders.addClass('d-none');
                     } else {
                         if (settings.debug) {
@@ -466,11 +471,21 @@
                     trigger($select, 'show.bs.select');
                 })
                 .on('shown.bs.dropdown', function () {
+                    // Vorhandener Code
                     const $select = $dropdown.find('select');
                     trigger($select, 'shown.bs.select');
                     const searchElement = $dropdown.find('[type="search"]');
                     if (searchElement.length) {
                         searchElement.focus();
+                    }
+
+                    const $dropdownMenuInner = $dropdown.find('.js-menu-dropdown-inner');
+                    const $activeItem = $dropdown.find('.dropdown-item.active:first');
+
+                    if ($activeItem.length) {
+                        $dropdownMenuInner.scrollTop($dropdownMenuInner.scrollTop() + $activeItem.position().top - $dropdownMenuInner.position().top);
+                    } else {
+                        $dropdownMenuInner.scrollTop(0);
                     }
                 });
 
@@ -536,9 +551,9 @@
          * Initializes a dropdown menu for a select element.
          *
          * @param {Window.jQuery} $select - The select element to initialize the dropdown for.
-         * @param {boolean} fireTrigger - (Optional) Whether or not to fire the trigger event. Default is false.
+         * @param {boolean} fireTrigger - (Optional) Whether to fire the trigger event. Default is false.
          *
-         * @return {JQuery} - The initialized dropdown menu.
+         * @return {$} - The initialized dropdown menu.
          */
         function init($select, fireTrigger = false) {
             const settings = $select.data('options');
@@ -548,7 +563,7 @@
                 console.log('bsSelect:init with value:', $select.val());
             }
             /**
-             * @type {JQuery}
+             * @type {$}
              */
             let $dropdown = getDropDown($select);
             const isSelectDisabled = $select.hasClass('disabled') || $select.is('[disabled]');
@@ -586,7 +601,7 @@
                     'data-toggle': 'dropdown',
                     'aria-expanded': false,
                     'data-bs-auto-close': multiple ? 'outside' : true,
-                    html: `<span class="js-selected-text text-truncate text-nowrap d-inline-block">${settings.btnEmptyText}</span>${dropIcon}`,
+                    html: `<div class="js-selected-text">${settings.btnEmptyText}</div>${dropIcon}`,
                     css: {
                         width: settings.btnWidth
                     }
@@ -596,7 +611,7 @@
                 $('<button>', {
                     class: `btn ${settings.btnClass} d-flex flex-nowrap align-items-start js-dropdown-header justify-content-between`,
                     type: 'button',
-                    html: `<span class="js-selected-text d-inline-block text-truncate text-nowrap">${settings.btnEmptyText}</span>`,
+                    html: `<div class="js-selected-text">${settings.btnEmptyText}</div>`,
                     css: {
                         width: settings.btnWidth
                     }
@@ -681,6 +696,7 @@
             }
 
             const $dropdownMenuInner = $(`<div>`, {
+                class:'js-menu-dropdown-inner',
                 css: {
                     overflowY: 'auto',
                     maxHeight: `${settings.menuMaxHeight}px`
@@ -798,7 +814,7 @@
         /**
          * Sets the dropdown title based on the selected values in the given select element.
          *
-         * @param {JQuery} $select - The select element.
+         * @param {$} $select - The select element.
          */
         function setDropdownTitle($select) {
             const settings = $select.data('options');
@@ -817,22 +833,15 @@
             // If no value is set, set empty text
             if (isEmpty) {
                 title2 = settings.btnEmptyText;
-                title = settings.btnEmptyText;
             } else {
                 if (Array.isArray(selectedValues)) {
                     // I am multiple
                     if (selectedValues.length === 1) {
                         // Only one option was selected
                         let $option = $select.find(`option[value="${selectedValues[0]}"]`);
-                        let $subtext = settings.showSubtext && $option.data('subtext') ?
-                            `<small class="text-muted mx-2">${$option.data('subtext')}`
-                            : '';
                         subtext2 = settings.showSubtext && $option.data('subtext') ? $option.data('subtext') : null;
-                        let $icon = $option.data('icon') ?
-                            `<i class="${$option.data('icon')}"></i> `
-                            : '';
+
                         title2 = $option.text();
-                        title = `<span>${$icon}${$option.text()}</span><small class="text-muted ms-2 ml-2">${$subtext}</small>`;
                         tooltip = $option.text();
                     } else {
                         // Several option was selected
@@ -848,24 +857,16 @@
                             tooltip += tooltips.join(',');
                         } else {
                             // show as list
-                            let texts = [];
                             let texts2 = [];
                             let subtexts2 = [];
                             let tooltips = [];
                             selectedValues.forEach(val => {
                                 let $option = $select.find(`option[value="${val}"]`);
                                 let hasSubtext = settings.showSubtext && $option.data('subtext');
-                                let $subtext = hasSubtext ? $option.data('subtext') : '';
                                 subtexts2.push(hasSubtext ? $option.data('subtext') : null);
-
-                                let $icon = $option.data('icon') ?
-                                    `<i class="${$option.data('icon')}"></i> `
-                                    : '';
                                 texts2.push($option.text());
-                                texts.push(`<div><span>${$icon}${$option.text()}</span><small class="text-muted ms-2 ml-2">${$subtext}</small></div>`);
                                 tooltips.push($option.text());
                             });
-                            title = `<div class="d-flex flex-column">${texts.join('')}</div>`;
                             title2 = texts2;
                             subtext2 = subtexts2;
                             tooltip += tooltips.join(',');
@@ -875,23 +876,17 @@
                     // I am single select
                     let $option = $select.find(`option[value="${selectedValues}"]`);
                     if ($option.hasClass('d-none')) {
-                        title = settings.btnEmptyText;
                         title2 = settings.btnEmptyText;
                     } else {
                         let hasSubtexts = settings.showSubtext && $option.data('subtext');
-                        let $subtext = hasSubtexts ? `<small class="text-muted ms-2 ml-2">${$option.data('subtext')}` : '';
                         subtext2 = hasSubtexts ? $option.data('subtext') : null;
-                        let $icon = $option.data('icon') ?
-                            `<i class="${$option.data('icon')}"></i> `
-                            : '';
-                        title = `<span>${$icon}${$option.text()}</span><small class="text-muted mx-2">${$subtext}</small>`;
                         title2 = $option.text();
                         tooltip = $option.text();
                     }
                 }
             }
 
-            $titleElement.html(formateSelectedText(title2, subtext2));
+            $titleElement.html(formateSelectedText(settings, title2, subtext2));
 
             // $titleElement.html('<div class="d-flex flex-column">'+title+'</div>');
             $titleElement.attr('title', tooltip);
@@ -900,30 +895,26 @@
         /**
          * Formats the selected text by combining a title and an optional subtext into a specific HTML structure.
          *
+         * @param settings {object}
          * @param {string|array} title - The main title text to be formatted.
          * @param {string|array|null} [subtext=null] - The optional subtext to be included. If not provided or empty, it will default to an empty string.
          * @return {string} The formatted HTML string containing the title and optional subtext.
          */
-        function formateSelectedText(title, subtext = null) {
+        function formateSelectedText(settings, title, subtext = null) {
             // Check if title is a valid array element
             if (Array.isArray(title) && title.length > 0) {
                 let returnString = '';
                 for (let i = 0; i < title.length; i++) {
-                    // If subtext is also a valid array element, then use the corresponding subtext element                    const sub = Array.isArray(subtext) && subtext.length > i ? subtext[i] : null;
+                    // If subtext is also a valid array element, then use the corresponding subtext element
+                    const sub = Array.isArray(subtext) && subtext.length > i ? subtext[i] : null;
                     // Call recursively formatted text and append it to returnString
-                    returnString += formateSelectedText(title[i], sub);
+                    returnString += formateSelectedText(settings, title[i], sub);
                 }
                 return returnString;
             }
 
-            // Check whether subtext is empty and set accordingly
-            subtext = isValueEmpty(subtext) ? '' : `<small class="text-muted mx-2">${subtext}</small>`;
 
-            // Return the formatted HTML string
-            return `<div class="d-flex flex-column">
-                <span>${title}</span>
-                ${subtext}
-           </div>`;
+            return settings.formatSelectedText(title, subtext);
         }
 
 
@@ -1114,9 +1105,6 @@
 
 
                 if (callFunction) {
-
-                    const settings = $select.data('options');
-
                     switch (options) {
                         case 'getSelectedText': {
                             let result; // Variable zum Speichern des Ergebnisses
@@ -1130,7 +1118,7 @@
                                     const texts = [];
                                     value.forEach(val => {
                                         texts.push($select.find('[value="' + val + '"]').text());
-                                    })
+                                    });
                                     result = texts.join(', ');
                                 } else if (typeof value === 'string') {
                                     result = $select.find('[value="' + value + '"]').text();

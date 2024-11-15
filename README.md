@@ -24,6 +24,7 @@ Download and include the script at the end of the body tag.
 
 ```html
 
+<!--suppress ALL -->
 <script src="dist/locale/de-DE.min.js" type="text/javascript"><!-- optional -->
 <script src="dist/jquery.bs-select.js" type="text/javascript">
 ```
@@ -36,6 +37,7 @@ composer require webcito/bs-select
 
 ```html
 
+<!--suppress ALL -->
 <script src="/vendor/webcito/bs-select/dist/locale/de-DE.min.js" type="text/javascript"> <!-- optional -->
 <script src="/vendor/webcito/bs-select/dist/jquery.bs-select.min.js" type="text/javascript">
 ```
@@ -55,6 +57,7 @@ All selects with the attribute `[data-bs-toggle="select"]` or `[data-toggle="sel
 
 ```html
 <!-- Simple selection -->
+<!--suppress ALL -->
 <select name="countries">
     <option value="Germany">Deutschland</option>
     <option value="Poland">Polen</option>
@@ -121,6 +124,7 @@ All selects with the attribute `[data-bs-toggle="select"]` or `[data-toggle="sel
 | actionMenuBtnClass     | [data-action-menu-btn-class]  | `string`         | `btn-light`                         | *The classnames for the buttons in the action menu.*                                                                                                                                                                              |
 | showSelectionAsList    | [data-show-selection-as-list] | `bool`           | `true`                              | *If it is a multiple selection, all selections should be listed below each other. If the value is false, it will show how much was selected.*                                                                                     |
 | showSelectedText       |                               | `function`       | `(selectedItems, totalItems) => {}` | *If it is a multiple selection and the selected elements are greater than 1, this function is called. This function is ignored if the showSelectionAsList option is true.*                                                        |
+| formatSelectedText     |                               | `function`       | `(title, subtext) => {}`            | *If it is a multiple selection and the selected elements are greater than 1, this function is called. This function is ignored if the showSelectionAsList option is true.*                                                        |
 | deselectAllText        | [data-deselect-all-text]      | `string`         | `Deselect All`                      | *If showActionMenu is true, the language of the two buttons can be set here.*                                                                                                                                                     |
 | selectAllText          | [data-select-all-text]        | `string`         | `Select All`                        | *If showActionMenu is true, the language of the two buttons can be set here.*                                                                                                                                                     |
 | checkedIcon            | [data-checked-icon]           | `string`         | `bi bi-check-lg`                    | *Class used to style the select icon.*                                                                                                                                                                                            |
