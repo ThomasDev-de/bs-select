@@ -887,21 +887,18 @@
          *
          * @*/
         function val($select) {
-
-            // const settings = $select.data('options');
-            // const multiple = false !== $select.prop('multiple');
             const $dropdown = getDropDown($select);
             const beforeValues = $select.val();
             $dropdown.find('.dropdown-item.active').removeClass('active');
             $dropdown.find('.dropdown-item .js-icon-checklist.bi-check-square').removeClass('bi-check-square').addClass('bi-square');
             const disabledDropdownIcons = $dropdown.find('.dropdown-item.disabled');
             disabledDropdownIcons.removeClass('disabled');
-            let selectedValues = $select.val();
-            if (!Array.isArray(selectedValues)) {
-                selectedValues = [selectedValues];
+            let values = beforeValues;
+            if (!Array.isArray(values)) {
+                values = [values];
             }
 
-            selectedValues.forEach(value => {
+            values.forEach(value => {
                 let index = $select.find(`option[value="${value}"]`).index();
                 const item = $dropdown.find(`.dropdown-item[data-index="${index}"]`);
                 item.addClass('active');
@@ -1073,6 +1070,8 @@
 
                 if (callFunction) {
 
+                    const settings = $select.data('options');
+
                     switch (options) {
                         case 'getSelectedText': {
                             let result; // Variable zum Speichern des Ergebnisses
@@ -1115,6 +1114,7 @@
                             if (onBeforeChange($select)) {
                                 $select.val(null);
                                 $select.find('option').first().attr('selected', true);
+
                                 val($select);
                             }
                         }
