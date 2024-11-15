@@ -905,36 +905,27 @@
          * @return {string} The formatted HTML string containing the title and optional subtext.
          */
         function formateSelectedText(title, subtext = null) {
-
-            if (isValidArrayElement(title, 0)) {
+            // Check if title is a valid array element
+            if (Array.isArray(title) && title.length > 0) {
                 let returnString = '';
                 for (let i = 0; i < title.length; i++) {
-                    const sub = isValidArrayElement(subtext, i) ? subtext[i] : null;
+                    // If subtext is also a valid array element, then use the corresponding subtext element                    const sub = Array.isArray(subtext) && subtext.length > i ? subtext[i] : null;
+                    // Call recursively formatted text and append it to returnString
                     returnString += formateSelectedText(title[i], sub);
                 }
                 return returnString;
             }
 
+            // Check whether subtext is empty and set accordingly
             subtext = isValueEmpty(subtext) ? '' : `<small class="text-muted mx-2">${subtext}</small>`;
+
+            // Return the formatted HTML string
             return `<div class="d-flex flex-column">
-                        <span>${title}</title>
-                        ${subtext}
-                   </div>`;
+                <span>${title}</span>
+                ${subtext}
+           </div>`;
         }
 
-        function isValidArrayElement(arr, index) {
-            // Prüfen, ob das Element nicht null ist
-            if (arr !== null && arr !== undefined) {
-                // Prüfen, ob das Element ein Array ist
-                if (Array.isArray(arr)) {
-                    // Prüfen, ob der Index im Array existiert
-                    if (index >= 0 && index < arr.length) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
 
         /**
          * Updates the visual state of the dropdown menu based on the selected values
