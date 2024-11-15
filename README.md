@@ -167,7 +167,7 @@ $('select').bsSelect('method', param);
 | show.bs.select           | Fires immediately when the show instance method is called.                                                                       |
 | shown.bs.select          | Fired when the dropdown has been made visible to the user and CSS transitions have completed.                                    |
 | refresh.bs.select        | Fires when the `refresh` method has been invoked.                                                                                |
-| change.bs.select         | Fires when the method `val` has been called. Additional parameters are [valueBefore, valueAfter]                                 |
+| change.bs.select         | Fires when the values in the select have changed. Additional parameters are [valueBefore, valueAfter]                            |
 | clear.bs.select          | Fires when the `clear` method has been called.                                                                                   |
 | acceptChange.bs.select   | If the function onBeforeChange returns true, this event is fired.                                                                |
 | cancelChange.bs.select   | If the function onBeforeChange returns false, this event is fired.                                                               |

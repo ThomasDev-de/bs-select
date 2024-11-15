@@ -278,8 +278,9 @@
             const ev = state ? 'selectAll' : 'selectNone';
             trigger($select, ev + '.bs.select');
             const afterValues = getSelectedValuesFromDropdown($select);
-            trigger($select, 'change.bs.select', [beforeValues, afterValues]);
-            // trigger($select, 'change');
+            if (hasValueChanged(beforeValues, afterValues)) {
+                trigger($select, 'change.bs.select', [beforeValues, afterValues]);
+            }
         }
 
         function getBootstrapMajorVersion() {
@@ -378,22 +379,21 @@
                 .on('click', '.dropdown-item', function (e) {
                     e.preventDefault();
                     const settings = selectElement.data('options');
-                    const active = $(e.currentTarget).hasClass('active');
-                    const beforeValues = selectElement.val();
+                    const item = $(e.currentTarget);
+
 
                     if (onBeforeChange(selectElement)) {
 
-                        const item = $(e.currentTarget);
-
+                        const beforeValues = selectElement.val();
+                        item.toggleClass('active');
+                        const active = item.hasClass('active');
                         if (!multiple) {
+
                             $dropdown
                                 .find('.dropdown-item.active')
                                 .not(item)
                                 .removeClass('active');
                         }
-
-                        item.toggleClass('active');
-
                         const toggleCheckIcon = multiple && settings.showMultipleCheckboxes;
 
                         if (active) {
@@ -419,7 +419,9 @@
                         setSelectValues(selectElement);
                         const afterValues = getSelectedValuesFromDropdown(selectElement);
                         setDropdownTitle(selectElement);
-                        trigger(selectElement, 'change.bs.select', [beforeValues, afterValues]);
+                        if (hasValueChanged(beforeValues, afterValues)) {
+                            trigger(selectElement, 'change.bs.select', [beforeValues, afterValues]);
+                        }
 
                         // Check the condition and make sure it is not closed if:
                         // Boostrap 4 & autoclose
@@ -696,7 +698,7 @@
             }
 
             const $dropdownMenuInner = $(`<div>`, {
-                class:'js-menu-dropdown-inner',
+                class: 'js-menu-dropdown-inner',
                 css: {
                     overflowY: 'auto',
                     maxHeight: `${settings.menuMaxHeight}px`
@@ -945,7 +947,9 @@
 
             setSelectValues($select);
             const afterValues = getSelectedValuesFromDropdown($select);
-            trigger($select, 'change.bs.select', [beforeValues, afterValues]);
+            if (hasValueChanged(beforeValues, afterValues)) {
+                trigger($select, 'change.bs.select', [beforeValues, afterValues]);
+            }
             setDropdownTitle($select);
             disabledDropdownIcons.addClass('disabled');
         }
