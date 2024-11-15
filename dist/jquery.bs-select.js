@@ -179,7 +179,7 @@
          *                             a single value if the select allows only one selection,
          *                             or null if no value is selected.
          */
-        function getSelectedValuesFromDropdown($select){
+        function getSelectedValuesFromDropdown($select) {
             // Retrieve the dropdown element related to the given select element
             const $dropdown = getDropDown($select);
             // Check if the select element allows multiple selections
@@ -806,11 +806,17 @@
             const $dropdown = getDropDown($select);
             const $titleElement = $dropdown.find('.js-dropdown-header .js-selected-text');
             let selectedValues = $select.val();
+            const isEmpty = isValueEmpty(selectedValues);
             let title;
+
+            let title2;
+            let subtext2 = null;
+
             let tooltip = "";
 
             // If no value is set, set empty text
-            if (!selectedValues || !selectedValues.length || selectedValues === "" || !$select.find('option:selected').length) {
+            if (isEmpty) {
+                title2 = settings.btnEmptyText;
                 title = settings.btnEmptyText;
             } else {
                 if (Array.isArray(selectedValues)) {
@@ -821,10 +827,11 @@
                         let $subtext = settings.showSubtext && $option.data('subtext') ?
                             `<small class="text-muted mx-2">${$option.data('subtext')}`
                             : '';
+                        subtext2 = settings.showSubtext && $option.data('subtext') ? $option.data('subtext') : null;
                         let $icon = $option.data('icon') ?
                             `<i class="${$option.data('icon')}"></i> `
                             : '';
-
+                        title2 = $option.text();
                         title = `<span>${$icon}${$option.text()}</span><small class="text-muted ms-2 ml-2">${$subtext}</small>`;
                         tooltip = $option.text();
                     } else {
@@ -832,6 +839,7 @@
                         if (!settings.showSelectionAsList) {
                             let length = $select.find('option').length;
                             title = settings.showSelectedText(selectedValues.length, length);
+                            title2 = title;
                             let tooltips = [];
                             selectedValues.forEach(val => {
                                 let $option = $select.find(`option[value="${val}"]`);
@@ -841,20 +849,25 @@
                         } else {
                             // show as list
                             let texts = [];
+                            let texts2 = [];
+                            let subtexts2 = [];
                             let tooltips = [];
                             selectedValues.forEach(val => {
                                 let $option = $select.find(`option[value="${val}"]`);
-                                let $subtext = settings.showSubtext && $option.data('subtext') ?
-                                    $option.data('subtext')
-                                    : '';
+                                let hasSubtext = settings.showSubtext && $option.data('subtext');
+                                let $subtext = hasSubtext ? $option.data('subtext') : '';
+                                subtexts2.push(hasSubtext ? $option.data('subtext') : null);
+
                                 let $icon = $option.data('icon') ?
                                     `<i class="${$option.data('icon')}"></i> `
                                     : '';
-
+                                texts2.push($option.text());
                                 texts.push(`<div><span>${$icon}${$option.text()}</span><small class="text-muted ms-2 ml-2">${$subtext}</small></div>`);
                                 tooltips.push($option.text());
                             });
                             title = `<div class="d-flex flex-column">${texts.join('')}</div>`;
+                            title2 = texts2;
+                            subtext2 = subtexts2;
                             tooltip += tooltips.join(',');
                         }
                     }
@@ -863,21 +876,64 @@
                     let $option = $select.find(`option[value="${selectedValues}"]`);
                     if ($option.hasClass('d-none')) {
                         title = settings.btnEmptyText;
+                        title2 = settings.btnEmptyText;
                     } else {
-                        let $subtext = settings.showSubtext && $option.data('subtext') ?
-                            `<small class="text-muted ms-2 ml-2">${$option.data('subtext')}`
-                            : '';
+                        let hasSubtexts = settings.showSubtext && $option.data('subtext');
+                        let $subtext = hasSubtexts ? `<small class="text-muted ms-2 ml-2">${$option.data('subtext')}` : '';
+                        subtext2 = hasSubtexts ? $option.data('subtext') : null;
                         let $icon = $option.data('icon') ?
                             `<i class="${$option.data('icon')}"></i> `
                             : '';
                         title = `<span>${$icon}${$option.text()}</span><small class="text-muted mx-2">${$subtext}</small>`;
+                        title2 = $option.text();
                         tooltip = $option.text();
                     }
                 }
             }
 
-            $titleElement.html(title);
+            $titleElement.html(formateSelectedText(title2, subtext2));
+
+            // $titleElement.html('<div class="d-flex flex-column">'+title+'</div>');
             $titleElement.attr('title', tooltip);
+        }
+
+        /**
+         * Formats the selected text by combining a title and an optional subtext into a specific HTML structure.
+         *
+         * @param {string|array} title - The main title text to be formatted.
+         * @param {string|array|null} [subtext=null] - The optional subtext to be included. If not provided or empty, it will default to an empty string.
+         * @return {string} The formatted HTML string containing the title and optional subtext.
+         */
+        function formateSelectedText(title, subtext = null) {
+
+            if (isValidArrayElement(title, 0)) {
+                let returnString = '';
+                for (let i = 0; i < title.length; i++) {
+                    const sub = isValidArrayElement(subtext, i) ? subtext[i] : null;
+                    returnString += formateSelectedText(title[i], sub);
+                }
+                return returnString;
+            }
+
+            subtext = isValueEmpty(subtext) ? '' : `<small class="text-muted mx-2">${subtext}</small>`;
+            return `<div class="d-flex flex-column">
+                        <span>${title}</title>
+                        ${subtext}
+                   </div>`;
+        }
+
+        function isValidArrayElement(arr, index) {
+            // Prüfen, ob das Element nicht null ist
+            if (arr !== null && arr !== undefined) {
+                // Prüfen, ob das Element ein Array ist
+                if (Array.isArray(arr)) {
+                    // Prüfen, ob der Index im Array existiert
+                    if (index >= 0 && index < arr.length) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         /**
@@ -975,8 +1031,7 @@
             const btn = dropDown.find('[data-bs-toggle="dropdown"],[data-toggle="dropdown"]');
             if (btn.hasClass('disabled')) {
                 setDisabled($select, false);
-            }
-            else{
+            } else {
                 setDisabled($select, true);
             }
         }
@@ -994,8 +1049,7 @@
             const btn = dropDown.find('[data-bs-toggle="dropdown"],[data-toggle="dropdown"]');
             if (status) {
                 btn.addClass('disabled');
-            }
-            else{
+            } else {
                 btn.removeClass('disabled');
             }
             trigger($select, 'toggleDisabled.bs.select', [status]);
@@ -1120,10 +1174,10 @@
                         }
                             break;
                         case 'clear': {
-                                $select.val(null);
-                                $select.find('option,optgroup').remove();
-                                refresh($select);
-                                trigger($select, 'clear.bs.select');
+                            $select.val(null);
+                            $select.find('option,optgroup').remove();
+                            refresh($select);
+                            trigger($select, 'clear.bs.select');
                         }
                             break;
                         case 'selectLast': {
@@ -1159,19 +1213,19 @@
                             refresh($select);
                             trigger($select, 'update.bs.select');
                         }
-                        break;
+                            break;
                         case 'setBtnClass': {
-                            $select.data('options', $.extend({}, $.bsSelect.DEFAULTS, $select.data('options'),  {btnClass: param}));
+                            $select.data('options', $.extend({}, $.bsSelect.DEFAULTS, $select.data('options'), {btnClass: param}));
                             refresh($select);
                             trigger($select, 'update.bs.select');
                         }
                             break;
                         case 'toggleDisabled': {
-                           toggleDisabled($select);
+                            toggleDisabled($select);
                         }
                             break;
                         case 'setDisabled': {
-                           setDisabled($select, param);
+                            setDisabled($select, param);
                         }
                             break;
                         case 'refresh': {
