@@ -63,6 +63,7 @@
                 return defCopy;
             },
             DEFAULTS: {
+                btnClass: 'btn-outline-dark',
                 btnWidth: 'fit-content',
                 btnEmptyText: translations.btnEmptyText,
                 btnSplit: false,
@@ -70,7 +71,6 @@
                 dropIconClass: 'bi bi-chevron-down',
                 menuClass: null,
                 menuHeaderClass: 'text-bg-secondary text-uppercase',
-                btnClass: 'btn-outline-dark',
                 search: true,
                 menuPreHtml: null,
                 menuAppendHtml: null,
@@ -1104,11 +1104,15 @@
             return true;
         }
 
+        function hasOptions($select) {
+            return $select.data('options') !== undefined;
+        }
+
         /**
          * jQuery plugin for creating Bootstrap style select dropdowns.
          *
          * @namespace bsSelect
-         * @param {object} options - The plugin options.
+         * @param {object|string|null|undefined} options - The plugin options.
          * @param {null|object|int|string|float|boolean|array} param - The method values.
          * @returns {object} - The jQuery object.
          *
@@ -1123,30 +1127,31 @@
          * });
          */
         $.fn.bsSelect = function (options, param) {
-            let callFunction = false;
-            let optionsSet = false;
+            const $elements = $(this);
+            let callFunction = typeof options === 'string';
+            let optionsSet = typeof options === 'object';
 
-            switch (typeof options) {
-                case 'string': {
-                    callFunction = true;
-                }
-                    break;
-                default: {
-                    optionsSet = true;
-                }
-                    break;
-            }
-
-            return $(this).each(function (index, select) {
+            return $elements.each(function (index, select) {
                 const $select = $(select);
 
                 if (optionsSet) {
-                    const setup = $.extend({}, $.bsSelect.DEFAULTS, $select.data(), options || {});
+                    let setup;
+                    // If options are already set, merge them with the new options
+                    if (hasOptions($select)) {
+                        setup = $.extend({}, $.bsSelect.DEFAULTS, $select.data('options'), options);
+                    } else {
+                        // Otherwise merge them with the defaults
+                        setup = $.extend({}, $.bsSelect.DEFAULTS, options);
+                    }
+
                     $select.data('options', setup);
+                } else if (!hasOptions($select)) {
+                    // If no options were passed and none can be found in the select, use the defaults
+                    $select.data('options', $.bsSelect.DEFAULTS);
                 }
 
+                // Options should definitely be set in the select here.
                 init($select, true);
-
 
                 if (callFunction) {
                     switch (options) {
