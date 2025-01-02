@@ -13,6 +13,9 @@
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
  * @fileOverview README.md
+ * @repository https://github.com/ThomasDev-de/bs-select (bsSelect)
+ * @see https://getbootstrap.com/ (Bootstrap documentation)
+ * @see https://github.com/twbs/bootstrap-icons (Bootstrap Icons)
  *
  * Dependencies:
  * ---------------
