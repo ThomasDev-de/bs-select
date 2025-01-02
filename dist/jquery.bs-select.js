@@ -1,5 +1,3 @@
-// noinspection JSCheckFunctionSignatures,JSUnresolvedReference
-
 /**
  * **************************************************
  *                     bsSelect                     *
