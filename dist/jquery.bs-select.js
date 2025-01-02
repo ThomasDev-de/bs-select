@@ -1,16 +1,24 @@
 // noinspection JSCheckFunctionSignatures,JSUnresolvedReference
 
 /**
- * This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
+ * **************************************************
+ *                     bsSelect                     *
+ * **************************************************
+ *
+ * @file jquery.bs-select.js
+ * @author Thomas Kirsch
+ * @license MIT
+ * @version 2.1.16
+ * @date 2025-01-01
+ * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
+ * @fileOverview README.md
  *
- * The plugin methods are:
- *
- * - setDefaults(options): This function is used to set the default options by extending the current defaults with the
- *   provided parameter options.
- * - getDefaults(): Returns a copy of the current default settings with debug and debugElement properties removed.
- *
- * The default settings are stored in a DEFAULTS object.
+ * Dependencies:
+ * ---------------
+ * - jQuery (https://jquery.com/)
+ * - Bootstrap (https://getbootstrap.com/)
+ * - Bootstrap Icons (https://icons.getbootstrap.com/)
  *
  * The script also includes a number of helper functions intended to manage dropdown behaviours. They include triggering of
  * events, fetching dropdown associated with a select element, showing and hiding dropdowns, changing select values,
