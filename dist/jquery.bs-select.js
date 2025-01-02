@@ -137,7 +137,6 @@
             }
             const settings = $select.data('options');
 
-
             if (settings.debug) {
                 console.log('trigger', event, params);
 
@@ -292,6 +291,11 @@
             }
         }
 
+        /**
+         * Retrieves the major version of Bootstrap being used by extracting the main version number from the Bootstrap modal plugin.
+         *
+         * @return {number|undefined} The major version number of Bootstrap if available, or undefined if the Bootstrap modal plugin is not accessible.
+         */
         function getBootstrapMajorVersion() {
             if (typeof $.fn.modal === 'undefined' || typeof $.fn.modal.Constructor === 'undefined') {
                 console.error('Bootstrap Modal Plugin ist nicht verfügbar');
@@ -303,6 +307,14 @@
             return parseInt(bootstrapVersion.split('.')[0]);
         }
 
+        /**
+         * Configures behavior for a dropdown menu including item selection, search functionality, and event handling.
+         *
+         * @param {jQuery} $dropdown - The jQuery object representing the dropdown element to be configured.
+         * @param {jQuery} selectElement - The jQuery object representing the select element associated with the dropdown.
+         * @param {boolean} multiple - A flag indicating whether multiple selections are allowed in the dropdown.
+         * @return {void} This function does not return any value but sets up event handlers and functionality for the dropdown.
+         */
         function setupDropdown($dropdown, selectElement, multiple) {
             const $dropdownToggle = $dropdown.find('.dropdown-toggle');
             const autoclose = $dropdownToggle.data('autoClose') || $dropdownToggle.data('bsAutoClose') || "true";
@@ -389,7 +401,6 @@
                     e.preventDefault();
                     const settings = selectElement.data('options');
                     const item = $(e.currentTarget);
-
 
                     if (onBeforeChange(selectElement)) {
 
@@ -502,6 +513,14 @@
 
         }
 
+        /**
+         * Compares two arrays for equality by checking if they contain the same elements,
+         * regardless of order, and without modifying the original arrays.
+         *
+         * @param {Array} arr1 - The first array to be compared.
+         * @param {Array} arr2 - The second array to be compared.
+         * @return {boolean} Returns true if both arrays contain the same elements, otherwise false.
+         */
         function arraysEqual(arr1, arr2) {
             if (arr1.length !== arr2.length) {
                 return false;
@@ -519,6 +538,14 @@
             return true;
         }
 
+        /**
+         * Determines if a value has changed by comparing the initial value with the current value.
+         * It supports comparison of primitive types, arrays, and objects.
+         *
+         * @param {*} valueBefore The value before the change occurred. Can be a primitive, array, or object.
+         * @param {*} currentValue The current value to be compared with the initial value. Can be a primitive, array, or object.
+         * @return {boolean} Returns true if the values differ, false otherwise.
+         */
         function hasValueChanged(valueBefore, currentValue) {
             // Prüfen, ob sich der Wert geändert hat
             if (Array.isArray(valueBefore) && Array.isArray(currentValue)) {
@@ -1050,6 +1077,16 @@
             trigger($select, 'toggleDisabled.bs.select', [status]);
         }
 
+        /**
+         * Disables specific items in a select element and optionally sets their selected state.
+         *
+         * @param {jQuery} $select The jQuery object representing the select element whose options are being modified.
+         * @param {Object} object Configuration options for modifying the select element:
+         *   - {Array|string} value: The values of the options to be disabled. Can be a string or an array of strings.
+         *   - {boolean} [enableOther=false]: If true, enables all options before applying the disable logic.
+         *   - {boolean|null} [setSelected=null]: If provided, sets the `selected` property of the options being modified to this value.
+         * @return {void} Does not return a value.
+         */
         function setItemsDisabled($select, object) {
             if (typeof object === 'object') {
 
