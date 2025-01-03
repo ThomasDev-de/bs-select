@@ -6,7 +6,7 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.17
+ * @version 2.1.18
  * @date 2025-01-02
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
@@ -597,6 +597,8 @@
         function init($select, fireTrigger = false) {
             const settings = $select.data('options');
             const multiple = $select.prop('multiple');
+            const isDisabled = $select.is(':disabled');
+
 
             if (settings.debug) {
                 console.log('bsSelect:init with value:', $select.val());
@@ -636,6 +638,7 @@
                 $('<button>', {
                     class: `btn ${settings.btnClass} ${toggleIconClass} d-flex flex-nowrap align-items-start flex-nowrap js-dropdown-header justify-content-between`,
                     type: 'button',
+                    disabled: isDisabled,
                     'data-bs-toggle': 'dropdown',
                     'data-toggle': 'dropdown',
                     'aria-expanded': false,
@@ -650,6 +653,7 @@
                 $('<button>', {
                     class: `btn ${settings.btnClass} d-flex flex-nowrap align-items-start js-dropdown-header justify-content-between`,
                     type: 'button',
+                    disabled: isDisabled,
                     html: `<div class="js-selected-text">${settings.btnEmptyText}</div>`,
                     css: {
                         width: settings.btnWidth
@@ -1047,7 +1051,7 @@
         function toggleDisabled($select) {
             const dropDown = getDropDown($select);
             const btn = dropDown.find('[data-bs-toggle="dropdown"],[data-toggle="dropdown"]');
-            const status = !btn.hasClass('disabled');
+            const status = !$select.is(':disabled');
             setDisabled($select, status);
         }
 
@@ -1060,13 +1064,26 @@
          * @return {void} This function does not return a value.
          */
         function setDisabled($select, status) {
+            // Gets the dropdown component associated with the <select>
             const dropDown = getDropDown($select);
+            // Searches for the trigger button (Bootstrap specific)
             const btn = dropDown.find('[data-bs-toggle="dropdown"],[data-toggle="dropdown"]');
+
             if (status) {
+                // Adds the bootstrap class 'disabled' (makes the button visually unusable)
                 btn.addClass('disabled');
+                hide($select);
             } else {
+                // Removes the 'disabled' class (makes the button usable again)
                 btn.removeClass('disabled');
             }
+
+            // Disables/enables the dropdown button (prevents all interactions, not just visually)
+            btn.prop('disabled', status);
+            // Enables/Disables the native <select>
+            $select.prop('disabled', status);
+
+            // Raises a custom event that informs other functions or components
             trigger($select, 'toggleDisabled.bs.select', [status]);
         }
 
