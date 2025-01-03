@@ -6,8 +6,8 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.16
- * @date 2025-01-01
+ * @version 2.1.17
+ * @date 2025-01-02
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
  * @fileOverview README.md
@@ -129,7 +129,7 @@
                         params.push(p);
                     });
                 } else {
-                    params.push($select.val());
+                    // params.push($select.val());
                 }
                 $select.trigger(event, params);
             } else {
@@ -141,9 +141,10 @@
                 console.log('trigger', event, params);
 
                 if (settings.debugElement !== null) {
+                    const paramsString = params.length ? JSON.stringify(params) : null;
                     const log = $('<small>', {
                         class: 'js-log border-bottom',
-                        html: '[' + new Date().toUTCString() + '] trigger <span class="text-warning">' + event + '</span> fired'
+                        html: '[' + new Date().toUTCString() + '] trigger <span class="text-warning">' + event + '</span> fired. Params: ' + paramsString
                     }).prependTo(settings.debugElement);
 
 
@@ -964,12 +965,11 @@
          * @*/
         function val($select) {
             const $dropdown = getDropDown($select);
-            const beforeValues = $select.val();
             $dropdown.find('.dropdown-item.active').removeClass('active');
             $dropdown.find('.dropdown-item .js-icon-checklist.bi-check-square').removeClass('bi-check-square').addClass('bi-square');
             const disabledDropdownIcons = $dropdown.find('.dropdown-item.disabled');
             disabledDropdownIcons.removeClass('disabled');
-            let values = beforeValues;
+            let values = $select.val();
             if (!Array.isArray(values)) {
                 values = [values];
             }
@@ -982,10 +982,6 @@
             $dropdown.find('.dropdown-item.active .js-icon-checklist.bi-square').removeClass('bi-square').addClass('bi-check-square');
 
             setSelectValues($select);
-            const afterValues = getSelectedValuesFromDropdown($select);
-            if (hasValueChanged(beforeValues, afterValues)) {
-                trigger($select, 'change.bs.select', [beforeValues, afterValues]);
-            }
             setDropdownTitle($select);
             disabledDropdownIcons.addClass('disabled');
         }
@@ -1051,11 +1047,8 @@
         function toggleDisabled($select) {
             const dropDown = getDropDown($select);
             const btn = dropDown.find('[data-bs-toggle="dropdown"],[data-toggle="dropdown"]');
-            if (btn.hasClass('disabled')) {
-                setDisabled($select, false);
-            } else {
-                setDisabled($select, true);
-            }
+            const status = !btn.hasClass('disabled');
+            setDisabled($select, status);
         }
 
 
@@ -1127,6 +1120,7 @@
             }
         }
 
+
         /**
          * Executes the onBeforeChange function provided in the settings object.
          * If the function exists and returns true, triggers the 'acceptChange.bs.select' event.
@@ -1179,7 +1173,8 @@
 
             return $elements.each(function (index, select) {
                 const $select = $(select);
-
+                // before methods call
+                const beforeValues = $select.val();
                 if (optionsSet) {
                     let setup;
                     // If options are already set, merge them with the new options
@@ -1241,9 +1236,16 @@
                         case 'selectFirst': {
                             if (onBeforeChange($select)) {
                                 $select.val(null);
-                                $select.find('option').first().attr('selected', true);
-
+                                $select.find('option').prop('selected', false);
+                                $select.find('option:first').prop('selected', true);
                                 val($select);
+                                // Determine the newly set value
+                                const afterValues = getSelectedValuesFromDropdown($select);
+                                // If the old value does not match the new one, trigger the change
+                                if (hasValueChanged(beforeValues, afterValues)) {
+                                    trigger($select, 'change.bs.select', [beforeValues, afterValues]);
+                                }
+                                trigger($select, 'selectFirst.bs.select', [afterValues]);
                             }
                         }
                             break;
@@ -1257,8 +1259,16 @@
                         case 'selectLast': {
                             if (onBeforeChange($select)) {
                                 $select.val(null);
-                                $select.find('option').last().attr('selected', true);
+                                $select.find('option').prop('selected', false);
+                                $select.find('option:last').prop('selected', true);
                                 val($select);
+                                // Determine the newly set value
+                                const afterValues = getSelectedValuesFromDropdown($select);
+                                // If the old value does not match the new one, trigger the change
+                                if (hasValueChanged(beforeValues, afterValues)) {
+                                    trigger($select, 'change.bs.select', [beforeValues, afterValues]);
+                                }
+                                trigger($select, 'selectLast.bs.select', [afterValues]);
                             }
                         }
                             break;
@@ -1272,8 +1282,16 @@
                             break;
                         case 'val': {
                             if (onBeforeChange($select)) {
+                                // set the Value to the native Select
                                 $select.val(param);
+                                // Update the plugin to the value
                                 val($select);
+                                // Determine the newly set value
+                                const afterValues = getSelectedValuesFromDropdown($select);
+                                // If the old value does not match the new one, trigger the change
+                                if (hasValueChanged(beforeValues, afterValues)) {
+                                    trigger($select, 'change.bs.select', [beforeValues, afterValues]);
+                                }
                             }
                         }
                             break;

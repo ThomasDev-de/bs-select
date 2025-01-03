@@ -1,20 +1,33 @@
 {
   "name": "webcito/bs-select",
-  "version": "2.1.16",
-  "description": "A jQuery-based plugin for creating customizable Bootstrap-style select dropdowns with various features including search, multi-select, and dynamic updates.",
-  "minimum-stability": "stable",
-  "license": "MIT",
-  "keywords": ["jquery", "bootstrap", "select", "dropdown", "plugin"],
+  "version": "2.1.17",
+  "description": "A jQuery-based plugin for creating customizable Bootstrap-style select dropdowns with search, multi-select, and more.",
   "type": "library",
+  "license": "MIT",
+  "keywords": ["jquery", "bootstrap", "select", "dropdown", "plugin", "bs-select"],
   "authors": [
     {
-      "name": "thomas",
-      "email": "t.kirsch@webcito.de"
+      "name": "Thomas Kirsch",
+      "email": "t.kirsch@webcito.de",
+      "homepage": "https://webcito.de",
+      "role": "Maintainer"
     }
   ],
+  "support": {
+    "issues": "https://github.com/ThomasDev-de/bs-select/issues",
+    "source": "https://github.com/ThomasDev-de/bs-select",
+    "docs": "https://github.com/ThomasDev-de/bs-select#readme"
+  },
   "require": {
-    "components/jquery": "^3",
+    "components/jquery": "^3.7.1",
     "twbs/bootstrap": "^4 || ^5",
-    "twbs/bootstrap-icons": "^1"
-  }
+    "twbs/bootstrap-icons": "^1.11"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-main": "2.1.x-dev"
+    }
+  },
+  "minimum-stability": "stable",
+  "homepage": "https://github.com/ThomasDev-de/bs-select"
 }

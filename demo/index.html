@@ -38,9 +38,9 @@
 <form action="" method="get">
     <div class="d-flex">
         <div class="p-3">
-            <table class="table">
+            <table class="table w-100">
                 <tr>
-                    <td>single select</td>
+                    <td class="w-25">single select</td>
                     <td>
 
                         <label for="select1" class="d-none"></label>
@@ -68,53 +68,67 @@
                 </tr>
                 <tr>
                     <td>
-                        playground
-                        <div class="d-flex flex-column align-items-start">
-                            <button id="btnInit" class="btn btn-link">init</button>
-                            <button id="btnShow" class="btn btn-link">show</button>
-                            <button id="btnHide" class="btn btn-link">hide</button>
-                            <button id="btnVal" class="btn btn-link">val (2)</button>
-                            <button id="btnAll" class="btn btn-link">selectAll</button>
-                            <button id="btnNone" class="btn btn-link">selectNone</button>
-                            <button id="btnRefresh" class="btn btn-link">refresh</button>
-                            <button id="btnUpdate" class="btn btn-link">update options</button>
-                            <button id="toggleDisabled" class="btn btn-link">toggleDisabled</button>
-                            <button id="setValueDisabled" class="btn btn-link">setItemsDisabled [2,3]</button>
-                            <button id="btnDestroy" class="btn btn-link">destroy</button>
+                        <small class="text-uppercase mb-3 d-block">playground</small>
+                        <div class="d-flex flex-wrap align-items-start">
+                            <button id="btnInit" class="btn btn-outline-warning btn-sm me-1 mb-1">init</button>
+                            <button id="btnShow" class="btn btn-outline-warning btn-sm me-1 mb-1">show</button>
+                            <button id="btnHide" class="btn btn-outline-warning btn-sm me-1 mb-1">hide</button>
+                            <button id="btnVal" class="btn btn-outline-warning btn-sm me-1 mb-1">val (2)</button>
+                            <button id="btnAll" class="btn btn-outline-warning btn-sm me-1 mb-1">selectAll</button>
+                            <button id="btnNone" class="btn btn-outline-warning btn-sm me-1 mb-1">selectNone</button>
+                            <button id="selectFirst" class="btn btn-outline-warning btn-sm me-1 mb-1">selectFirst</button>
+                            <button id="selectLast" class="btn btn-outline-warning btn-sm me-1 mb-1">selectLast</button>
+                            <button id="btnRefresh" class="btn btn-outline-warning btn-sm me-1 mb-1">refresh</button>
+                            <button id="btnUpdate" class="btn btn-outline-warning btn-sm me-1 mb-1">update options</button>
+                            <button id="setBtnClass" class="btn btn-outline-warning btn-sm me-1 mb-1">setBtnClass btn-primary</button>
+                            <button id="toggleDisabled" class="btn btn-outline-warning btn-sm me-1 mb-1">toggleDisabled</button>
+<!--                            <button id="setValueDisabled" class="btn btn-outline-warning btn-sm me-1 mb-1">setItemsDisabled [2,3]</button>-->
+                            <button id="btnDestroy" class="btn btn-outline-warning btn-sm me-1 mb-1">destroy</button>
 
 
                         </div>
                     </td>
-                    <td><label for="select4" class="d-none"></label>
-                        <select
-                                multiple
-                                data-debug="true"
-                                data-debug-element="#debug"
-                                id="select4"
-                                data-show-selection-as-list="false"
-                                data-show-action-menu="false"
-                                data-drop-direction="dropdown-center"
-                                data-btn-split="true"
-                                data-btn-class="btn-info">
-                            <option value="1">Item 1</option>
-                            <option value="2">Item 2</option>
-                            <option value="3">Item 3</option>
-                        </select>
+                    <td>
+                        <div class="d-flex">
+                            <div>
+                                <label for="select4" class="d-none"></label>
+                                <select
+                                        multiple
+                                        data-debug="true"
+                                        data-debug-element="#debug"
+                                        id="select4"
+                                        data-show-selection-as-list="false"
+                                        data-show-action-menu="false"
+                                        data-drop-direction="dropdown-center"
+                                        data-btn-split="true"
+                                        data-btn-class="btn-info">
+                                    <option value="1">Item 1</option>
+                                    <option value="2">Item 2</option>
+                                    <option value="3">Item 3</option>
+                                    <option value="4">Item 4</option>
+                                    <option value="5">Item 5</option>
+                                    <option value="6">Item 6</option>
+                                </select>
+                            </div>
+                            <div class="px-2">
+                                <small class="text-uppercase mb-3 d-block">Console of playground</small>
+                                <div id="debug" class="font-monospace border d-flex flex-column overflow-auto p-3"
+                                     style="max-height: 500px"></div>
+                            </div>
+                        </div>
                     </td>
                 </tr>
             </table>
         </div>
         <div class="flex-fill d-flex flex-column p-3" data-bs-theme="light">
-            <h4>Console of playground</h4>
-            <div id="debug" class="font-monospace border d-flex flex-column overflow-auto p-3"
-                 style="max-height: 500px"></div>
+
         </div>
     </div>
 </form>
 <script src="../vendor/components/jquery/jquery.min.js"></script>
 <script src="../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
-<script  src="../dist/locale/de-DE.min.js"></script>
+<script src="../dist/locale/de-DE.min.js"></script>
 <script src="../dist/jquery.bs-select.min.js"></script>
 
 <script>
@@ -159,8 +173,8 @@
             }
 
             select1.bsSelect();
-            select1.on('change.bs.select', function (e) {
-                select1.bsSelect('getSelectedText', function(text){
+            select1.on('change.bs.select', function () {
+                select1.bsSelect('getSelectedText', function (text) {
                     console.log('getSelectedText:', text);
                 })
             })
@@ -173,8 +187,10 @@
                 showMultipleCheckboxes: true
             });
             select4.bsSelect({
-                btnClass:'text-nowrap btn btn-success',
-                showMultipleCheckboxes: true
+                btnClass: 'text-nowrap btn btn-success',
+                showMultipleCheckboxes: true,
+                debug: true,
+                debugElement: '#debug',
                 // onBeforeChange: function(){
                 //     return confirm('really change?')
                 // }
@@ -201,7 +217,7 @@
                     // }
                 };
                 select4.bsSelect('updateOptions', newOptions)
-                select4.bsSelect('getSelectedText', function(text){
+                select4.bsSelect('getSelectedText', function (text) {
                     console.log(text);
                 })
             });
@@ -209,7 +225,7 @@
                 e.preventDefault();
 
                 select4.bsSelect('setItemsDisabled', {
-                    value: [2,3],
+                    value: [2, 3],
                     setSelected: false,
                     enableOther: true
                 })
@@ -256,6 +272,18 @@
             $('#btnAll').on('click', function (e) {
                 e.preventDefault();
                 select4.bsSelect('selectAll');
+            });
+            $('#selectLast').on('click', function (e) {
+                e.preventDefault();
+                select4.bsSelect('selectLast');
+            });
+            $('#selectFirst').on('click', function (e) {
+                e.preventDefault();
+                select4.bsSelect('selectFirst');
+            });
+            $('#setBtnClass').on('click', function (e) {
+                e.preventDefault();
+                select4.bsSelect('setBtnClass', 'btn-primary');
             });
             $('body').animate({opacity: 1}, 0);
 

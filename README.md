@@ -1,9 +1,6 @@
 `$.fn.bsSelect`
 
-This jQuery plugin converts a simple select element into a bootstrap dropdown element. It offers numerous options,
-methods and events for further processing.
-It was developed on the basis of jQuery 3.6, Bootstrap 5.3 and Bootstrap icons.
-
+This jQuery plugin enhances standard `<select>` elements by converting them into fully-featured Bootstrap dropdown components. It provides a wide range of customization options, methods, and event hooks for seamless integration and extended functionality. The plugin is built using **jQuery 3.6**, **Bootstrap 5.3**, and **Bootstrap Icons**, ensuring compatibility and modern design standards.
 ## table of contents
 
 - [Requirements](#requirements)
@@ -175,6 +172,17 @@ $('select').bsSelect('method', param);
 | destroy.bs.select        | Fires when the `destroy` method has been activated.                                                                              |
 | selectAll.bs.select      | Fires when the select all option has been pressed.                                                                               |
 | selectNone.bs.select     | Fires when the select none option has been pressed.                                                                              |
+| selectFirst.bs.select    | Fires when the `selectFirst` method has been called. The value of the first element is passed as a parameter.                    |
+| selectLast.bs.select     | Fires when the `selectLast` method has been called. The value of the last element is passed as a parameter.                      |
 | any.bs.select            | Fires at every event.                                                                                                            |
 | keydown.bs.select        | Fires when the pressed key is not a dropdown command (arrowUp,arrowDown,ESCAPE)                                                  |
 | toggleDisabled.bs.select | Fires when the disable status changes. Returns the new status as a parameter. fn(e, (boolean)status){}                           |
+
+## Conclusion
+
+The **bs-select** plugin is a feature-rich solution for enhancing `<select>` elements to work with Bootstrap styling and interactivity.
+
+For further queries or issues, check:
+
+- [GitHub Documentation](https://github.com/ThomasDev-de/bs-select)
+- [Bootstrap Select Examples](https://getbootstrap.com/docs)
