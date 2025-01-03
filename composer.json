@@ -19,7 +19,7 @@
     "docs": "https://github.com/ThomasDev-de/bs-select#readme"
   },
   "require": {
-    "components/jquery": "^3.7.1",
+    "components/jquery": "^3",
     "twbs/bootstrap": "^4 || ^5",
     "twbs/bootstrap-icons": "^1.11"
   },
