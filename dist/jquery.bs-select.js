@@ -6,7 +6,7 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.18
+ * @version 2.1.19
  * @date 2025-01-02
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
@@ -108,7 +108,8 @@
                 menuItemClass: null,
                 searchText: translations.searchText,
                 onBeforeChange: null,
-                onKeyDown: null
+                onKeyDown: null,
+                value: undefined
             }
         };
 
@@ -595,91 +596,117 @@
          * @return {$} - The initialized dropdown menu.
          */
         function init($select, fireTrigger = false) {
+            // Retrieve the settings for this specific select element.
             const settings = $select.data('options');
-            const multiple = $select.prop('multiple');
-            const isDisabled = $select.is(':disabled');
 
-
+            // If debugging is enabled, log the initial value of the select element.
             if (settings.debug) {
                 console.log('bsSelect:init with value:', $select.val());
             }
-            /**
-             * @type {$}
-             */
-            let $dropdown = getDropDown($select);
-            const isSelectDisabled = $select.hasClass('disabled') || $select.is('[disabled]');
 
+            // Attempt to retrieve a pre-existing dropdown wrapper for this select element.
+            let $dropdown = getDropDown($select);
+
+            // If a dropdown wrapper already exists, it means the plugin has already been initialized for this element.
+            // In this case, simply return the existing dropdown wrapper.
             if ($dropdown.length) {
                 return $dropdown;
             }
 
+            // Determine if multiple selections are allowed for this select element.
+            const multiple = $select.prop('multiple');
+            // Check if the original select element is disabled using jQuery's is() method.
+            const isDisabled = $select.is(':disabled');
+            // Check if the select element is disabled using either the 'disabled' class or the 'disabled' attribute.
+            const isSelectDisabled = $select.hasClass('disabled') || $select.is('[disabled]');
+
+            // If the select element does not allow multiple selections and no value is currently selected,
+            // reset the selectedIndex property to -1 to ensure no option is selected by default.
             if (!multiple && isValueEmpty($select.val())) {
                 $select.prop("selectedIndex", -1);
             }
 
-            let selectedValue = $select.val();
+            // Determine the initial selected value. If fireTrigger is true and a value is provided in the settings,
+            // use that value. Otherwise, use the value currently selected in the native select element.
+            let selectedValue = fireTrigger && typeof settings.value !== undefined ? settings.value : $select.val();
 
+            // If the select element allows multiple selections and the provided selectedValue is not an array,
+            // convert it into an array to ensure compatibility with the plugin's internal logic.
+            if (multiple && !Array.isArray(selectedValue)) {
+                selectedValue = [selectedValue];
+            }
 
+            // Create a new div element to serve as the dropdown wrapper and insert it after the original select element.
+            // The wrapper is assigned the classes 'js-bs-select-dropdown' and 'position-relative'.
             $dropdown = $('<div>', {
                 class: `${WRAPPER_CLASS} position-relative`,
                 css: {
-                    width: settings.btnWidth
+                    width: settings.btnWidth // Set the width of the dropdown based on the provided settings.
                 }
             }).insertAfter($select);
 
+            // If a dropDirection is specified in the settings, add the corresponding class to the dropdown wrapper.
             if (settings.dropDirection !== null) {
                 $dropdown.addClass(settings.dropDirection);
             }
 
+            // Determine the class for the toggle icon. If no custom icon class is provided, use 'dropdown-toggle'.
             const toggleIconClass = settings.dropIconClass === null ? 'dropdown-toggle' : '';
+            // Create the HTML for the dropdown icon, using the specified icon class if available.
             const dropIcon = settings.dropIconClass !== null ? `<i class="ms-2 ml-2 ${settings.dropIconClass}"></i>` : '';
-            // add dropdown toggle item
-            if (!settings.btnSplit) {
-                $('<button>', {
-                    class: `btn ${settings.btnClass} ${toggleIconClass} d-flex flex-nowrap align-items-start flex-nowrap js-dropdown-header justify-content-between`,
-                    type: 'button',
-                    disabled: isDisabled,
-                    'data-bs-toggle': 'dropdown',
-                    'data-toggle': 'dropdown',
-                    'aria-expanded': false,
-                    'data-bs-auto-close': multiple ? 'outside' : true,
-                    html: `<div class="js-selected-text">${settings.btnEmptyText}</div>${dropIcon}`,
-                    css: {
-                        width: settings.btnWidth
-                    }
-                }).appendTo($dropdown);
-            } else {
-                $dropdown.addClass('btn-group');
-                $('<button>', {
-                    class: `btn ${settings.btnClass} d-flex flex-nowrap align-items-start js-dropdown-header justify-content-between`,
-                    type: 'button',
-                    disabled: isDisabled,
-                    html: `<div class="js-selected-text">${settings.btnEmptyText}</div>`,
-                    css: {
-                        width: settings.btnWidth
-                    }
-                }).appendTo($dropdown);
 
+            // Add the dropdown toggle button. The implementation differs depending on whether the dropdown is split or not.
+            if (!settings.btnSplit) {
+                // If btnSplit is false, create a single button that acts as both the dropdown toggle and displays the selected value(s).
                 $('<button>', {
-                    class: `btn ${settings.btnClass} dropdown-toggle dropdown-toggle-split`,
-                    'data-bs-toggle': 'dropdown',
-                    'data-toggle': 'dropdown',
-                    'aria-expanded': false,
-                    'data-bs-auto-close': multiple ? 'outside' : true
-                }).appendTo($dropdown);
+                    class: `btn ${settings.btnClass} ${toggleIconClass} d-flex flex-nowrap align-items-start flex-nowrap js-dropdown-header justify-content-between`, // Apply Bootstrap classes, the toggle icon class, and custom classes for styling and selection.
+                    type: 'button',  // Set the button type to "button" to prevent form submission.
+                    disabled: isDisabled, // Set the disabled state of the button to match the original select element.
+                    'data-bs-toggle': 'dropdown', // Add the data attribute required for Bootstrap's dropdown functionality.  This is for Bootstrap 5.
+                    'data-toggle': 'dropdown',  // Add the data attribute required for Bootstrap's dropdown functionality. This is for Bootstrap 4.
+                    'aria-expanded': false, // Set the aria-expanded attribute to "false" initially, as the dropdown starts closed.
+                    'data-bs-auto-close': multiple ? 'outside' : true, // Configure the dropdown's auto-close behavior. If multiple selections are allowed, close only when clicking outside. Otherwise, close when clicking anywhere.
+                    html: `<div class="js-selected-text">${settings.btnEmptyText}</div>${dropIcon}`, // Set the HTML content of the button, including the placeholder text and the dropdown icon.
+                    css: {
+                        width: settings.btnWidth // Set the width of the button according to the settings.
+                    }
+                }).appendTo($dropdown); // Append the created button to the dropdown wrapper.
+            } else {
+                // If btnSplit is true, create a split button group, where one button displays the selected value(s) and another button triggers the dropdown.
+                $dropdown.addClass('btn-group'); // Add the 'btn-group' class to the dropdown wrapper to create a button group.
+
+                // Create the button that displays the selected value(s).
+                $('<button>', {
+                    class: `btn ${settings.btnClass} d-flex flex-nowrap align-items-start js-dropdown-header justify-content-between`, // Apply Bootstrap classes and custom classes for styling and selection.
+                    type: 'button', // Set the button type to "button".
+                    disabled: isDisabled,  // Set the disabled state to match the original select element.
+                    html: `<div class="js-selected-text">${settings.btnEmptyText}</div>`, // Set the HTML content, including the placeholder text.
+                    css: {
+                        width: settings.btnWidth // Set the width according to the settings.
+                    }
+                }).appendTo($dropdown); // Append the button to the dropdown wrapper.
+
+
+                // Create the button that triggers the dropdown.
+                $('<button>', {
+                    class: `btn ${settings.btnClass} dropdown-toggle dropdown-toggle-split`, // Apply Bootstrap classes for the split toggle button.
+                    'data-bs-toggle': 'dropdown', // Add the data attribute for Bootstrap 5 dropdown functionality.
+                    'data-toggle': 'dropdown',  // Add the data attribute for Bootstrap 4 dropdown functionality.
+                    'aria-expanded': false, // Set aria-expanded to "false".
+                    'data-bs-auto-close': multiple ? 'outside' : true // Set auto-close behavior similar to the non-split button.
+                }).appendTo($dropdown); // Append the toggle button to the dropdown wrapper.
             }
 
-            /**
-             * fix overflow, when dropdown is inside bootstrap-table plugin
-             * @see https://github.com/wenzhixin/bootstrap-table
-             */
+            // Apply a fix for overflow issues that may occur when the dropdown is placed inside a Bootstrap table with fixed height.
             const isDropDownInBootstrapTable = $dropdown.closest('.fixed-table-body:not(.overflow-visible)').length;
             if (isDropDownInBootstrapTable) {
+                // If the dropdown is inside a fixed-height table, add the 'overflow-visible' class to its parent to prevent clipping.
                 $dropdown
                     .closest('.fixed-table-body')
                     .addClass('overflow-visible');
             }
 
+            // Set up the dropdown menu and its event listeners.
             setupDropdown($dropdown, $select, multiple);
 
             /**
@@ -777,10 +804,12 @@
                 let selected = "";
                 if (value !== false) {
                     if (multiple) {
-                        isSelected = $.inArray(value, selectedValue) > -1;
+                        // String conversion for comparison
+                        isSelected = selectedValue.some(item => String(item) === String(value));
                         selected = isSelected ? 'active' : '';
                     } else {
-                        isSelected = selectedValue === value;
+                        // String conversion for comparison
+                        isSelected = String(selectedValue) === String(value);
                         selected = isSelected ? 'active' : '';
                     }
                 }
@@ -819,8 +848,6 @@
                 i++;
             });
 
-            setSelectValues($select);
-
             if (settings.menuAppendHtml !== null) {
                 $(`<hr>`, {
                     class: 'dropdown-divider'
@@ -833,6 +860,7 @@
                 }).appendTo($dropdownMenuInner);
             }
 
+            setSelectValues($select);
             setDropdownTitle($select);
 
             if (fireTrigger) {
@@ -845,53 +873,59 @@
         }
 
         /**
-         * Returns the HTML string of a checklist icon.
+         * Returns the HTML string for a checklist icon, based on the provided selection state.
          *
-         * @param {boolean} isSelected - Indicates whether the icon should be selected or not.
-         * @return {string} - The HTML string representing the checklist icon.
+         * @param {boolean} isSelected True if the icon should be checked, false otherwise.
+         * @returns {string} The HTML string representing the checklist icon.
          */
         function getCheckListIcon(isSelected) {
+            // If isSelected is true, return the HTML for a checked icon ("bi-check-square").
+            // Otherwise, return the HTML for an unchecked icon ("bi-square").
+            // Both icons include Bootstrap Icon classes and custom classes for styling and functionality.
             return isSelected ? `<i class="bi bi-check-square mr-2 me-2 js-icon-checklist"></i>` : `<i class="bi bi-square me-2 mr-2 js-icon-checklist"></i>`;
         }
-
         /**
-         * Sets the dropdown title based on the selected values in the given select element.
+         * Sets the title of the bsSelect dropdown button based on the selected values.
          *
-         * @param {$} $select - The select element.
+         * @param {jQuery} $select The jQuery object representing the select element.
          */
         function setDropdownTitle($select) {
+            // Retrieve the plugin settings.
             const settings = $select.data('options');
-            // const multiple = false !== $select.prop('multiple');
+            // Get the dropdown wrapper element.
             const $dropdown = getDropDown($select);
+            // Find the element within the dropdown that displays the title text.
             const $titleElement = $dropdown.find('.js-dropdown-header .js-selected-text');
+            // Get the currently selected values from the select element.
             let selectedValues = $select.val();
+            // Check if any values are selected.
             const isEmpty = isValueEmpty(selectedValues);
-            let title;
 
             let title2;
             let subtext2 = null;
-
             let tooltip = "";
 
-            // If no value is set, set empty text
+            // If no values are selected, set the title to the default empty text.
             if (isEmpty) {
                 title2 = settings.btnEmptyText;
             } else {
+                // If values are selected, handle the title display based on whether it's a multiple or single select.
                 if (Array.isArray(selectedValues)) {
-                    // I am multiple
+                    // Multiple select:
                     if (selectedValues.length === 1) {
-                        // Only one option was selected
+                        // Only one option is selected, so display its text and subtext (if available).
                         let $option = $select.find(`option[value="${selectedValues[0]}"]`);
                         subtext2 = settings.showSubtext && $option.data('subtext') ? $option.data('subtext') : null;
-
                         title2 = $option.text();
                         tooltip = $option.text();
                     } else {
-                        // Several option was selected
+                        // Multiple options are selected.
                         if (!settings.showSelectionAsList) {
+                            // Display the number of selected items.
                             let length = $select.find('option').length;
-                            title = settings.showSelectedText(selectedValues.length, length);
-                            title2 = title;
+                            title2 = settings.showSelectedText(selectedValues.length, length);
+
+                            // Construct the tooltip text by concatenating the text of each selected option.
                             let tooltips = [];
                             selectedValues.forEach(val => {
                                 let $option = $select.find(`option[value="${val}"]`);
@@ -899,7 +933,7 @@
                             });
                             tooltip += tooltips.join(',');
                         } else {
-                            // show as list
+                            // Display the selected options as a list.
                             let texts2 = [];
                             let subtexts2 = [];
                             let tooltips = [];
@@ -916,9 +950,10 @@
                         }
                     }
                 } else {
-                    // I am single select
+                    // Single select: Display the selected option's text and subtext (if available).
                     let $option = $select.find(`option[value="${selectedValues}"]`);
                     if ($option.hasClass('d-none')) {
+                        // If the selected option is hidden, display the default empty text.
                         title2 = settings.btnEmptyText;
                     } else {
                         let hasSubtexts = settings.showSubtext && $option.data('subtext');
@@ -929,34 +964,42 @@
                 }
             }
 
+            // Set the HTML content of the title element using the formatted title and subtext.
             $titleElement.html(formateSelectedText(settings, title2, subtext2));
 
-            // $titleElement.html('<div class="d-flex flex-column">'+title+'</div>');
+            // Set the tooltip attribute of the title element.
             $titleElement.attr('title', tooltip);
         }
 
         /**
-         * Formats the selected text by combining a title and an optional subtext into a specific HTML structure.
+         * Formats the selected text for display in the bsSelect dropdown button.
+         * This function handles both single and multiple selections, as well as optional subtext.
          *
-         * @param settings {object}
-         * @param {string|array} title - The main title text to be formatted.
-         * @param {string|array|null} [subtext=null] - The optional subtext to be included. If not provided or empty, it will default to an empty string.
-         * @return {string} The formatted HTML string containing the title and optional subtext.
+         * @param {Object} settings The plugin settings.
+         * @param {string|Array} title The main title text(s) to display. Can be a string or an array of strings.
+         * @param {string|Array|null} [subtext=null] The optional subtext(s) to display. Can be a string, an array of strings, or null.
+         * @returns {string} The formatted HTML string representing the selected text.
          */
         function formateSelectedText(settings, title, subtext = null) {
-            // Check if title is a valid array element
+            // Check if the title is an array (indicating multiple selections).
             if (Array.isArray(title) && title.length > 0) {
+                // If the title is an array, iterate over each title element.
                 let returnString = '';
                 for (let i = 0; i < title.length; i++) {
-                    // If subtext is also a valid array element, then use the corresponding subtext element
+                    // If the subtext is also an array, use the corresponding subtext element for the current title.
+                    // Otherwise, use the provided subtext (or null if not provided).
                     const sub = Array.isArray(subtext) && subtext.length > i ? subtext[i] : null;
-                    // Call recursively formatted text and append it to returnString
+
+                    // Recursively call the formateSelectedText function for each title/subtext pair
+                    // and concatenate the results into the returnString.
                     returnString += formateSelectedText(settings, title[i], sub);
                 }
+                // Return the combined formatted string for all selected items.
                 return returnString;
             }
 
-
+            // If the title is not an array (indicating a single selection or the recursive call for a single item in a multiple selection),
+            // call the user-defined formatSelectedText function from the settings and return the result.
             return settings.formatSelectedText(title, subtext);
         }
 
@@ -967,59 +1010,104 @@
          * @param {jQuery} $select - The jQuery object representing the select element
          *
          * @*/
+        /**
+         * Updates the dropdown menu's visual state to reflect the currently selected values in the associated select element.
+         *
+         * @param {jQuery} $select The jQuery object representing the select element.
+         */
         function val($select) {
+            // Retrieve the dropdown wrapper element associated with the select element.
             const $dropdown = getDropDown($select);
+
+            // Remove the 'active' class from all dropdown items to clear any previous selections.
             $dropdown.find('.dropdown-item.active').removeClass('active');
+            // Uncheck all checked icons by removing the 'bi-check-square' class and adding the 'bi-square' class.
             $dropdown.find('.dropdown-item .js-icon-checklist.bi-check-square').removeClass('bi-check-square').addClass('bi-square');
+
+            // Temporarily remove the 'disabled' class from disabled dropdown items to allow for proper styling updates.
             const disabledDropdownIcons = $dropdown.find('.dropdown-item.disabled');
             disabledDropdownIcons.removeClass('disabled');
+
+            // Get the currently selected values from the select element.
             let values = $select.val();
+
+            // If the selected values are not already an array (e.g., in a single-select scenario), convert them into an array.
             if (!Array.isArray(values)) {
                 values = [values];
             }
 
+            // Iterate over each selected value.
             values.forEach(value => {
+                // Find the index of the corresponding option element within the select element.
                 let index = $select.find(`option[value="${value}"]`).index();
+
+                // Find the corresponding dropdown item using its data-index attribute.
                 const item = $dropdown.find(`.dropdown-item[data-index="${index}"]`);
+
+                // Add the 'active' class to the dropdown item to visually mark it as selected.
                 item.addClass('active');
             });
+
+            // For active items, check their icons by removing 'bi-square' and adding 'bi-check-square'.
             $dropdown.find('.dropdown-item.active .js-icon-checklist.bi-square').removeClass('bi-square').addClass('bi-check-square');
 
+            // Update the actual select element's values based on the active dropdown items.
             setSelectValues($select);
+            // Update the dropdown title to reflect the current selection.
             setDropdownTitle($select);
+
+            // Re-add the 'disabled' class to the previously disabled dropdown items.
             disabledDropdownIcons.addClass('disabled');
         }
 
         /**
-         * Destroys a dropdown element and restores the original select element.
+         * Destroys the bsSelect dropdown associated with a given select element, restoring the original select element.
          *
-         * @param {jQuery} $select - The select element to destroy.
-         * @param {boolean} show - Flag to indicate whether to show the select element after destruction.
-         * @param {boolean} [clearData=false] - Flag to indicate whether to clear the data associated with the select element.
-         *
-         * @return {undefined}
+         * @param {jQuery} $select The jQuery object representing the select element.
+         * @param {boolean} show Whether to show the original select element after destroying the dropdown.
+         * @param {boolean} [clearData=false] Whether to remove the plugin's data associated with the select element.
          */
         function destroy($select, show, clearData = false) {
+            // Retrieve the plugin settings associated with the select element.
             const settings = $select.data('options');
+
+            // If debugging is enabled, log a message indicating the destruction process.
             if (settings.debug) {
                 console.log('bsSelect:destroy');
             }
+
+            // Store the current value of the select element before destroying the dropdown.
             let val = $select.val();
+
+            // If debugging is enabled, log the value of the select element before destruction.
             if (settings.debug) {
                 console.log('bsSelect:destroy value before: ', val);
             }
+
+            // Retrieve the dropdown wrapper element associated with the select element.
             let $dropdown = getDropDown($select);
+
+            // Move the original select element back to its original position in the DOM, before the dropdown wrapper.
             $select.insertBefore($dropdown);
+
+            // Restore the original value of the select element.
             $select.val(val);
+
+            // If debugging is enabled, log the value of the select element after restoration.
             if (settings.debug) {
                 console.log('bsSelect:destroy value after: ', $select.val());
             }
+
+            // If clearData is true, remove the plugin's data associated with the select element.
             if (clearData) {
                 $select.removeData('options');
             }
-            $dropdown.remove();
-            if (show) {
 
+            // Remove the dropdown wrapper element from the DOM.
+            $dropdown.remove();
+
+            // If show is true, restore the original select element's visibility and dimensions.
+            if (show) {
                 $select.css({
                     'position': '',
                     'left': '',
@@ -1031,133 +1119,152 @@
         }
 
         /**
-         * Refreshes the given select element by destroying and reinitializing it.
+         * Refreshes the bsSelect dropdown for a given select element by destroying and re-initializing the plugin.
          *
-         * @param {jQuery} $select - The select element to refresh.
-         *
-         * @return {void}
+         * @param {jQuery} $select The jQuery object representing the select element to refresh.
          */
         function refresh($select) {
+            // Destroy the existing bsSelect dropdown, without showing the original select element and without clearing the plugin data.
             destroy($select, false, false);
+            // Re-initialize the bsSelect dropdown for the select element, without triggering the init event.
             init($select, false);
         }
 
         /**
-         * Toggles the disabled state of a dropdown button associated with the provided select element.
+         * Toggles the disabled state of the bsSelect dropdown button associated with the provided select element.
          *
-         * @param {jQuery} $select - The jQuery object representing the select element.
-         * @return {void}
+         * @param {jQuery} $select The jQuery object representing the select element.
          */
         function toggleDisabled($select) {
-            const dropDown = getDropDown($select);
-            const btn = dropDown.find('[data-bs-toggle="dropdown"],[data-toggle="dropdown"]');
+            // Determine the new disabled state by inverting the current disabled state of the select element.
             const status = !$select.is(':disabled');
+            // Set the disabled state of the dropdown using the determined status.
             setDisabled($select, status);
         }
 
-
         /**
-         * Sets the disabled status of a dropdown menu.
+         * Sets the disabled state of the bsSelect dropdown menu.
          *
-         * @param {jQuery} $select - The jQuery object representing the dropdown selector.
-         * @param {boolean} status - A boolean indicating whether to disable (true) or enable (false) the dropdown.
-         * @return {void} This function does not return a value.
+         * @param {jQuery} $select The jQuery object representing the select element associated with the dropdown.
+         * @param {boolean} status True to disable the dropdown, false to enable it.
          */
         function setDisabled($select, status) {
-            // Gets the dropdown component associated with the <select>
+            // Retrieve the dropdown wrapper element.
             const dropDown = getDropDown($select);
-            // Searches for the trigger button (Bootstrap specific)
+            // Find the dropdown toggle button within the wrapper.  This selector handles both Bootstrap 4 and Bootstrap 5 data attributes.
             const btn = dropDown.find('[data-bs-toggle="dropdown"],[data-toggle="dropdown"]');
 
             if (status) {
-                // Adds the bootstrap class 'disabled' (makes the button visually unusable)
+                // If the dropdown should be disabled:
+                // Add the 'disabled' class to the toggle button for visual indication.
                 btn.addClass('disabled');
+                // Hide the dropdown menu.
                 hide($select);
             } else {
-                // Removes the 'disabled' class (makes the button usable again)
+                // If the dropdown should be enabled:
+                // Remove the 'disabled' class from the toggle button.
                 btn.removeClass('disabled');
             }
 
-            // Disables/enables the dropdown button (prevents all interactions, not just visually)
+            // Set the 'disabled' property of the toggle button to reflect the desired state.
             btn.prop('disabled', status);
-            // Enables/Disables the native <select>
+            // Set the 'disabled' property of the original select element to synchronize its state with the dropdown.
             $select.prop('disabled', status);
 
-            // Raises a custom event that informs other functions or components
+            // Trigger a custom 'toggleDisabled.bs.select' event to notify other parts of the plugin about the state change.
             trigger($select, 'toggleDisabled.bs.select', [status]);
         }
 
         /**
-         * Disables specific items in a select element and optionally sets their selected state.
+         * Disables specific items (options) within a select element and optionally sets their selected state.
          *
-         * @param {jQuery} $select The jQuery object representing the select element whose options are being modified.
-         * @param {Object} object Configuration options for modifying the select element:
-         *   - {Array|string} value: The values of the options to be disabled. Can be a string or an array of strings.
-         *   - {boolean} [enableOther=false]: If true, enables all options before applying the disable logic.
-         *   - {boolean|null} [setSelected=null]: If provided, sets the `selected` property of the options being modified to this value.
-         * @return {void} Does not return a value.
+         * @param {jQuery} $select The jQuery object representing the select element.
+         * @param {Object} object An object containing configuration options:
+         *   - {Array|string} value: The value(s) of the options to disable. Can be a string or an array of strings.
+         *   - {boolean} [enableOther=false]: If true, enables all options before disabling the specified ones.
+         *   - {boolean|null} [setSelected=null]: If true or false, sets the 'selected' property of the disabled options accordingly.
          */
         function setItemsDisabled($select, object) {
+            // Check if the provided argument is an object.  If not, the function does nothing.
             if (typeof object === 'object') {
 
+                // Ensure the 'value' property exists in the object. If not, initialize it as an empty array.
                 if (!object.hasOwnProperty('value')) {
                     object.value = [];
                 }
 
+                // Ensure the 'enableOther' property exists in the object. If not, default it to false.
                 if (!object.hasOwnProperty('enableOther')) {
                     object.enableOther = false;
                 }
 
+                // Ensure the 'setSelected' property exists in the object. If not, default it to null.
                 if (!object.hasOwnProperty('setSelected')) {
                     object.setSelected = null;
                 }
 
+                // If the 'value' property is not an array, convert it into an array.
                 if (!Array.isArray(object.value)) {
                     object.value = [object.value];
                 }
 
-
+                // Destroy the existing bsSelect dropdown to manipulate the original select element directly.
                 destroy($select, false, false);
 
+                // If 'enableOther' is true, enable all options within the select element.
                 if (object.enableOther) {
-                    $select.find('option').prop('disabled', false); // Enable all options
+                    $select.find('option').prop('disabled', false);
                 }
 
+                // Iterate over the provided values to disable.
                 object.value.forEach(val => {
+                    // Find the option element corresponding to the current value.
                     const option = $select.find(`option[value="${val}"]`);
 
+                    // If 'setSelected' is provided (true or false), set the 'selected' property of the option accordingly.
                     if (object.setSelected !== null) {
                         option.prop('selected', object.setSelected);
                     }
 
+                    // Disable the current option element.
                     option.prop('disabled', true);
                 });
 
+                // Re-initialize the bsSelect dropdown after modifying the original select element.
                 init($select, false);
             }
         }
 
 
         /**
-         * Executes the onBeforeChange function provided in the settings object.
-         * If the function exists and returns true, triggers the 'acceptChange.bs.select' event.
-         * If the function exists and returns false, triggers the 'cancelChange.bs.select' event.
-         * Returns the value returned by the onBeforeChange function or true if it does not exist.
+         * Executes the `onBeforeChange` callback function, if defined in the plugin settings.
+         * This function allows custom logic to be executed before a change event occurs.
          *
-         * @param {jQuery} $select - The select element.
-         * @return {*|boolean} - The value returned by the onBeforeChange function or true if it does not exist.
+         * @param {jQuery} $select The jQuery object representing the select element.
+         * @returns {boolean} True if the change is allowed (or if no callback is defined), false otherwise.
          */
         function onBeforeChange($select) {
+            // Retrieve the plugin settings for the select element.
             const settings = $select.data('options');
+
+            // Check if an 'onBeforeChange' callback function is defined in the settings.
             if (typeof settings.onBeforeChange === 'function') {
+                // If the callback exists, execute it and store the returned value.
                 const ok = settings.onBeforeChange($select);
+
+                // If the callback returns true (or any truthy value), trigger the 'acceptChange.bs.select' event.
                 if (ok) {
                     trigger($select, 'acceptChange.bs.select');
                 } else {
+                    // If the callback returns false (or any falsy value), trigger the 'cancelChange.bs.select' event.
                     trigger($select, 'cancelChange.bs.select');
                 }
+
+                // Return the value returned by the callback function.
                 return ok;
             }
+
+            // If no 'onBeforeChange' callback is defined, return true to allow the change.
             return true;
         }
 

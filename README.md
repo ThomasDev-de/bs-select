@@ -1,6 +1,10 @@
 `$.fn.bsSelect`
 
-This jQuery plugin enhances standard `<select>` elements by converting them into fully-featured Bootstrap dropdown components. It provides a wide range of customization options, methods, and event hooks for seamless integration and extended functionality. The plugin is built using **jQuery 3.6**, **Bootstrap 5.3**, and **Bootstrap Icons**, ensuring compatibility and modern design standards.
+This jQuery plugin enhances standard `<select>` elements by converting them into fully-featured Bootstrap dropdown
+components. It provides a wide range of customization options, methods, and event hooks for seamless integration and
+extended functionality. The plugin is built using **jQuery 3.6**, **Bootstrap 5.3**, and **Bootstrap Icons**, ensuring
+compatibility and modern design standards.
+
 ## table of contents
 
 - [Requirements](#requirements)
@@ -102,6 +106,7 @@ All selects with the attribute `[data-bs-toggle="select"]` or `[data-toggle="sel
 
 | property               | data-attribute                | type             | default                             | desc                                                                                                                                                                                                                              |
 |------------------------|-------------------------------|------------------|-------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| value                  | [data-value]                  | `mixed`          | `undefined`                         | *If a value is passed here, this value (if available) will be preselected during initialization. Otherwise the value of the native select is adopted.*                                                                            |
 | search                 | [data-search]                 | `bool`           | `true`                              | *adds a search function to the menu*                                                                                                                                                                                              |
 | searchText             | [data-search-text]            | `string`         | `Search..`                          | "Placeholder for search input box*                                                                                                                                                                                                |
 | btnWidth               | [data-btn-width]              | `string`         | `fit-content`                       | *the css width of the dropdown button*                                                                                                                                                                                            |
@@ -180,7 +185,8 @@ $('select').bsSelect('method', param);
 
 ## Conclusion
 
-The **bs-select** plugin is a feature-rich solution for enhancing `<select>` elements to work with Bootstrap styling and interactivity.
+The **bs-select** plugin is a feature-rich solution for enhancing `<select>` elements to work with Bootstrap styling and
+interactivity.
 
 For further queries or issues, check:
 

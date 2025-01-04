@@ -172,15 +172,12 @@
                 })
             }
 
-            select1.bsSelect();
+            select1.bsSelect({value:2});
             select1.on('change.bs.select', function () {
                 select1.bsSelect('getSelectedText', function (text) {
                     console.log('getSelectedText:', text);
                 })
             })
-
-
-            select1.bsSelect('val', 1);
 
             select2.bsSelect();
             select3.bsSelect({
