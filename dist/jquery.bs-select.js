@@ -1,19 +1,17 @@
 /**
  * **************************************************
- *                     bsSelect                     *
+ *                     bsSelect
  * **************************************************
  *
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.19
- * @date 2025-01-02
+ * @version 2.1.20
+ * @date 2025-01-05
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
  * @fileOverview README.md
  * @repository https://github.com/ThomasDev-de/bs-select (bsSelect)
- * @see https://getbootstrap.com/ (Bootstrap documentation)
- * @see https://github.com/twbs/bootstrap-icons (Bootstrap Icons)
  *
  * Dependencies:
  * ---------------
@@ -56,6 +54,7 @@
         const translations = window.bsSelectTranslations || defaultTranslations;
 
         const WRAPPER_CLASS = 'js-bs-select-dropdown';
+
         /**
          * Represents a Bootstrap Select plugin.
          *
@@ -114,7 +113,6 @@
         };
 
         /**
-         *
          * Triggers the specified event on the given select element.
          *
          * @param {$} $select - The select element to trigger the event on.
@@ -122,33 +120,46 @@
          * @param {array} addParams - Additional trigger parameters.
          */
         function trigger($select, event, addParams = []) {
+            // Initialize an array to hold the event parameters
             let params = [];
+
+            // If the event is not 'any.bs.select'
             if (event !== 'any.bs.select') {
+                // Trigger the 'any.bs.select' event first
                 trigger($select, 'any.bs.select');
+
+                // Add any additional parameters to the params array
                 if (addParams.length) {
                     addParams.forEach(p => {
                         params.push(p);
                     });
-                } else {
-                    // params.push($select.val());
                 }
+                // Trigger the specified event with the parameters
                 $select.trigger(event, params);
             } else {
+                // If the event is 'any.bs.select', trigger it directly without parameters
                 $select.trigger(event);
             }
+
+            // Get the plugin settings
             const settings = $select.data('options');
 
+            // If debug mode is enabled
             if (settings.debug) {
+                // Log the triggered event and its parameters to the console
                 console.log('trigger', event, params);
 
+                // If a debug element is specified
                 if (settings.debugElement !== null) {
+                    // Convert the parameters to a string
                     const paramsString = params.length ? JSON.stringify(params) : null;
+                    // Create a log message element
                     const log = $('<small>', {
                         class: 'js-log border-bottom',
                         html: '[' + new Date().toUTCString() + '] trigger <span class="text-warning">' + event + '</span> fired. Params: ' + paramsString
                     }).prependTo(settings.debugElement);
 
-
+                    // Remove the log message after 5 seconds
                     setTimeout(function () {
                         log.remove();
                     }, 5000);
@@ -173,8 +184,11 @@
          * @return {void}
          */
         function show($select) {
+            // Get the dropdown element that contains the select
             const $dropdown = getDropDown($select);
+            // If the dropdown element exists
             if ($dropdown.length) {
+                // Use the Bootstrap dropdown('show') method to open the dropdown
                 $dropdown.dropdown('show');
             }
         }
@@ -185,8 +199,11 @@
          * @param {jQuery} $select - The select element.
          */
         function hide($select) {
+            // Get the dropdown element that contains the select
             const $dropdown = getDropDown($select);
+            // If the dropdown exists
             if ($dropdown.length) {
+                // Use the Bootstrap dropdown('hide') method to close the dropdown.
                 $dropdown.dropdown('hide');
             }
         }
@@ -210,7 +227,8 @@
             $dropdown.find('.dropdown-item:not(.active)').find('.dropdown-item-select-icon').hide();
             // Iterate over all active dropdown items
             $dropdown.find('.dropdown-item.active').each(function (i, element) {
-                // Get the value of the corresponding option element in the select element based on the data-index attribute of the dropdown item
+                // Get the value of the corresponding option element in the select element based on
+                // the data-index attribute of the dropdown item
                 let val = $select.find('option:eq(' + $(element).data('index') + ')').prop('value');
                 // If the value is not false, add it to the values array and show the selection icon
                 if (val !== false) {
@@ -231,7 +249,6 @@
                 return null;
             }
         }
-
         /**
          * Sets the values of a select element based on its data options.
          *
@@ -239,12 +256,18 @@
          * @return {void}
          */
         function setSelectValues($select) {
+            // Get the plugin's settings from the select element's data
             const settings = $select.data('options');
+
+            // Log the current value if debug mode is enabled
             if (settings.debug) {
                 console.log('bsSelect:setSelectValues', $select.val());
             }
 
+            // Get the currently selected values from the dropdown
             let values = getSelectedValuesFromDropdown($select);
+
+            // Set the value of the original select element to the retrieved values.
             $select.val(values);
         }
 
@@ -257,37 +280,60 @@
          * @returns {void}
          */
         function toggleAllItemsState($select, state = false) {
+            // Get the dropdown element
             const dropdown = getDropDown($select);
+            // Store the values before the change
             const beforeValues = $select.val();
+            // Get all the options within the select element
             const options = $select.find('option');
+            // Get the settings for the bs-select plugin
             const settings = $select.data('options');
+            // Check if multiple selections are allowed
             const multiple = false !== $select.prop('multiple');
+            // Set the 'selected' property of all options to the given state (true for select all, false for deselect all)
             options.prop('selected', state);
+            // Determine whether to toggle the check icon (for multiple selections with checkboxes)
             const toggleCheckIcon = multiple && settings.showMultipleCheckboxes;
+            // Get the inner scrolling element of the dropdown menu
             const $dropdownMenuInner = dropdown.find('.js-menu-dropdown-inner');
 
-
+            // Iterate through each option
             options.each(function (i) {
+                // Find the corresponding dropdown item element
                 const $item = dropdown.find('.dropdown-item[data-index="' + i + '"]');
+                // If selecting all
                 if (state) {
+                    // Add the 'active' class to the dropdown item (visually indicates selection)
                     $item.addClass('active');
+                    // Show the select icon within the dropdown item
                     $item.find('.dropdown-item-select-icon').show();
                 } else {
+                    // If deselecting all, remove the 'active' class and hide the icon
                     $item.removeClass('active');
                     $item.find('.dropdown-item-select-icon').hide();
                 }
             });
 
+            // If using checkboxes for multiple selections
             if (toggleCheckIcon) {
+                // Update the checkbox icons to reflect the selection state
                 dropdown.find('.dropdown-item:not(.active) .js-icon-checklist.bi-check-square').removeClass('bi-check-square').addClass('bi-square');
                 dropdown.find('.dropdown-item.active .js-icon-checklist.bi-square').removeClass('bi-square').addClass('bi-check-square');
             }
+
+            // Update the selected values in the original select element
             setSelectValues($select);
+            // Update the title of the dropdown to reflect the current selection
             setDropdownTitle($select);
+            // Scroll to the top of the dropdown menu
             $dropdownMenuInner.scrollTop(0);
+            // Determine the event name ('selectAll' or 'selectNone')
             const ev = state ? 'selectAll' : 'selectNone';
+            // Trigger the corresponding event
             trigger($select, ev + '.bs.select');
+            // Get the values after the change
             const afterValues = getSelectedValuesFromDropdown($select);
+            // If the values have changed, trigger the 'change' event
             if (hasValueChanged(beforeValues, afterValues)) {
                 trigger($select, 'change.bs.select', [beforeValues, afterValues]);
             }
@@ -321,7 +367,6 @@
             const $dropdownToggle = $dropdown.find('.dropdown-toggle');
             const autoclose = $dropdownToggle.data('autoClose') || $dropdownToggle.data('bsAutoClose') || "true";
             const BS_V = getBootstrapMajorVersion();
-
 
             $dropdown
                 .on('click', '.js-select-select-all', function (e) {
@@ -512,7 +557,6 @@
                         $dropdownMenuInner.scrollTop(0);
                     }
                 });
-
         }
 
         /**
@@ -842,7 +886,6 @@
                     class: classList,
                     html: `<a href="#" class="dropdown-item ${selected} ${disabledClass} px-2 d-flex flex-nowrap align-items-center ${itemClass} " data-index="${i}" style="cursor: pointer;">${checkElement}${$icon}<div class="${paddingLeftClass} d-flex flex-column"><div>${element.text()}</div>${$subtext}</div><div class="dropdown-item-select-icon pl-1 ps-1 ml-auto ms-auto ">${checkElementPre}</div></a>`
                 }).appendTo($dropdownMenuInner);
-
 
                 inOGroup = inOptGroup;
                 i++;
@@ -1235,7 +1278,6 @@
             }
         }
 
-
         /**
          * Executes the `onBeforeChange` callback function, if defined in the plugin settings.
          * This function allows custom logic to be executed before a change event occurs.
@@ -1318,16 +1360,25 @@
                 // Options should definitely be set in the select here.
                 init($select, true);
 
+                // Checks if the function should be called
                 if (callFunction) {
+                    // Uses a switch statement to determine which function to call based on the 'options' parameter
                     switch (options) {
+                        // Case for getting selected text
                         case 'getSelectedText': {
-                            let result; // Variable zum Speichern des Ergebnisses
+                            // Variable to store the result
+                            let result;
+                            // Get the selected value
                             const value = $select.val();
+                            // Check if the value is empty
                             if (isValueEmpty(value)) {
+                                // If empty, set the result to an empty string
                                 result = "";
                             } else {
+                                // If not empty, check if multiple values are selected
                                 const multiple = $select.prop('multiple');
 
+                                // If multiple values are selected, create an array of selected texts
                                 if (multiple && Array.isArray(value)) {
                                     const texts = [];
                                     value.forEach(val => {
@@ -1335,119 +1386,154 @@
                                     });
                                     result = texts.join(', ');
                                 } else if (typeof value === 'string') {
+                                    // If a single value is selected as a string, get the text for it
                                     result = $select.find('[value="' + value + '"]').text();
                                 } else {
+                                    // Otherwise set the result to an empty string
                                     result = '';
                                 }
                             }
+                            // if param is a function, pass result and value to function
                             if (typeof param === 'function') {
                                 param(result, value);
                             }
                         }
                             break;
+                        // handles selecting all options
                         case 'selectAll': {
+                            // calls onBeforeChange, proceeds if it returns true
                             if (onBeforeChange($select)) {
                                 toggleAllItemsState($select, true);
                             }
                         }
                             break;
+                        // handles deselecting all options
                         case 'selectNone': {
+                            // Check if onBeforeChange allows the operation
                             if (onBeforeChange($select)) {
                                 toggleAllItemsState($select, false);
                             }
                         }
                             break;
+                        // handles selecting first option
                         case 'selectFirst': {
+                            // Check if onBeforeChange allows the change
                             if (onBeforeChange($select)) {
+                                // Set the value to null and deselect all options initially
                                 $select.val(null);
                                 $select.find('option').prop('selected', false);
+                                // Select the first option
                                 $select.find('option:first').prop('selected', true);
+                                // Update the plugin's internal state
                                 val($select);
-                                // Determine the newly set value
+                                // Get values after the change
                                 const afterValues = getSelectedValuesFromDropdown($select);
-                                // If the old value does not match the new one, trigger the change
+                                // Trigger a 'change' event if the value has changed
                                 if (hasValueChanged(beforeValues, afterValues)) {
                                     trigger($select, 'change.bs.select', [beforeValues, afterValues]);
                                 }
+                                // Trigger 'selectFirst' event with the newly set value
                                 trigger($select, 'selectFirst.bs.select', [afterValues]);
                             }
                         }
                             break;
+
+                        // handles clearing the select
                         case 'clear': {
+                            // sets value to null
                             $select.val(null);
+                            // removes all options and optgroups
                             $select.find('option,optgroup').remove();
+                            // refreshes the select element
                             refresh($select);
+                            // triggers clear event
                             trigger($select, 'clear.bs.select');
                         }
                             break;
+                        // handles selecting the last option
                         case 'selectLast': {
+                            // checks if change is allowed by onBeforeChange
                             if (onBeforeChange($select)) {
+                                // Clear selection and set last option as selected
                                 $select.val(null);
                                 $select.find('option').prop('selected', false);
                                 $select.find('option:last').prop('selected', true);
                                 val($select);
                                 // Determine the newly set value
                                 const afterValues = getSelectedValuesFromDropdown($select);
-                                // If the old value does not match the new one, trigger the change
+                                // Trigger the change event if the value has changed
                                 if (hasValueChanged(beforeValues, afterValues)) {
                                     trigger($select, 'change.bs.select', [beforeValues, afterValues]);
                                 }
+                                // trigger selectLast event
                                 trigger($select, 'selectLast.bs.select', [afterValues]);
                             }
                         }
                             break;
+                        // Case for hiding the select element
                         case 'hide': {
                             hide($select);
                         }
                             break;
+                        // Case for showing the select element
                         case 'show': {
                             show($select);
                         }
                             break;
+                        // Case for setting the value of the select element
                         case 'val': {
                             if (onBeforeChange($select)) {
-                                // set the Value to the native Select
+                                // Set the value to the native select element
                                 $select.val(param);
-                                // Update the plugin to the value
+                                // Update the plugin's internal state
                                 val($select);
                                 // Determine the newly set value
                                 const afterValues = getSelectedValuesFromDropdown($select);
-                                // If the old value does not match the new one, trigger the change
+                                // Trigger the change event if the value has changed
                                 if (hasValueChanged(beforeValues, afterValues)) {
                                     trigger($select, 'change.bs.select', [beforeValues, afterValues]);
                                 }
                             }
                         }
                             break;
+                        // Case for destroying the select element
                         case 'destroy': {
+                            // triggers destroy event
                             trigger($select, 'destroy.bs.select');
+                            // destroy select element
                             destroy($select, true, param);
                         }
                             break;
+                        // Case for updating the options of the select element
                         case 'updateOptions': {
                             $select.data('options', $.extend({}, $.bsSelect.DEFAULTS, $select.data('options'), param || {}));
                             refresh($select);
                             trigger($select, 'update.bs.select');
                         }
                             break;
+                        // Case for setting the button class of the select element
                         case 'setBtnClass': {
                             $select.data('options', $.extend({}, $.bsSelect.DEFAULTS, $select.data('options'), {btnClass: param}));
                             refresh($select);
                             trigger($select, 'update.bs.select');
                         }
                             break;
+                        // Case for toggling the disabled state of the select element
                         case 'toggleDisabled': {
                             toggleDisabled($select);
                         }
                             break;
+                        // Case for setting the disabled state of the select element
                         case 'setDisabled': {
                             setDisabled($select, param);
                         }
                             break;
+                        // Case for setting the disabled state of the select items
                         case 'setItemsDisabled': {
                             setItemsDisabled($select, param);
                         }
                             break;
+                        // Case for refreshing the select element
                         case 'refresh': {
                             refresh($select);
                             trigger($select, 'refresh.bs.select');
@@ -1463,6 +1549,5 @@
         document.addEventListener("DOMContentLoaded", () => {
             $('[data-bs-toggle="select"],[data-toggle="select"]').bsSelect();
         });
-    }
-    (jQuery)
+    }(jQuery)
 );
