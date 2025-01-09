@@ -46,7 +46,7 @@
                         <label for="select1" class="d-none"></label>
                         <select id="select1" data-btn-class="btn-primary" name="test1">
                             <option value="1" disabled>Item 1</option>
-                            <option value="2">Item 2</option>
+                            <option value="2" selected>Item 2</option>
                             <option value="3">Item 3</option>
                         </select>
                         <!--                        <button type="submit">test submit</button>-->
@@ -172,14 +172,14 @@
                 })
             }
 
-            select1.bsSelect({value:2});
+            select1.bsSelect();
             select1.on('change.bs.select', function () {
                 select1.bsSelect('getSelectedText', function (text) {
                     console.log('getSelectedText:', text);
                 })
             })
 
-            select2.bsSelect();
+            select2.bsSelect({value: 3});
             select3.bsSelect({
                 showMultipleCheckboxes: true
             });
