@@ -6,8 +6,8 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.20
- * @date 2025-01-09
+ * @version 2.1.21
+ * @date 2025-02-12
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
  * @fileOverview README.md
@@ -97,6 +97,16 @@
                     return `<div class="d-flex flex-column align-items-start">
                                 <span>${title}</span>
                                     ${subtext}
+                            </div>`;
+                },
+                formatItem($optionElement, optionText, dataSubtext) {
+                    // Check whether subtext is empty and set accordingly
+                    dataSubtext = isValueEmpty(dataSubtext) ? '' : `<small class="text-muted">${dataSubtext}</small>`;
+
+                    // Return the formatted HTML string
+                    return `<div class="d-flex flex-column align-items-start">
+                                <span>${optionText}</span>
+                                    ${dataSubtext}
                             </div>`;
                 },
                 deselectAllText: translations.deselectAllText,
@@ -859,10 +869,10 @@
                     }
                 }
 
-                const showSubtext = settings.showSubtext && element.data('subtext');
+                const showAndHasSubtext = settings.showSubtext && element.data('subtext');
                 const showCheckList = multiple && settings.showMultipleCheckboxes;
                 const showIcon = element.data('icon');
-                const $subtext = showSubtext ? `<small class="text-muted">${element.data('subtext')}</small>` : '';
+                const $subtext = showAndHasSubtext ? `<small class="text-muted">${element.data('subtext')}</small>` : '';
                 const $icon = showIcon ? `<i class="${element.data('icon')}"></i> ` : '';
                 const paddingLeftClass = inOptGroup || $icon !== '' ? 'ps-2 pl-2' : '';
 
@@ -882,11 +892,26 @@
 
                 const itemClass = settings.menuItemClass === null ? '' : settings.menuItemClass;
 
-                $('<div>', {
+                const $drowDownItemWrapper = $('<div>', {
                     tabindex: i,
                     class: classList,
-                    html: `<a href="#" class="dropdown-item ${selected} ${disabledClass} px-2 d-flex flex-nowrap align-items-center ${itemClass} " data-index="${i}" style="cursor: pointer;">${checkElement}${$icon}<div class="${paddingLeftClass} d-flex flex-column"><div>${element.text()}</div>${$subtext}</div><div class="dropdown-item-select-icon pl-1 ps-1 ml-auto ms-auto ">${checkElementPre}</div></a>`
                 }).appendTo($dropdownMenuInner);
+
+                const $dropDownItem = $('<a>', {
+                    href: '#',
+                    'data-index': i,
+                    class: `dropdown-item ${selected} ${disabledClass} px-2 d-flex flex-nowrap align-items-center ${itemClass} `,
+                    css: {
+                        cursor: 'pointer'
+                    },
+                    html: [
+                        `${checkElement}${$icon}`,
+                        `<div class="${paddingLeftClass} d-flex flex-column">`,
+                        settings.formatItem(element, element.text(), element.data('subtext') || null),
+                        `</div>`,
+                        `<div class="dropdown-item-select-icon pl-1 ps-1 ml-auto ms-auto ">${checkElementPre}</div>`
+                    ].join('')
+                }).appendTo($drowDownItemWrapper)
 
                 inOGroup = inOptGroup;
                 i++;
