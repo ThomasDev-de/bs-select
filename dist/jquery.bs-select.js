@@ -6,8 +6,8 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.21
- * @date 2025-02-12
+ * @version 2.1.22
+ * @date 2025-02-25
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
  * @fileOverview README.md
@@ -79,6 +79,7 @@
                 dropIconClass: 'bi bi-chevron-down',
                 menuClass: null,
                 menuHeaderClass: 'text-bg-secondary text-uppercase',
+                menuInnerClass: null,
                 search: true,
                 menuPreHtml: null,
                 menuAppendHtml: null,
@@ -820,8 +821,13 @@
                 $('<hr class="dropdown-divider mt-0">').appendTo($dropdownMenu);
             }
 
+            const menuInnerClasses = ['js-menu-dropdown-inner'];
+
+            if (settings.menuInnerClass) {
+                menuInnerClasses.push(settings.menuInnerClass);
+            };
             const $dropdownMenuInner = $(`<div>`, {
-                class: 'js-menu-dropdown-inner',
+                class: menuInnerClasses.join(' '),
                 css: {
                     overflowY: 'auto',
                     maxHeight: `${settings.menuMaxHeight}px`

@@ -45,8 +45,7 @@
 
                         <label for="select1" class="d-none"></label>
                         <select id="select1" data-btn-class="btn-primary" name="test1">
-                            <option value="1" data-subtext="Item 1 long description">Item 1 long description</option>
-
+                            <option value="1">Item 1</option>
                             <option value="2" selected>Item 2</option>
                             <option value="3">Item 3</option>
                         </select>
@@ -174,24 +173,7 @@
             }
 
             select1.bsSelect({
-                menuHeaderClass: 'bg-secondary-subtle fst-italic',
-                btnClass: 'btn-outline-dark border-dark-subtle',
-                formatSelectedText: function (title, subtext) {
-                    subtext = subtext ? `<small class="text-black-50">${subtext}</small>` : '';
-                    return `
-        <div class="text-start text-nowrap overflow-hidden">
-            <span>${title}</span>
-            ${subtext}
-        </div>`;
-                },
-                formatItem: function ($optionElement, title, subtext) {
-                    subtext = subtext ? `<small class="text-black-50">${subtext}</small>` : '';
-                    return `
-        <div class="text-start text-wrap" style="min-width:60vw; max-width:75vw;">
-            <span>${title}</span>
-            ${subtext}
-        </div>`;
-                }
+                menuInnerClass: 'border border-5 border-warning rounded-5 m-2'
             });
             select1.on('change.bs.select', function () {
                 select1.bsSelect('getSelectedText', function (text) {
