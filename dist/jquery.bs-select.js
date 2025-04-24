@@ -932,7 +932,7 @@
                     if (multiple) {
                         $('<input>', {
                             type: 'checkbox',
-                            class: 'form-check-input m-0'
+                            class: 'm-0'
                         }).appendTo(dropdownHeader.find('.d-flex:first'));
                     }
                     return;
