@@ -6,7 +6,7 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.23
+ * @version 2.1.24
  * @date 2025-04-24
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
@@ -916,19 +916,24 @@
                 const isOptGroup = element.is("optgroup");
                 if (isOptGroup) {
                     optGrpIndex++;
+                    const headerHTML = [
+                        '<div class="d-flex flex-nowrap align-items-center justify-content-between w-100">',
+                        `<strong>${element.attr('label')}</strong>`,
+                        '</div>',
+                    ].join('')
                     // I am an option group
                     const dropdownHeader = $('<h6>', {
                         'data-role': 'optgroup',
                         'data-og-index': optGrpIndex,
-                        class: `dropdown-header mb-0 d-flex align-items-center justify-content-between my-0 w-100 rounded-0 py-1 ${settings.menuHeaderClass}`,
-                        html: `<strong>${element.attr('label')}</strong>`
+                        class: `dropdown-header mb-0 my-0 w-100 rounded-0 py-1 ${settings.menuHeaderClass}`,
+                        html: headerHTML
                     }).appendTo($dropdownMenuInner);
 
                     if (multiple) {
                         $('<input>', {
                             type: 'checkbox',
                             class: 'form-check-input m-0'
-                        }).appendTo(dropdownHeader);
+                        }).appendTo(dropdownHeader.find('.d-flex:first'));
                     }
                     return;
                 }
