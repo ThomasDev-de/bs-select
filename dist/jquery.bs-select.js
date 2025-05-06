@@ -40,7 +40,6 @@
  * events and other enhancements.
  */
 (function ($) {
-
         const defaultTranslations = {
             btnEmptyText: "Please select..",
             deselectAllText: "Deselect All",
@@ -368,12 +367,14 @@
         }
 
         /**
-         * Configures behavior for a dropdown menu including item selection, search functionality, and event handling.
+         * Initializes the event listeners and functionality for a custom dropdown menu connected to a select element.
+         * The function facilitates search, selection, and interaction within the dropdown, while maintaining synchronization
+         * with the associated select element's state. It also supports Bootstrap-specific dropdown behaviors.
          *
-         * @param {jQuery} $dropdown - The jQuery object representing the dropdown element to be configured.
-         * @param {jQuery} selectElement - The jQuery object representing the select element associated with the dropdown.
-         * @param {boolean} multiple - A flag indicating whether multiple selections are allowed in the dropdown.
-         * @return {void} This function does not return any value but sets up event handlers and functionality for the dropdown.
+         * @param {jQuery} $dropdown - jQuery object representing the dropdown container.
+         * @param {jQuery} selectElement - jQuery object representing the associated HTML select element.
+         * @param {boolean} multiple - Indicates whether the dropdown supports multiple selections.
+         * @return {void} Does not return any value, modifies the DOM state and interacts with the dropdown's functionality.
          */
         function setupDropdown($dropdown, selectElement, multiple) {
             const $dropdownToggle = $dropdown.find('.dropdown-toggle');
