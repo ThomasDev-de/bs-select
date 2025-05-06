@@ -6,8 +6,8 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.22
- * @date 2025-02-25
+ * @version 2.1.24
+ * @date 2025-04-24
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
  * @fileOverview README.md
@@ -325,6 +325,8 @@
                 }
             });
 
+            dropdown.find('[data-role="optgroup"] [type="checkbox"]').prop('checked', state);
+
             // If using checkboxes for multiple selections
             if (toggleCheckIcon) {
                 // Update the checkbox icons to reflect the selection state
@@ -457,59 +459,72 @@
                     const dd = btn.closest('.' + WRAPPER_CLASS);
                     dd.find('[data-bs-toggle="dropdown"],[data-toggle="dropdown"]').dropdown('hide');
                 })
+                .on('change', '[data-role="optgroup"] [type="checkbox"]', function (e) {
+                    const checked = $(e.currentTarget).is(':checked');
+                    const groupIndex = $(e.currentTarget).closest('[data-role="optgroup"]').data('ogIndex');
+
+                    const options = $dropdown.find('[data-role="option"][data-og-index="' + groupIndex + '"]');
+                    toggleSelectedItem($dropdown, selectElement, multiple, options, checked).then(() => {
+                        //
+                    });
+                })
                 .on('click', '.dropdown-item', function (e) {
                     e.preventDefault();
                     const settings = selectElement.data('options');
                     const item = $(e.currentTarget);
-
-                    if (onBeforeChange(selectElement)) {
-
-                        const beforeValues = selectElement.val();
-                        item.toggleClass('active');
-                        const active = item.hasClass('active');
-                        if (!multiple) {
-
-                            $dropdown
-                                .find('.dropdown-item.active')
-                                .not(item)
-                                .removeClass('active');
-                        }
-                        const toggleCheckIcon = multiple && settings.showMultipleCheckboxes;
-
-                        if (active) {
-                            if (toggleCheckIcon) {
-                                item
-                                    .find('.js-icon-checklist')
-                                    .removeClass('bi-square')
-                                    .addClass('bi-check-square');
+                    const active = item.hasClass('active');
+                    toggleSelectedItem($dropdown, selectElement, multiple, item, !active)
+                        .then(() => {
+                            if (BS_V === 4 && multiple && (autoclose === "true" || autoclose === "outside")) {
+                                e.stopPropagation();
                             }
+                        });
+                    // if (onBeforeChange(selectElement)) {
+                    //
+                    //     const beforeValues = selectElement.val();
+                    //     item.toggleClass('active');
+                    //     const active = item.hasClass('active');
+                    //     if (!multiple) {
+                    //
+                    //         $dropdown
+                    //             .find('.dropdown-item.active')
+                    //             .not(item)
+                    //             .removeClass('active');
+                    //     }
+                    //     const toggleCheckIcon = multiple && settings.showMultipleCheckboxes;
+                    //
+                    //     if (active) {
+                    //         if (toggleCheckIcon) {
+                    //             item
+                    //                 .find('.js-icon-checklist')
+                    //                 .removeClass('bi-square')
+                    //                 .addClass('bi-check-square');
+                    //         }
+                    //
+                    //         item.find('.dropdown-item-select-icon').show();
+                    //     } else {
+                    //         if (toggleCheckIcon) {
+                    //             item
+                    //                 .find('.js-icon-checklist')
+                    //                 .removeClass('bi-check-square')
+                    //                 .addClass('bi-square');
+                    //         }
+                    //
+                    //         item.find('.dropdown-item-select-icon').hide();
+                    //     }
+                    //
+                    //     setSelectValues(selectElement);
+                    //     const afterValues = getSelectedValuesFromDropdown(selectElement);
+                    //     setDropdownTitle(selectElement);
+                    //     if (hasValueChanged(beforeValues, afterValues)) {
+                    //         trigger(selectElement, 'change.bs.select', [beforeValues, afterValues]);
+                    //     }
+                    //
+                    //     // Check the condition and make sure it is not closed if:
+                    //     // Boostrap 4 & autoclose
+                    //
 
-                            item.find('.dropdown-item-select-icon').show();
-                        } else {
-                            if (toggleCheckIcon) {
-                                item
-                                    .find('.js-icon-checklist')
-                                    .removeClass('bi-check-square')
-                                    .addClass('bi-square');
-                            }
-
-                            item.find('.dropdown-item-select-icon').hide();
-                        }
-
-                        setSelectValues(selectElement);
-                        const afterValues = getSelectedValuesFromDropdown(selectElement);
-                        setDropdownTitle(selectElement);
-                        if (hasValueChanged(beforeValues, afterValues)) {
-                            trigger(selectElement, 'change.bs.select', [beforeValues, afterValues]);
-                        }
-
-                        // Check the condition and make sure it is not closed if:
-                        // Boostrap 4 & autoclose
-
-                        if (BS_V === 4 && multiple && (autoclose === "true" || autoclose === "outside")) {
-                            e.stopPropagation();
-                        }
-                    }
+                    // }
                 })
                 .on('keydown', function (e) {
                     const $wrap = $(e.currentTarget);
@@ -570,6 +585,58 @@
                         $dropdownMenuInner.scrollTop(0);
                     }
                 });
+        }
+
+        function toggleSelectedItem($dropdown, selectElement, multiple, items, setActive) {
+            const settings = selectElement.data('options');
+            const toggleCheckIcon = multiple && settings.showMultipleCheckboxes;
+            return new Promise((resolve, reject) => {
+                if (onBeforeChange(selectElement)) {
+
+                    const beforeValues = selectElement.val();
+                    if (setActive) {
+                        items.not('.active').addClass('active');
+                    } else {
+                        items.removeClass('active');
+                    }
+
+                    if (!multiple) {
+                        $dropdown
+                            .find('.dropdown-item.active')
+                            .not(items)
+                            .removeClass('active');
+                    }
+
+                    if (setActive) {
+                        if (toggleCheckIcon) {
+                            items
+                                .find('.js-icon-checklist.bi-square')
+                                .removeClass('bi-square')
+                                .addClass('bi-check-square');
+                        }
+
+                        items.find('.dropdown-item-select-icon').show();
+                    } else {
+                        if (toggleCheckIcon) {
+                            items
+                                .find('.js-icon-checklist.bi-check-square')
+                                .removeClass('bi-check-square')
+                                .addClass('bi-square');
+                        }
+
+                        items.find('.dropdown-item-select-icon').hide();
+                    }
+
+                    setSelectValues(selectElement);
+                    const afterValues = getSelectedValuesFromDropdown(selectElement);
+                    setDropdownTitle(selectElement);
+                    if (hasValueChanged(beforeValues, afterValues)) {
+                        trigger(selectElement, 'change.bs.select', [beforeValues, afterValues]);
+                    }
+                    resolve();
+                }
+            })
+
         }
 
         /**
@@ -826,7 +893,8 @@
 
             if (settings.menuInnerClass) {
                 menuInnerClasses.push(settings.menuInnerClass);
-            };
+            }
+            ;
             const $dropdownMenuInner = $(`<div>`, {
                 class: menuInnerClasses.join(' '),
                 css: {
@@ -840,6 +908,7 @@
                 .prop("autocomplete", "off");
 
             let i = 0;
+            let optGrpIndex = -1;
             let inOGroup = false;
             const validElements = $select.find('optgroup, option');
 
@@ -847,11 +916,26 @@
                 const element = $(option);
                 const isOptGroup = element.is("optgroup");
                 if (isOptGroup) {
+                    optGrpIndex++;
+                    const headerHTML = [
+                        '<div class="d-flex flex-nowrap align-items-center justify-content-between w-100">',
+                        `<strong>${element.attr('label')}</strong>`,
+                        '</div>',
+                    ].join('')
                     // I am an option group
-                    $('<h6>', {
-                        class: `dropdown-header text-start my-0 w-100 rounded-0 py-1 ${settings.menuHeaderClass}`,
-                        text: element.attr('label')
+                    const dropdownHeader = $('<h6>', {
+                        'data-role': 'optgroup',
+                        'data-og-index': optGrpIndex,
+                        class: `dropdown-header mb-0 my-0 w-100 rounded-0 py-1 ${settings.menuHeaderClass}`,
+                        html: headerHTML
                     }).appendTo($dropdownMenuInner);
+
+                    if (multiple) {
+                        $('<input>', {
+                            type: 'checkbox',
+                            class: 'm-0'
+                        }).appendTo(dropdownHeader.find('.d-flex:first'));
+                    }
                     return;
                 }
                 // I am an option element
@@ -906,6 +990,8 @@
 
                 const $dropDownItem = $('<a>', {
                     href: '#',
+                    'data-role': 'option',
+                    'data-og-index': optGrpIndex,
                     'data-index': i,
                     class: `dropdown-item ${selected} ${disabledClass} px-2 d-flex flex-nowrap align-items-center ${itemClass} `,
                     css: {
