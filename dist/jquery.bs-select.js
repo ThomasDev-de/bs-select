@@ -6,8 +6,8 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.24
- * @date 2025-04-24
+ * @version 2.1.25
+ * @date 2025-05-09
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
  * @fileOverview README.md
@@ -475,56 +475,11 @@
                     const active = item.hasClass('active');
                     toggleSelectedItem($dropdown, selectElement, multiple, item, !active)
                         .then(() => {
+
                             if (BS_V === 4 && multiple && (autoclose === "true" || autoclose === "outside")) {
                                 e.stopPropagation();
                             }
                         });
-                    // if (onBeforeChange(selectElement)) {
-                    //
-                    //     const beforeValues = selectElement.val();
-                    //     item.toggleClass('active');
-                    //     const active = item.hasClass('active');
-                    //     if (!multiple) {
-                    //
-                    //         $dropdown
-                    //             .find('.dropdown-item.active')
-                    //             .not(item)
-                    //             .removeClass('active');
-                    //     }
-                    //     const toggleCheckIcon = multiple && settings.showMultipleCheckboxes;
-                    //
-                    //     if (active) {
-                    //         if (toggleCheckIcon) {
-                    //             item
-                    //                 .find('.js-icon-checklist')
-                    //                 .removeClass('bi-square')
-                    //                 .addClass('bi-check-square');
-                    //         }
-                    //
-                    //         item.find('.dropdown-item-select-icon').show();
-                    //     } else {
-                    //         if (toggleCheckIcon) {
-                    //             item
-                    //                 .find('.js-icon-checklist')
-                    //                 .removeClass('bi-check-square')
-                    //                 .addClass('bi-square');
-                    //         }
-                    //
-                    //         item.find('.dropdown-item-select-icon').hide();
-                    //     }
-                    //
-                    //     setSelectValues(selectElement);
-                    //     const afterValues = getSelectedValuesFromDropdown(selectElement);
-                    //     setDropdownTitle(selectElement);
-                    //     if (hasValueChanged(beforeValues, afterValues)) {
-                    //         trigger(selectElement, 'change.bs.select', [beforeValues, afterValues]);
-                    //     }
-                    //
-                    //     // Check the condition and make sure it is not closed if:
-                    //     // Boostrap 4 & autoclose
-                    //
-
-                    // }
                 })
                 .on('keydown', function (e) {
                     const $wrap = $(e.currentTarget);
@@ -632,7 +587,10 @@
                     setDropdownTitle(selectElement);
                     if (hasValueChanged(beforeValues, afterValues)) {
                         trigger(selectElement, 'change.bs.select', [beforeValues, afterValues]);
+                        trigger(selectElement, 'userChange.bs.select', [beforeValues, afterValues]);
                     }
+
+
                     resolve();
                 }
             })
