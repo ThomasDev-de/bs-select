@@ -6,7 +6,7 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.25
+ * @version 2.1.26
  * @date 2025-05-09
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
@@ -386,20 +386,33 @@
             $dropdown
                 .on('click', '.js-select-select-all', function (e) {
                     e.preventDefault();
+                    const beforeValues = selectElement.val();
                     if (onBeforeChange(selectElement)) {
                         toggleAllItemsState(selectElement, true);
                         if (BS_V === 4 && multiple && (autoclose === "true" || autoclose === "outside")) {
                             e.stopPropagation();
                         }
+                        const afterValues = getSelectedValuesFromDropdown(afterValues);
+                        const valueChanged = hasValueChanged(beforeValues, currentValue);
+                        if (valueChanged) {
+                            trigger(selectElement, 'userChange.bs.select', [beforeValues, afterValues]);
+                        }
                     }
                 })
                 .on('click', '.js-select-select-none', function (e) {
                     e.preventDefault();
+                    const beforeValues = selectElement.val();
                     if (onBeforeChange(selectElement)) {
                         toggleAllItemsState(selectElement, false);
 
                         if (BS_V === 4 && multiple && (autoclose === "true" || autoclose === "outside")) {
                             e.stopPropagation();
+                        }
+
+                        const afterValues = getSelectedValuesFromDropdown(afterValues);
+                        const valueChanged = hasValueChanged(beforeValues, currentValue);
+                        if (valueChanged) {
+                            trigger(selectElement, 'userChange.bs.select', [beforeValues, afterValues]);
                         }
                     }
                 })
