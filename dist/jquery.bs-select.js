@@ -6,8 +6,8 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.26
- * @date 2025-05-09
+ * @version 2.1.27
+ * @date 2025-05-10
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
  * @fileOverview README.md
@@ -889,7 +889,7 @@
                 if (isOptGroup) {
                     optGrpIndex++;
                     const headerHTML = [
-                        '<div class="d-flex flex-nowrap align-items-center justify-content-between w-100">',
+                        '<div class="d-flex js-bs-select-dropdown-header-inner flex-nowrap align-items-center justify-content-between w-100">',
                         `<strong>${element.attr('label')}</strong>`,
                         '</div>',
                     ].join('')
@@ -902,10 +902,14 @@
                     }).appendTo($dropdownMenuInner);
 
                     if (multiple) {
-                        $('<input>', {
-                            type: 'checkbox',
-                            class: 'm-0'
-                        }).appendTo(dropdownHeader.find('.d-flex:first'));
+                        const uniquiId = generateGuid();
+                        $('<div>', {
+                            class: 'form-check form-switch custom-control custom-switch',
+                            html: [
+                                `<input class="form-check-input custom-control-input" type="checkbox" role="switch" id="${uniquiId}">`,
+                                `<label class="form-check-label custom-control-label" for="${uniquiId}"></label>`
+                            ].join('')
+                        }).appendTo(dropdownHeader.find('.js-bs-select-dropdown-header-inner'));
                     }
                     return;
                 }
@@ -1003,6 +1007,21 @@
                 }, 0);
             }
             return $dropdown;
+        }
+
+        /**
+         * Generates a globally unique identifier (GUID) in the standard format
+         * xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx, where the characters are lowercase hexadecimal values.
+         *
+         * @return {string} A GUID string in lowercase.
+         */
+        function generateGuid() {
+            // Erstellt eine GUID mit Kleinbuchstaben
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (char) {
+                const rand = (Math.random() * 16) | 0;
+                const value = char === 'x' ? rand : (rand & 0x3) | 0x8;
+                return value.toString(16).toLowerCase();
+            });
         }
 
         /**
