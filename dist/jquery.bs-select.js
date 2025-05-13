@@ -6,8 +6,8 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.27
- * @date 2025-05-10
+ * @version 2.1.28
+ * @date 2025-05-13
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
  * @fileOverview README.md
@@ -1191,13 +1191,13 @@
 
             // Iterate over each selected value.
             values.forEach(value => {
-                // Find the index of the corresponding option element within the select element.
-                let index = $select.find(`option[value="${value}"]`).index();
+                // Globalen Index des Options-Elements ermitteln
+                let index = $select.find('option').index($select.find(`option[value="${value}"]`));
 
-                // Find the corresponding dropdown item using its data-index attribute.
+                // Dropdown-Element mit dem entsprechenden Index finden
                 const item = $dropdown.find(`.dropdown-item[data-index="${index}"]`);
 
-                // Add the 'active' class to the dropdown item to visually mark it as selected.
+                // 'active'-Klasse zum Dropdown-Item hinzufügen
                 item.addClass('active');
             });
 
