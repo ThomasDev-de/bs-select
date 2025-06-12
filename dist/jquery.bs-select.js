@@ -6,8 +6,8 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.27
- * @date 2025-05-13
+ * @version 2.1.28
+ * @date 2025-06-12
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
  * @fileOverview README.md
@@ -840,10 +840,26 @@
             }
 
             if (multiple) {
+                actionMenu = `<div class="d-flex flex-nowrap justify-content-start align-items-center mt-2 p-0">`;
                 if (settings.showActionMenu) {
-                    actionMenu = `<div class="d-flex flex-nowrap mt-2 p-0"><a href="#" class="btn-sm text-nowrap btn ${settings.actionMenuBtnClass} js-select-select-all">${settings.selectAllText}</a><span class="mx-1"></span><a href="#" class="btn-sm text-nowrap btn ${settings.actionMenuBtnClass} js-select-select-none">${settings.deselectAllText}</a></div>`;
+                    actionMenu += [
+                        `<a href="#" class="btn-sm text-nowrap btn ${settings.actionMenuBtnClass} js-select-select-all">${settings.selectAllText}</a><span class="mx-1"></span>`,
+                        `<a href="#" class="btn-sm text-nowrap me-2 btn ${settings.actionMenuBtnClass} js-select-select-none">`,
+                        `${settings.deselectAllText}</a>`,
+                    ].join('');
                 }
+                if (getBootstrapMajorVersion() >= 5) {
+                    actionMenu += `<button type="button" class="btn-close ms-auto" data-bs-dismiss="dropdown" aria-label="Close"></button>`;
+                } else {
+                    actionMenu += [
+                        `<button type="button" class="close" data-dismiss="modal" aria-label="Close">`,
+                        `<span aria-hidden="true">&times;</span>`,
+                        '</button>'
+                    ].join('');
+                }
+                actionMenu += `</div>`;
             }
+
 
             let toolbarClasses = '';
             if (searchInput !== '' || closeButton !== '' || actionMenu !== '') {
@@ -996,6 +1012,7 @@
                     css: {padding: '4px 16px'}
                 }).appendTo($dropdownMenuInner);
             }
+
 
             setSelectValues($select);
             setDropdownTitle($select);
