@@ -55,7 +55,7 @@
         const WRAPPER_CLASS = 'js-bs-select-dropdown';
 
         /**
-         * Represents a Bootstrap Select plugin.
+         * Represents the Bootstrap Select plugin.
          *
          * @class
          */
@@ -94,20 +94,14 @@
                     subtext = isValueEmpty(subtext) ? '' : `<small class="text-muted">${subtext}</small>`;
 
                     // Return the formatted HTML string
-                    return `<div class="d-flex flex-column align-items-start">
-                                <span>${title}</span>
-                                    ${subtext}
-                            </div>`;
+                    return `<div class="d-flex flex-column align-items-start"><span>${title}</span>${subtext}</div>`;
                 },
                 formatItem($optionElement, optionText, dataSubtext) {
                     // Check whether subtext is empty and set accordingly
                     dataSubtext = isValueEmpty(dataSubtext) ? '' : `<small class="text-muted">${dataSubtext}</small>`;
 
                     // Return the formatted HTML string
-                    return `<div class="d-flex flex-column align-items-start">
-                                <span>${optionText}</span>
-                                    ${dataSubtext}
-                            </div>`;
+                    return `<div class="d-flex flex-column align-items-start"><span>${optionText}</span>${dataSubtext}</div>`;
                 },
                 deselectAllText: translations.deselectAllText,
                 selectAllText: translations.selectAllText,
@@ -376,7 +370,7 @@
          * @param {jQuery} $dropdown - jQuery object representing the dropdown container.
          * @param {jQuery} selectElement - jQuery object representing the associated HTML select element.
          * @param {boolean} multiple - Indicates whether the dropdown supports multiple selections.
-         * @return {void} Does not return any value, modifies the DOM state and interacts with the dropdown's functionality.
+         * @return {void} Doesn’t return any value, modifies the DOM state and interacts with the dropdown's functionality.
          */
         function setupDropdown($dropdown, selectElement, multiple) {
             const $dropdownToggle = $dropdown.find('.dropdown-toggle');
