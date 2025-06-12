@@ -6,7 +6,7 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.28.1
+ * @version 2.1.28.2
  * @date 2025-06-12
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
@@ -842,15 +842,7 @@
                         `${settings.deselectAllText}</a>`,
                     ].join('');
                 }
-                if (getBootstrapMajorVersion() >= 5) {
-                    actionMenu += `<button type="button" class="btn-close ms-auto text-muted" data-bs-dismiss="dropdown" aria-label="Close"></button>`;
-                } else {
-                    actionMenu += [
-                        `<button type="button" class="close" data-dismiss="dropdown" aria-label="Close">`,
-                        `<span aria-hidden="true">&times;</span>`,
-                        '</button>'
-                    ].join('');
-                }
+                actionMenu += `<button style="font-size:2em" type="button" class="text-muted bg-transparent border-0 ms-auto ml-auto" data-dismiss="dropdown"  data-bs-dismiss="dropdown" aria-label="Close">&times;</button>`;
                 actionMenu += `</div>`;
             }
 
