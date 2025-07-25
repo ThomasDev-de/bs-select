@@ -143,23 +143,25 @@ Methods are called as follows
 $('select').bsSelect('method', param);
 ```
 
-| method              | example                                                                       | description                                                                                                               |
-|---------------------|-------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
-| `'show'`            | `$('select').bsSelect('show');`                                               | Opens the dropdown                                                                                                        |
-| `'hide'`            | `$('select').bsSelect('hide');`                                               | Closes the dropdown                                                                                                       | 
-| `'val'`             | `$('select').bsSelect('val', 1);`                                             | Changes the value of the select                                                                                           | 
-| `'selectAll'`       | `$('select').bsSelect('selectAll');`                                          | Selects all values                                                                                                        | 
-| `'selectFirst'`     | `$('select').bsSelect('selectFirst');`                                        | Selects the first option element                                                                                          | 
-| `'selectLast'`      | `$('select').bsSelect('selectLast');`                                         | Selects the last option element                                                                                           | 
-| `'selectNone'`      | `$('select').bsSelect('selectNone');`                                         | deselects all values                                                                                                      | 
-| `'clear'`           | `$('select').bsSelect('clear');`                                              | Empties the Select                                                                                                        | 
-| `'updateOptions'`   | `$('select').bsSelect('updateOptions', {buttonClass: 'btn btn-danger',...});` | Changes the settings of the dropdown.                                                                                     |
-| `'setBtnClass'`     | `$('select').bsSelect('setBtnClass', 'btn btn-danger');`                      | Behaves like `updateOptions`. The btnClass option is overwritten.                                                         |
-| `'refresh'`         | `$('select').bsSelect('refresh');`                                            | Rebuild the dropdown. This is useful if the options are changed via Javascript.                                           |
-| `'getSelectedText'` | `$('select').bsSelect('getSelectedText', (text, value) => {});`               | Retrieves the text based on the selections of the select                                                                  |
-| `'destroy'`         | `$('select').bsSelect('destroy'[, true]);`                                    | Deletes the dropdown and restores the original select. If parameter is passed true, all data is removed from the element. |
-| `'toggleDisabled'`  | `$('select').bsSelect('toggleDisabled');`                                     | Toggles the status of the dropdown button                                                                                 |
-| `'setDisabled'`     | `$('select').bsSelect('setDisabled', true);`                                  | Set the dropdown disabled (true) otherwise enabled (false)                                                                |
+| method               | example                                                                       | description                                                                                                               |
+|----------------------|-------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
+| `'show'`             | `$('select').bsSelect('show');`                                               | Opens the dropdown                                                                                                        |
+| `'hide'`             | `$('select').bsSelect('hide');`                                               | Closes the dropdown                                                                                                       | 
+| `'val'`              | `$('select').bsSelect('val', 1);`                                             | Changes the value of the select                                                                                           | 
+| `'selectAll'`        | `$('select').bsSelect('selectAll');`                                          | Selects all values                                                                                                        | 
+| `'selectFirst'`      | `$('select').bsSelect('selectFirst');`                                        | Selects the first option element                                                                                          | 
+| `'selectLast'`       | `$('select').bsSelect('selectLast');`                                         | Selects the last option element                                                                                           | 
+| `'selectNone'`       | `$('select').bsSelect('selectNone');`                                         | deselects all values                                                                                                      | 
+| `'clear'`            | `$('select').bsSelect('clear');`                                              | Empties the Select                                                                                                        | 
+| `'updateOptions'`    | `$('select').bsSelect('updateOptions', {buttonClass: 'btn btn-danger',...});` | Changes the settings of the dropdown.                                                                                     |
+| `'setBtnClass'`      | `$('select').bsSelect('setBtnClass', 'btn btn-danger');`                      | Behaves like `updateOptions`. The btnClass option is overwritten.                                                         |
+| `'refresh'`          | `$('select').bsSelect('refresh');`                                            | Rebuild the dropdown. This is useful if the options are changed via Javascript.                                           |
+| `'getSelectedText'`  | `$('select').bsSelect('getSelectedText', (text, value) => {});`               | Retrieves the text based on the selections of the select                                                                  |
+| `'destroy'`          | `$('select').bsSelect('destroy'[, true]);`                                    | Deletes the dropdown and restores the original select. If parameter is passed true, all data is removed from the element. |
+| `'toggleDisabled'`   | `$('select').bsSelect('toggleDisabled');`                                     | Toggles the status of the dropdown button                                                                                 |
+| `'setDisabled'`      | `$('select').bsSelect('setDisabled', true);`                                  | Set the dropdown disabled (true) otherwise enabled (false)                                                                |
+| `'toggleVisibility'` | `$('select').bsSelect('toggleVisibility');`                                   | Toggles the visibility of the dropdown                                                                                    |
+| `'setVisible'`       | `$('select').bsSelect('setVisible', true);`                                   | Set the visibility of the dropdown (show: true, hide: false)                                                              |
 
 ## Events
 

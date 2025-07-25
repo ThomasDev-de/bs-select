@@ -84,6 +84,7 @@
                             <button id="toggleDisabled" class="btn btn-outline-warning btn-sm me-1 mb-1">toggleDisabled</button>
 <!--                            <button id="setValueDisabled" class="btn btn-outline-warning btn-sm me-1 mb-1">setItemsDisabled [2,3]</button>-->
                             <button id="btnDestroy" class="btn btn-outline-warning btn-sm me-1 mb-1">destroy</button>
+                            <button id="btnVisible" class="btn btn-outline-warning btn-sm me-1 mb-1">toggleVisibility</button>
 
 
                         </div>
@@ -234,6 +235,12 @@
                 e.preventDefault();
 
                 select4.bsSelect('toggleDisabled')
+
+            });
+            $('#btnVisible').on('click', function (e) {
+                e.preventDefault();
+                select4.bsSelect('toggleVisibility')
+
 
             });
 

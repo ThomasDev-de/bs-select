@@ -6,8 +6,8 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.28.2
- * @date 2025-06-12
+ * @version 2.1.29
+ * @date 2025-07-25
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
  * @fileOverview README.md
@@ -60,6 +60,7 @@
          * @class
          */
         $.bsSelect = {
+            version: '2.1.29',
             setDefaults: function (options) {
                 this.DEFAULTS = $.extend({}, this.DEFAULTS, options || {});
             },
@@ -1299,6 +1300,31 @@
         }
 
         /**
+         * Sets the visibility of the given select element and its associated dropdown.
+         *
+         * @param {jQuery} $select - The jQuery object representing the select element.
+         * @param {boolean} visible - A boolean value indicating whether the element should be visible.
+         * @return {void} This function does not return a value.
+         */
+        function setVisible($select, visible) {
+            setDisabled($select, !visible);
+            const $dropdown = getDropDown($select);
+            $dropdown.toggleClass('d-none', !visible);
+            trigger($select, 'toggleVisibility.bs.select', [visible]);
+        }
+        /**
+         * Toggles the visibility of the dropdown element associated with the given select element.
+         *
+         * @param {jQuery} $select - The jQuery object representing the select element whose dropdown visibility is toggled.
+         * @return {void} This function does not return a value.
+         */
+        function toggleVisibility($select) {
+            const $dropdown = getDropDown($select);
+            const visible = $dropdown.hasClass('d-none');
+            setVisible($select, visible);
+        }
+
+        /**
          * Sets the disabled state of the bsSelect dropdown menu.
          *
          * @param {jQuery} $select The jQuery object representing the select element associated with the dropdown.
@@ -1477,6 +1503,15 @@
                 if (callFunction) {
                     // Uses a switch statement to determine which function to call based on the 'options' parameter
                     switch (options) {
+                        case 'toggleVisibility': {
+                            toggleVisibility($select);
+                        } break;
+                        case 'setVisible': {
+                            const visible = param;
+                            setDisabled($select, !visible);
+                            const $dropdown = getDropDown($select);
+                            $dropdown.toggleClass('d-none', !visible);
+                        } break;
                         // Case for getting selected text
                         case 'getSelectedText': {
                             // Variable to store the result
