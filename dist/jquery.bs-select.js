@@ -6,7 +6,7 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.29.1
+ * @version 2.1.30
  * @date 2025-07-25
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
@@ -60,7 +60,7 @@
          * @class
          */
         $.bsSelect = {
-            version: '2.1.29.1',
+            version: '2.1.30',
             setDefaults: function (options) {
                 this.DEFAULTS = $.extend({}, this.DEFAULTS, options || {});
             },
@@ -113,9 +113,67 @@
                 searchText: translations.searchText,
                 onBeforeChange: null,
                 onKeyDown: null,
-                value: undefined
+                value: undefined,
+                searchQuery: null
             }
         };
+
+        /**
+         * Triggers a search within the dropdown.
+         *
+         * @param {$} $select - The select element.
+         * @param {string} searchPattern - The search pattern to filter by.
+         */
+        function doSearch($select, searchPattern) {
+            const settings = $select.data('options');
+            const $dropdown = getDropDown($select);
+            const searchElements = $dropdown.find('[data-index]');
+            const dropdownHeaders = $dropdown.find('.dropdown-header');
+            const searchField = $dropdown.find('[type="search"]');
+
+            if (searchField.length && searchField.val() !== searchPattern) {
+                searchField.val(searchPattern);
+            }
+
+            let fullPattern = searchPattern;
+            const $prefix = $dropdown.find('.input-group-text');
+            if ($prefix.length) {
+                fullPattern = $prefix.text() + searchPattern;
+            }
+
+            searchElements.removeClass('d-none').addClass('d-flex');
+            dropdownHeaders.removeClass('d-none');
+
+            if (settings && settings.debug) {
+                console.log('bsSelect:doSearch', fullPattern);
+            }
+
+            const trimmedPattern = fullPattern.trim();
+            if (!isValueEmpty(trimmedPattern)) {
+                const search = trimmedPattern.toUpperCase();
+                searchElements.each(function (index, value) {
+                    let currentName = $(value).text().trim();
+                    if (currentName.toUpperCase().indexOf(search) > -1) {
+                        if (settings && settings.debug) {
+                            console.log('bsSelect:doSearch elements found:', currentName);
+                        }
+                        $(value).removeClass('d-none').addClass('d-flex');
+                    } else {
+                        if (settings && settings.debug) {
+                            console.log('bsSelect:doSearch elements not found:', currentName);
+                        }
+                        $(value).addClass('d-none').removeClass('d-flex');
+                    }
+                });
+                dropdownHeaders.addClass('d-none');
+            } else {
+                if (settings && settings.debug) {
+                    console.log('bsSelect:doSearch is empty');
+                }
+                searchElements.removeClass('d-none');
+                dropdownHeaders.removeClass('d-none');
+            }
+        }
 
         /**
          * Triggers the specified event on the given select element.
@@ -413,54 +471,20 @@
                 })
                 .on('hidden.bs.dropdown', function () {
                     // empty search field if exists
+                    const $select = $dropdown.find('select');
+                    const settings = $select.data('options');
                     let searchField = $(this).find('[type="search"]');
                     if (searchField.length) {
                         const searchElements = $dropdown.find('[data-index]');
                         searchElements.removeClass('d-none').addClass('d-flex');
-                        searchField.val(null).trigger('keyup');
+                        
+                        searchField.val('').trigger('keyup');
                     }
                 })
                 .on('keyup input', '[type="search"]', function (e) {
-                    const settings = selectElement.data('options');
-
                     const searchField = $(e.currentTarget);
-                    const searchPattern = searchField.val().trim();
-                    if (settings.debug) {
-                        console.log('bsSelect:search', searchPattern);
-                    }
-                    const searchElements = $dropdown.find('[data-index]');
-                    const dropdownHeaders = $dropdown.find('.dropdown-header'); // Elemente für dropdown-header
-
-                    searchElements.removeClass('d-none').addClass('d-flex');
-                    dropdownHeaders.removeClass('d-none'); // Setzt dropdown-header auf sichtbar
-
-                    if (settings.debug) {
-                        console.log('bsSelect:search elements:', searchElements.length);
-                    }
-                    if (!isValueEmpty(searchPattern)) {
-                        const search = searchPattern.toUpperCase();
-                        searchElements.each(function (index, value) {
-                            let currentName = $(value).text().trim();
-                            if (currentName.toUpperCase().indexOf(search) > -1) {
-                                if (settings.debug) {
-                                    console.log('bsSelect:search elements found:', currentName);
-                                }
-                                $(value).removeClass('d-none').addClass('d-flex');
-                            } else {
-                                if (settings.debug) {
-                                    console.log('bsSelect:search elements not found:', currentName);
-                                }
-                                $(value).addClass('d-none').removeClass('d-flex');
-                            }
-                        });
-                        dropdownHeaders.addClass('d-none');
-                    } else {
-                        if (settings.debug) {
-                            console.log('bsSelect:search is empty');
-                        }
-                        searchElements.removeClass('d-none');
-                        dropdownHeaders.removeClass('d-none'); // Zeigt dropdown-header an, wenn kein Suchstring vorhanden ist
-                    }
+                    let value = searchField.val();
+                    doSearch(selectElement, value);
                 })
                 .on('click', '[data-dismiss="dropdown"], [data-bs-dismiss="dropdown"]', function (e) {
                     const btn = $(e.currentTarget);
@@ -830,8 +854,18 @@
             let searchInput = '';
             let closeButton = '';
             let actionMenu = '';
+
+            if (true === settings.search || multiple) {
+                closeButton = `<button style="font-size:2rem; line-height: 1" type="button" class="text-muted bg-transparent border-0 ms-auto ml-auto ps-2 p-0" data-dismiss="dropdown"  data-bs-dismiss="dropdown" aria-label="Close">&times;</button>`;
+            }
+
             if (true === settings.search) {
-                searchInput = `<input type="search" autocomplete="off" class="form-control form-control-sm mr-auto me-auto mr-auto" placeholder="${settings.searchText}">`;
+                const query = settings.searchQuery || $select.attr('data-search-query');
+                if (!isValueEmpty(query)) {
+                    searchInput = `<div style="min-width: 250px" class="input-group input-group-sm mr-auto me-auto"><span class="input-group-text">${query}</span><input type="search" autocomplete="off" class="form-control" placeholder="${settings.searchText}"></div>`;
+                } else {
+                    searchInput = `<input style="min-width: 250px" type="search" autocomplete="off" class="form-control form-control-sm mr-auto me-auto" placeholder="${settings.searchText}">`;
+                }
             }
 
             if (multiple) {
@@ -843,17 +877,14 @@
                         `${settings.deselectAllText}</a>`,
                     ].join('');
                 }
-                actionMenu += `<button style="font-size:2em" type="button" class="text-muted bg-transparent border-0 ms-auto ml-auto" data-dismiss="dropdown"  data-bs-dismiss="dropdown" aria-label="Close">&times;</button>`;
                 actionMenu += `</div>`;
             }
 
 
-            let toolbarClasses = '';
             if (searchInput !== '' || closeButton !== '' || actionMenu !== '') {
-                toolbarClasses = 'px-2 pb-2 pt-2 border-bottom';
+                const toolbarClasses = 'px-2 pb-2 pt-2 border-bottom';
+                $(`<div class="d-flex flex-column ${toolbarClasses}"><div class="d-flex justify-content-between align-items-center">${searchInput}${closeButton}</div>${actionMenu}</div>`).appendTo($dropdownMenu);
             }
-
-            $(`<div class="d-flex flex-column ${toolbarClasses}"><div class="d-flex  justify-content-end align-items-center">${searchInput}${closeButton}</div>${actionMenu}</div>`).appendTo($dropdownMenu);
 
             if (settings.menuPreHtml !== null) {
                 $('<div>', {
@@ -1497,7 +1528,14 @@
                 }
 
                 // Options should definitely be set in the select here.
+                const isFirstInit = !getDropDown($select).length;
                 init($select, true);
+
+                if (optionsSet || isFirstInit) {
+                    const setup = $select.data('options');
+                    // Initial search query if set
+                    doSearch($select, '');
+                }
 
                 // Checks if the function should be called
                 if (callFunction) {
@@ -1642,6 +1680,11 @@
                                     trigger($select, 'change.bs.select', [beforeValues, afterValues]);
                                 }
                             }
+                        }
+                            break;
+                        // Case for programmatically searching
+                        case 'search': {
+                            doSearch($select, param);
                         }
                             break;
                         // Case for destroying the select element

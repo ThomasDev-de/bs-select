@@ -67,6 +67,19 @@
                     </td>
                 </tr>
                 <tr>
+                    <td>fixed presearch prefix</td>
+                    <td>
+                        <label for="selectPresearch" class="d-none"></label>
+                        <select id="selectPresearch" data-search-query="Item 1" data-btn-class="btn-outline-success">
+                            <option value="1">Item 1</option>
+                            <option value="10">Item 10</option>
+                            <option value="11">Item 11</option>
+                            <option value="2">Item 2</option>
+                        </select>
+                        <small class="text-muted d-block mt-1">Search field has fixed "Item 1" prefix. Search results are "Item 1" + input.</small>
+                    </td>
+                </tr>
+                <tr>
                     <td>
                         <small class="text-uppercase mb-3 d-block">playground</small>
                         <div class="d-flex flex-wrap align-items-start">
@@ -130,7 +143,7 @@
 <script src="../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
 <script src="../dist/locale/de-DE.min.js"></script>
-<script src="../dist/jquery.bs-select.min.js"></script>
+<script src="../dist/jquery.bs-select.js"></script>
 
 <script>
     $(document).ready(function () {
@@ -144,6 +157,7 @@
             const select2 = $('#select2');
             const select3 = $('#select3');
             const select4 = $('#select4');
+            const selectPresearch = $('#selectPresearch');
             const groups = [];
             let options = [];
             for (let i = 1, j = 0; i <= 100; i++) {
@@ -186,6 +200,7 @@
             select3.bsSelect({
                 showMultipleCheckboxes: true
             });
+            selectPresearch.bsSelect();
             select4.bsSelect({
                 btnClass: 'text-nowrap btn btn-success',
                 showMultipleCheckboxes: true,
