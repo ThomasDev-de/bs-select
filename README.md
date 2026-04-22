@@ -199,3 +199,9 @@ For further queries or issues, check:
 
 - [GitHub Documentation](https://github.com/ThomasDev-de/bs-select)
 - [Bootstrap Select Examples](https://getbootstrap.com/docs)
+
+## Support this project
+
+If this project helps you, feel free to support its development:
+
+[☕ Buy me a coffee via PayPal](https://paypal.me/thomaskirsch1529)
