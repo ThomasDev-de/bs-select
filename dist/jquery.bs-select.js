@@ -6,8 +6,8 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.30
- * @date 2025-07-25
+ * @version 2.1.31
+ * @date 2026-04-23
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
  * @fileOverview README.md
@@ -60,7 +60,7 @@
          * @class
          */
         $.bsSelect = {
-            version: '2.1.30',
+            version: '2.1.31',
             setDefaults: function (options) {
                 this.DEFAULTS = $.extend({}, this.DEFAULTS, options || {});
             },
@@ -881,9 +881,20 @@
             }
 
 
-            if (searchInput !== '' || closeButton !== '' || actionMenu !== '') {
+            // Priority: if a search input exists, keep the close button next to it.
+            if (searchInput !== '') {
                 const toolbarClasses = 'px-2 pb-2 pt-2 border-bottom';
-                $(`<div class="d-flex flex-column ${toolbarClasses}"><div class="d-flex justify-content-between align-items-center">${searchInput}${closeButton}</div>${actionMenu}</div>`).appendTo($dropdownMenu);
+                $(`<div class="d-flex flex-column ${toolbarClasses}"><div class="d-flex justify-content-between align-items-center">${searchInput}${closeButton !== '' ? closeButton : ''}</div>${actionMenu}</div>`).appendTo($dropdownMenu);
+            } else if (actionMenu !== '') {
+                // If there's an actionMenu (and no search), inject the close button into the action menu so it appears with actions.
+                if (closeButton !== '') {
+                    actionMenu = actionMenu.replace(/<\/div>\s*$/, `${closeButton}</div>`);
+                }
+                const toolbarClasses = 'px-2 pb-2 pt-2 border-bottom';
+                $(`<div class="d-flex flex-column ${toolbarClasses}"><div class="d-flex justify-content-between align-items-center">${searchInput}</div>${actionMenu}</div>`).appendTo($dropdownMenu);
+            } else if (closeButton !== '') {
+                // No search, no action menu -> standalone compact close button line
+                $(`<div class="px-2 pb-1 pt-1 border-bottom d-flex justify-content-end">${closeButton}</div>`).appendTo($dropdownMenu);
             }
 
             if (settings.menuPreHtml !== null) {
