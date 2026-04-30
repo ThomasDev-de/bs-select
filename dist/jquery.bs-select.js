@@ -6,8 +6,8 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.31
- * @date 2026-04-23
+ * @version 2.1.32
+ * @date 2026-04-30
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
  * @fileOverview README.md
@@ -60,7 +60,7 @@
          * @class
          */
         $.bsSelect = {
-            version: '2.1.31',
+            version: '2.1.32',
             setDefaults: function (options) {
                 this.DEFAULTS = $.extend({}, this.DEFAULTS, options || {});
             },
@@ -252,7 +252,7 @@
             // If the dropdown element exists
             if ($dropdown.length) {
                 // Use the Bootstrap dropdown('show') method to open the dropdown
-                $dropdown.dropdown('show');
+                invokeBootstrapDropdownAction($dropdown, 'show');
             }
         }
 
@@ -267,7 +267,33 @@
             // If the dropdown exists
             if ($dropdown.length) {
                 // Use the Bootstrap dropdown('hide') method to close the dropdown.
-                $dropdown.dropdown('hide');
+                invokeBootstrapDropdownAction($dropdown, 'hide');
+            }
+        }
+
+        /**
+         * Invokes a Bootstrap dropdown action in a BS4/BS5 compatible way.
+         *
+         * @param {jQuery} $dropdown The dropdown wrapper element.
+         * @param {'show'|'hide'|'toggle'} action Dropdown action to execute.
+         * @return {void}
+         */
+        function invokeBootstrapDropdownAction($dropdown, action) {
+            const $toggle = $dropdown.find('[data-bs-toggle="dropdown"],[data-toggle="dropdown"]').first();
+            if (!$toggle.length) {
+                return;
+            }
+
+            if (typeof $.fn.dropdown === 'function') {
+                $toggle.dropdown(action);
+                return;
+            }
+
+            if (typeof window.bootstrap !== 'undefined' && window.bootstrap.Dropdown) {
+                const dropdownInstance = window.bootstrap.Dropdown.getOrCreateInstance($toggle.get(0));
+                if (dropdownInstance && typeof dropdownInstance[action] === 'function') {
+                    dropdownInstance[action]();
+                }
             }
         }
 
@@ -411,14 +437,15 @@
          * @return {number|undefined} The major version number of Bootstrap if available, or undefined if the Bootstrap modal plugin is not accessible.
          */
         function getBootstrapMajorVersion() {
-            if (typeof $.fn.modal === 'undefined' || typeof $.fn.modal.Constructor === 'undefined') {
-                console.error('Bootstrap Modal Plugin ist nicht verfügbar');
-                return;
+            if (typeof $.fn.dropdown === 'function' && $.fn.dropdown.Constructor && $.fn.dropdown.Constructor.VERSION) {
+                return parseInt($.fn.dropdown.Constructor.VERSION.split('.')[0], 10);
             }
 
-            const bootstrapVersion = $.fn.modal.Constructor.VERSION;
-            // Extrahieren der Hauptversionsnummer
-            return parseInt(bootstrapVersion.split('.')[0]);
+            if (typeof window.bootstrap !== 'undefined' && window.bootstrap.Dropdown && window.bootstrap.Dropdown.VERSION) {
+                return parseInt(window.bootstrap.Dropdown.VERSION.split('.')[0], 10);
+            }
+
+            return;
         }
 
         /**
@@ -445,8 +472,8 @@
                         if (BS_V === 4 && multiple && (autoclose === "true" || autoclose === "outside")) {
                             e.stopPropagation();
                         }
-                        const afterValues = getSelectedValuesFromDropdown(afterValues);
-                        const valueChanged = hasValueChanged(beforeValues, currentValue);
+                        const afterValues = getSelectedValuesFromDropdown(selectElement);
+                        const valueChanged = hasValueChanged(beforeValues, afterValues);
                         if (valueChanged) {
                             trigger(selectElement, 'userChange.bs.select', [beforeValues, afterValues]);
                         }
@@ -462,8 +489,8 @@
                             e.stopPropagation();
                         }
 
-                        const afterValues = getSelectedValuesFromDropdown(afterValues);
-                        const valueChanged = hasValueChanged(beforeValues, currentValue);
+                        const afterValues = getSelectedValuesFromDropdown(selectElement);
+                        const valueChanged = hasValueChanged(beforeValues, afterValues);
                         if (valueChanged) {
                             trigger(selectElement, 'userChange.bs.select', [beforeValues, afterValues]);
                         }
@@ -471,8 +498,6 @@
                 })
                 .on('hidden.bs.dropdown', function () {
                     // empty search field if exists
-                    const $select = $dropdown.find('select');
-                    const settings = $select.data('options');
                     let searchField = $(this).find('[type="search"]');
                     if (searchField.length) {
                         const searchElements = $dropdown.find('[data-index]');
@@ -489,7 +514,7 @@
                 .on('click', '[data-dismiss="dropdown"], [data-bs-dismiss="dropdown"]', function (e) {
                     const btn = $(e.currentTarget);
                     const dd = btn.closest('.' + WRAPPER_CLASS);
-                    dd.find('[data-bs-toggle="dropdown"],[data-toggle="dropdown"]').dropdown('hide');
+                    invokeBootstrapDropdownAction(dd, 'hide');
                 })
                 .on('change', '[data-role="optgroup"] [type="checkbox"]', function (e) {
                     const checked = $(e.currentTarget).is(':checked');
@@ -502,7 +527,6 @@
                 })
                 .on('click', '.dropdown-item', function (e) {
                     e.preventDefault();
-                    const settings = selectElement.data('options');
                     const item = $(e.currentTarget);
                     const active = item.hasClass('active');
                     toggleSelectedItem($dropdown, selectElement, multiple, item, !active)
@@ -577,7 +601,7 @@
         function toggleSelectedItem($dropdown, selectElement, multiple, items, setActive) {
             const settings = selectElement.data('options');
             const toggleCheckIcon = multiple && settings.showMultipleCheckboxes;
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
                 if (onBeforeChange(selectElement)) {
 
                     const beforeValues = selectElement.val();
@@ -910,7 +934,7 @@
             if (settings.menuInnerClass) {
                 menuInnerClasses.push(settings.menuInnerClass);
             }
-            ;
+
             const $dropdownMenuInner = $(`<div>`, {
                 class: menuInnerClasses.join(' '),
                 css: {
@@ -980,10 +1004,9 @@
                     }
                 }
 
-                const showAndHasSubtext = settings.showSubtext && element.data('subtext');
                 const showCheckList = multiple && settings.showMultipleCheckboxes;
                 const showIcon = element.data('icon');
-                const $subtext = showAndHasSubtext ? `<small class="text-muted">${element.data('subtext')}</small>` : '';
+               
                 const $icon = showIcon ? `<i class="${element.data('icon')}"></i> ` : '';
                 const paddingLeftClass = inOptGroup || $icon !== '' ? 'ps-2 pl-2' : '';
 
@@ -1008,7 +1031,7 @@
                     class: classList,
                 }).appendTo($dropdownMenuInner);
 
-                const $dropDownItem = $('<a>', {
+               $('<a>', {
                     href: '#',
                     'data-role': 'option',
                     'data-og-index': optGrpIndex,
@@ -1543,7 +1566,6 @@
                 init($select, true);
 
                 if (optionsSet || isFirstInit) {
-                    const setup = $select.data('options');
                     // Initial search query if set
                     doSearch($select, '');
                 }
