@@ -880,7 +880,7 @@
             let actionMenu = '';
 
             if (true === settings.search || multiple) {
-                closeButton = `<button style="font-size:2rem; line-height: 1" type="button" class="text-muted bg-transparent border-0 ms-auto ml-auto ps-2 p-0" data-dismiss="dropdown"  data-bs-dismiss="dropdown" aria-label="Close">&times;</button>`;
+                closeButton = `<button style="font-size:2rem; line-height: 1" type="button" class="text-muted bg-transparent border-0 ms-auto ml-auto ps-2 pl-2 p-0" data-dismiss="dropdown"  data-bs-dismiss="dropdown" aria-label="Close">&times;</button>`;
             }
 
             if (true === settings.search) {
