@@ -6,8 +6,8 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.32
- * @date 2026-04-30
+ * @version 2.1.33
+ * @date 2026-05-04
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
  * @fileOverview README.md
@@ -61,7 +61,7 @@
          * @class
          */
         $.bsSelect = {
-            version: '2.1.32',
+            version: '2.1.33',
             setDefaults: function (options) {
                 this.DEFAULTS = $.extend({}, this.DEFAULTS, options || {});
             },
@@ -85,6 +85,7 @@
                 menuPreHtml: null,
                 menuAppendHtml: null,
                 menuMaxHeight: 300,
+                animatedMenu: true,
                 showSubtext: true,
                 showActionMenu: true,
                 showMultipleCheckboxes: false,
@@ -295,6 +296,69 @@
                 if (dropdownInstance && typeof dropdownInstance[action] === 'function') {
                     dropdownInstance[action]();
                 }
+            }
+        }
+
+        /**
+         * Animates the dropdown menu when the animatedMenu option is enabled.
+         *
+         * @param {jQuery} $dropdown The dropdown wrapper element.
+         * @param {jQuery} $select The select element associated with the dropdown.
+         * @return {void}
+         */
+        function animateDropdownMenu($dropdown, $select) {
+            const settings = $select.data('options');
+            if (!settings || settings.animatedMenu !== true) {
+                return;
+            }
+
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                return;
+            }
+
+            const menu = $dropdown.find('.dropdown-menu').get(0);
+            if (!menu || typeof menu.animate !== 'function') {
+                return;
+            }
+
+            const previousAnimation = $dropdown.data('animatedMenuAnimation');
+            if (previousAnimation && typeof previousAnimation.cancel === 'function') {
+                previousAnimation.cancel();
+            }
+
+            menu.style.willChange = 'opacity, clip-path';
+
+            const animation = menu.animate(
+                [
+                    {
+                        opacity: 0,
+                        clipPath: 'inset(0 0 100% 0)'
+                    },
+                    {
+                        opacity: 1,
+                        clipPath: 'inset(0 0 0 0)'
+                    }
+                ],
+                {
+                    duration: 180,
+                    easing: 'cubic-bezier(.2, 0, .2, 1)',
+                    fill: 'both'
+                }
+            );
+
+            $dropdown.data('animatedMenuAnimation', animation);
+
+            if (animation.finished) {
+                animation.finished
+                    .catch(function () {
+                        // Cancelled animations are expected when the menu is toggled quickly.
+                    })
+                    .then(function () {
+                        if ($dropdown.data('animatedMenuAnimation') === animation) {
+                            $dropdown.removeData('animatedMenuAnimation');
+                            menu.style.willChange = '';
+                        }
+                    });
             }
         }
 
@@ -596,6 +660,8 @@
                     } else {
                         $dropdownMenuInner.scrollTop(0);
                     }
+
+                    animateDropdownMenu($dropdown, $select);
                 });
         }
 

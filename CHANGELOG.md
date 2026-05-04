@@ -2,6 +2,16 @@
 
 All important changes to this project are documented in this file.
 
+## [2.1.33] - 2026-05-04
+
+### Added
+- New option `animatedMenu`: Animates bsSelect dropdown menus when they open.
+
+### Changed
+- Dropdown menu animation now uses the Web Animations API without additional CSS.
+- Animation uses `clip-path` and `opacity` so Bootstrap/Popper positioning is not overwritten.
+- README option table updated for `animatedMenu`.
+
 ## [2.1.30] - 2025-12-23
 
 ### Added
