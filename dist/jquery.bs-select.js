@@ -54,6 +54,7 @@
 
         const WRAPPER_CLASS = 'js-bs-select-dropdown';
 
+        const D_NONE = 'd-none';
         /**
          * Represents the Bootstrap Select plugin.
          *
@@ -141,8 +142,8 @@
                 fullPattern = $prefix.text() + searchPattern;
             }
 
-            searchElements.removeClass('d-none').addClass('d-flex');
-            dropdownHeaders.removeClass('d-none');
+            searchElements.removeClass(D_NONE).addClass('d-flex');
+            dropdownHeaders.removeClass(D_NONE);
 
             if (settings && settings.debug) {
                 console.log('bsSelect:doSearch', fullPattern);
@@ -157,21 +158,21 @@
                         if (settings && settings.debug) {
                             console.log('bsSelect:doSearch elements found:', currentName);
                         }
-                        $(value).removeClass('d-none').addClass('d-flex');
+                        $(value).removeClass(D_NONE).addClass('d-flex');
                     } else {
                         if (settings && settings.debug) {
                             console.log('bsSelect:doSearch elements not found:', currentName);
                         }
-                        $(value).addClass('d-none').removeClass('d-flex');
+                        $(value).addClass(D_NONE).removeClass('d-flex');
                     }
                 });
-                dropdownHeaders.addClass('d-none');
+                dropdownHeaders.addClass(D_NONE);
             } else {
                 if (settings && settings.debug) {
                     console.log('bsSelect:doSearch is empty');
                 }
-                searchElements.removeClass('d-none');
-                dropdownHeaders.removeClass('d-none');
+                searchElements.removeClass(D_NONE);
+                dropdownHeaders.removeClass(D_NONE);
             }
         }
 
@@ -501,7 +502,7 @@
                     let searchField = $(this).find('[type="search"]');
                     if (searchField.length) {
                         const searchElements = $dropdown.find('[data-index]');
-                        searchElements.removeClass('d-none').addClass('d-flex');
+                        searchElements.removeClass(D_NONE).addClass('d-flex');
                         
                         searchField.val('').trigger('keyup');
                     }
@@ -777,7 +778,7 @@
             // Create a new div element to serve as the dropdown wrapper and insert it after the original select element.
             // The wrapper is assigned the classes 'js-bs-select-dropdown' and 'position-relative'.
             $dropdown = $('<div>', {
-                class: `${WRAPPER_CLASS} position-relative`,
+                class: `${WRAPPER_CLASS} position-relative ${D_NONE}`,
                 css: {
                     width: settings.btnWidth // Set the width of the dropdown based on the provided settings.
                 }
@@ -1071,6 +1072,7 @@
 
             if (fireTrigger) {
                 setTimeout(function () {
+                    $dropdown.removeClass(D_NONE);
                     trigger($select, 'init.bs.select');
                     $dropdown.show();
                 }, 0);
@@ -1174,7 +1176,7 @@
                 } else {
                     // Single select: Display the selected option's text and subtext (if available).
                     let $option = $select.find(`option[value="${selectedValues}"]`);
-                    if ($option.hasClass('d-none')) {
+                    if ($option.hasClass(D_NONE)) {
                         // If the selected option is hidden, display the default empty text.
                         title2 = settings.btnEmptyText;
                     } else {
@@ -1374,7 +1376,7 @@
         function setVisible($select, visible) {
             setDisabled($select, !visible);
             const $dropdown = getDropDown($select);
-            $dropdown.toggleClass('d-none', !visible);
+            $dropdown.toggleClass(D_NONE, !visible);
             trigger($select, 'toggleVisibility.bs.select', [visible]);
         }
         /**
@@ -1385,7 +1387,7 @@
          */
         function toggleVisibility($select) {
             const $dropdown = getDropDown($select);
-            const visible = $dropdown.hasClass('d-none');
+            const visible = $dropdown.hasClass(D_NONE);
             setVisible($select, visible);
         }
 
@@ -1581,7 +1583,7 @@
                             const visible = param;
                             setDisabled($select, !visible);
                             const $dropdown = getDropDown($select);
-                            $dropdown.toggleClass('d-none', !visible);
+                            $dropdown.toggleClass(D_NONE, !visible);
                         } break;
                         // Case for getting selected text
                         case 'getSelectedText': {
