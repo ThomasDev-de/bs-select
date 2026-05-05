@@ -6,7 +6,7 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.34
+ * @version 2.1.35
  * @date 2026-05-04
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
@@ -61,7 +61,7 @@
          * @class
          */
         $.bsSelect = {
-            version: '2.1.34',
+            version: '2.1.35',
             setDefaults: function (options) {
                 this.DEFAULTS = $.extend({}, this.DEFAULTS, options || {});
             },
@@ -116,6 +116,7 @@
                 onBeforeChange: null,
                 onKeyDown: null,
                 value: undefined,
+                selectAllOnInit: false,
                 searchQuery: null
             }
         };
@@ -847,6 +848,12 @@
             // Determine the initial selected value. If fireTrigger is true and a value is provided in the settings,
             // use that value. Otherwise, use the value currently selected in the native select element.
             let selectedValue = (fireTrigger && typeof settings.value !== 'undefined') ? settings.value : $select.val();
+
+            if (multiple && settings.selectAllOnInit === true) {
+                selectedValue = $select.find('option').map(function () {
+                    return $(this).val();
+                }).get();
+            }
 
             // If the select element allows multiple selections and the provided selectedValue is not an array,
             // convert it into an array to ensure compatibility with the plugin's internal logic.

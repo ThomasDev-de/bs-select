@@ -43,6 +43,13 @@ composer require webcito/bs-select
 <script src="/vendor/webcito/bs-select/dist/jquery.bs-select.min.js" type="text/javascript">
 ```
 
+or use the GitHub CDN (jsDelivr):
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.35/dist/locale/de-DE.min.js" type="text/javascript"></script> <!-- optional -->
+<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.35/dist/jquery.bs-select.min.js" type="text/javascript"></script>
+```
+
 ## Set global defaults
 
 ```js
@@ -107,6 +114,7 @@ All selects with the attribute `[data-bs-toggle="select"]` or `[data-toggle="sel
 | property               | data-attribute                | type             | default                             | desc                                                                                                                                                                                                                                                    |
 |------------------------|-------------------------------|------------------|-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | value                  | [data-value]                  | `mixed`          | `undefined`                         | *If a value is passed here, this value (if available) will be preselected during initialization. Otherwise the value of the native select is adopted.The value is only taken into account during the initial initialization (not for 'updateOptions').* |
+| selectAllOnInit        | [data-select-all-on-init]     | `bool`           | `false`                             | *If `true` and the select is `multiple`, all options are selected during initialization. If `value` is also set, `selectAllOnInit` takes precedence.* |
 | search                 | [data-search]                 | `bool`           | `true`                              | *adds a search function to the menu*                                                                                                                                                                                                                    |
 | searchText             | [data-search-text]            | `string`         | `Search..`                          | "Placeholder for search input box*                                                                                                                                                                                                                      |
 | searchQuery            | [data-search-query]           | `string`         | `null`                              | *predefined search prefix fixed as `input-group-text` in the search field. The search query becomes `prefix + user input`.*                                                                                                                              |

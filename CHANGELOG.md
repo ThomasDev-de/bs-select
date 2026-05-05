@@ -2,6 +2,11 @@
 
 All important changes to this project are documented in this file.
 
+## [2.1.35] - 2026-05-05
+
+### Added
+- New option `selectAllOnInit`: If enabled on a multi-select, all options are selected during initialization.
+
 ## [2.1.34] - 2026-05-05
 
 ### Fixed
