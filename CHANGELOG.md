@@ -2,6 +2,11 @@
 
 All important changes to this project are documented in this file.
 
+## [2.1.34] - 2026-05-05
+
+### Fixed
+- Bootstrap 4: Dropdown no longer closes when toggling an `optgroup` checkbox in multi-select mode (`autoClose: true|outside`).
+
 ## [2.1.33] - 2026-05-04
 
 ### Added

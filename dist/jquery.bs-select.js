@@ -6,7 +6,7 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.33
+ * @version 2.1.34
  * @date 2026-05-04
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
@@ -61,7 +61,7 @@
          * @class
          */
         $.bsSelect = {
-            version: '2.1.33',
+            version: '2.1.34',
             setDefaults: function (options) {
                 this.DEFAULTS = $.extend({}, this.DEFAULTS, options || {});
             },
@@ -582,6 +582,10 @@
                     invokeBootstrapDropdownAction(dd, 'hide');
                 })
                 .on('change', '[data-role="optgroup"] [type="checkbox"]', function (e) {
+                    if (BS_V === 4 && multiple && (autoclose === "true" || autoclose === "outside")) {
+                        e.stopPropagation();
+                    }
+
                     const checked = $(e.currentTarget).is(':checked');
                     const groupIndex = $(e.currentTarget).closest('[data-role="optgroup"]').data('ogIndex');
 
@@ -592,14 +596,13 @@
                 })
                 .on('click', '.dropdown-item', function (e) {
                     e.preventDefault();
+                    if (BS_V === 4 && multiple && (autoclose === "true" || autoclose === "outside")) {
+                        e.stopPropagation();
+                    }
                     const item = $(e.currentTarget);
                     const active = item.hasClass('active');
                     toggleSelectedItem($dropdown, selectElement, multiple, item, !active)
                         .then(() => {
-
-                            if (BS_V === 4 && multiple && (autoclose === "true" || autoclose === "outside")) {
-                                e.stopPropagation();
-                            }
                         });
                 })
                 .on('keydown', function (e) {
