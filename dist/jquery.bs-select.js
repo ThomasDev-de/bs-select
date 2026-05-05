@@ -581,6 +581,16 @@
                     const dd = btn.closest('.' + WRAPPER_CLASS);
                     invokeBootstrapDropdownAction(dd, 'hide');
                 })
+                .on('mousedown click', '[data-role="optgroup"] [type="checkbox"], [data-role="optgroup"] label', function (e) {
+                    if (BS_V === 4 && multiple && (autoclose === "true" || autoclose === "outside")) {
+                        e.stopPropagation();
+                    }
+                })
+                .on('click', '[data-role="optgroup"]', function (e) {
+                    if (BS_V === 4 && multiple && (autoclose === "true" || autoclose === "outside")) {
+                        e.stopPropagation();
+                    }
+                })
                 .on('change', '[data-role="optgroup"] [type="checkbox"]', function (e) {
                     if (BS_V === 4 && multiple && (autoclose === "true" || autoclose === "outside")) {
                         e.stopPropagation();
