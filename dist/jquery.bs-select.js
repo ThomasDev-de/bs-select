@@ -864,7 +864,7 @@
             // Create a new div element to serve as the dropdown wrapper and insert it after the original select element.
             // The wrapper is assigned the classes 'js-bs-select-dropdown' and 'position-relative'.
             $dropdown = $('<div>', {
-                class: `${WRAPPER_CLASS} position-relative ${D_NONE}`,
+                class: `${WRAPPER_CLASS} position-relative`,
                 css: {
                     width: settings.btnWidth // Set the width of the dropdown based on the provided settings.
                 }
@@ -1158,7 +1158,6 @@
 
             if (fireTrigger) {
                 setTimeout(function () {
-                    $dropdown.removeClass(D_NONE);
                     trigger($select, 'init.bs.select');
                     $dropdown.show();
                 }, 0);
