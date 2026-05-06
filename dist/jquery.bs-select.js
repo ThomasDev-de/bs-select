@@ -55,6 +55,8 @@
         const WRAPPER_CLASS = 'js-bs-select-dropdown';
 
         const D_NONE = 'd-none';
+
+        const SELECT_CLASS = 'bs-select';
         /**
          * Represents the Bootstrap Select plugin.
          *
@@ -211,7 +213,7 @@
             const settings = $select.data('options');
 
             // If debug mode is enabled
-            if (settings.debug) {
+            if (settings && settings.debug) {
                 // Log the triggered event and its parameters to the console
                 console.log('trigger', event, params);
 
@@ -806,6 +808,14 @@
             return false; // All other values are considered non-empty (including numbers)
         }
 
+        function shouldRevealAfterInit($select) {
+            return $select.hasClass(SELECT_CLASS) && $select.css('display') === 'none';
+        }
+
+        function revealAfterInit($select, $dropdown) {
+            $dropdown.show();
+        }
+
         /**
          * Initializes a dropdown menu for a select element.
          *
@@ -861,13 +871,21 @@
                 selectedValue = [selectedValue];
             }
 
+            const revealInitializedSelect = shouldRevealAfterInit($select);
+
             // Create a new div element to serve as the dropdown wrapper and insert it after the original select element.
             // The wrapper is assigned the classes 'js-bs-select-dropdown' and 'position-relative'.
+            const dropdownCss = {
+                width: settings.btnWidth // Set the width of the dropdown based on the provided settings.
+            };
+
+            if (revealInitializedSelect) {
+                dropdownCss.display = 'none';
+            }
+
             $dropdown = $('<div>', {
                 class: `${WRAPPER_CLASS} position-relative`,
-                css: {
-                    width: settings.btnWidth // Set the width of the dropdown based on the provided settings.
-                }
+                css: dropdownCss
             }).insertAfter($select);
 
             // If a dropDirection is specified in the settings, add the corresponding class to the dropdown wrapper.
@@ -1156,10 +1174,13 @@
             setSelectValues($select);
             setDropdownTitle($select);
 
+            if (revealInitializedSelect) {
+                revealAfterInit($select, $dropdown);
+            }
+
             if (fireTrigger) {
                 setTimeout(function () {
                     trigger($select, 'init.bs.select');
-                    $dropdown.show();
                 }, 0);
             }
             return $dropdown;

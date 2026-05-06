@@ -1,4 +1,8 @@
-QUnit.test('bsSelect Suchfunktion', function(assert) {
+function getVisibleDropdownItems($dropdown) {
+    return $dropdown.find('.dropdown-item').not('.d-none');
+}
+
+QUnit.test('bsSelect search', function(assert) {
     var done = assert.async();
     var $select = $('<select id="mySelect" data-bs-toggle="select"><option value="1">Apple</option><option value="2">Banana</option><option value="3">Avocado</option><option value="4">Apricot</option></select>');
     $('body').append($select);
@@ -8,23 +12,23 @@ QUnit.test('bsSelect Suchfunktion', function(assert) {
         var $dropdown = $select.closest('.js-bs-select-dropdown');
         var $searchInput = $dropdown.find('.dropdown-menu input[type="search"]');
 
-        // Test 1: Suche nach "Ap"
+        // Test 1: search for "Ap"
         $searchInput.val('Ap').trigger('input');
         setTimeout(function() {
-            var $visibleItems = $dropdown.find('.dropdown-item:visible');
-            assert.equal($visibleItems.length, 2, 'Zwei Elemente sichtbar (Apple, Apricot)');
+            var $visibleItems = getVisibleDropdownItems($dropdown);
+            assert.equal($visibleItems.length, 2, 'Two items are visible (Apple, Apricot)');
 
-            // Test 2: Suche nach "Banana"
+            // Test 2: search for "Banana"
             $searchInput.val('Banana').trigger('input');
             setTimeout(function() {
-                $visibleItems = $dropdown.find('.dropdown-item:visible');
-                assert.equal($visibleItems.length, 1, 'Ein Element sichtbar (Banana)');
+                $visibleItems = getVisibleDropdownItems($dropdown);
+                assert.equal($visibleItems.length, 1, 'One item is visible (Banana)');
 
-                // Test 3: Suche nach "xyz" (kein Ergebnis)
+                // Test 3: search for "xyz" (no results)
                 $searchInput.val('xyz').trigger('input');
                 setTimeout(function() {
-                    $visibleItems = $dropdown.find('.dropdown-item:visible');
-                    assert.equal($visibleItems.length, 0, 'Kein Element sichtbar');
+                    $visibleItems = getVisibleDropdownItems($dropdown);
+                    assert.equal($visibleItems.length, 0, 'No item is visible');
 
                     $select.bsSelect('destroy');
                     $select.remove();
@@ -36,7 +40,26 @@ QUnit.test('bsSelect Suchfunktion', function(assert) {
     });
 });
 
-QUnit.test('bsSelect vordefinierte Suche als Präfix (searchQuery Option)', function(assert) {
+QUnit.test('bsSelect reveals externally hidden select after initialization', function(assert) {
+    var $style = $('<style>.js-test-hidden-select.bs-select { display: none; }</style>').appendTo('head');
+    var $select = $('<select id="hiddenInitSelect" class="js-test-hidden-select bs-select"><option value="1">Apple</option><option value="2">Banana</option></select>');
+    $('body').append($select);
+
+    assert.equal($select.css('display'), 'none', 'Select is externally hidden before initialization');
+
+    $select.bsSelect();
+
+    var $dropdown = $select.closest('.js-bs-select-dropdown');
+
+    assert.notOk($dropdown.hasClass('bs-select'), 'Wrapper does not get the bs-select class from the plugin');
+    assert.notEqual($dropdown.css('display'), 'none', 'Dropdown wrapper is visible after initialization');
+
+    $select.bsSelect('destroy');
+    $select.remove();
+    $style.remove();
+});
+
+QUnit.test('bsSelect predefined search prefix (searchQuery option)', function(assert) {
     var done = assert.async();
     var $select = $('<select id="predefinedSearchSelect"><option value="1">Apple</option><option value="2">Banana</option><option value="3">Avocado</option><option value="4">Apricot</option></select>');
     $('body').append($select);
@@ -45,23 +68,23 @@ QUnit.test('bsSelect vordefinierte Suche als Präfix (searchQuery Option)', func
         $select.bsSelect({
             searchQuery: 'Ap'
         });
-        var $dropdown = $select.next('.js-bs-select-dropdown');
+        var $dropdown = $select.closest('.js-bs-select-dropdown');
         
-        // Da "Ap" der Präfix ist, sollten beim Start Apple und Apricot sichtbar sein
-        var $visibleItems = $dropdown.find('.dropdown-item:visible');
-        assert.equal($visibleItems.length, 2, 'Zwei Elemente sichtbar beim Start (Apple, Apricot)');
+        // Since "Ap" is the prefix, Apple and Apricot should be visible on init.
+        var $visibleItems = getVisibleDropdownItems($dropdown);
+        assert.equal($visibleItems.length, 2, 'Two items are visible on init (Apple, Apricot)');
 
         var $prefixText = $dropdown.find('.input-group-text');
-        assert.equal($prefixText.text(), 'Ap', 'Suchfeld-Präfix enthält "Ap"');
+        assert.equal($prefixText.text(), 'Ap', 'Search field prefix contains "Ap"');
 
         var $searchInput = $dropdown.find('input[type="search"]');
-        assert.equal($searchInput.val(), '', 'Das eigentliche Suchfeld ist leer');
+        assert.equal($searchInput.val(), '', 'The actual search field is empty');
 
-        // Wenn wir "r" eingeben, sollte nach "Apr" gesucht werden (Apricot)
+        // Entering "r" should search for "Apr" (Apricot).
         $searchInput.val('r').trigger('input');
-        $visibleItems = $dropdown.find('.dropdown-item:visible');
-        assert.equal($visibleItems.length, 1, 'Nur noch Apricot sichtbar nach Eingabe von "r"');
-        assert.equal($visibleItems.text().trim(), 'Apricot', 'Gefundenes Element ist Apricot');
+        $visibleItems = getVisibleDropdownItems($dropdown);
+        assert.equal($visibleItems.length, 1, 'Only Apricot is visible after entering "r"');
+        assert.equal($visibleItems.text().trim(), 'Apricot', 'Found item is Apricot');
 
         $select.bsSelect('destroy');
         $select.remove();
@@ -69,20 +92,20 @@ QUnit.test('bsSelect vordefinierte Suche als Präfix (searchQuery Option)', func
     });
 });
 
-QUnit.test('bsSelect programmatische Suche mit Präfix', function(assert) {
+QUnit.test('bsSelect programmatic search with prefix', function(assert) {
     var done = assert.async();
     var $select = $('<select id="programmaticSearchPrefixSelect" data-search-query="A"><option value="1">Apple</option><option value="2">Banana</option><option value="3">Avocado</option><option value="4">Apricot</option></select>');
     $('body').append($select);
 
     $(document).ready(function() {
         $select.bsSelect();
-        var $dropdown = $select.next('.js-bs-select-dropdown');
+        var $dropdown = $select.closest('.js-bs-select-dropdown');
 
-        // Suche nach "v" (Präfix "A" + "v" = "Av")
+        // Search for "v" (prefix "A" + "v" = "Av").
         $select.bsSelect('search', 'v');
-        var $visibleItems = $dropdown.find('.dropdown-item:visible');
-        assert.equal($visibleItems.length, 1, 'Ein Element sichtbar nach programmatischer Suche "v" mit Präfix "A" (Avocado)');
-        assert.equal($visibleItems.text().trim(), 'Avocado', 'Gefundenes Element ist Avocado');
+        var $visibleItems = getVisibleDropdownItems($dropdown);
+        assert.equal($visibleItems.length, 1, 'One item is visible after programmatic search "v" with prefix "A" (Avocado)');
+        assert.equal($visibleItems.text().trim(), 'Avocado', 'Found item is Avocado');
 
         $select.bsSelect('destroy');
         $select.remove();
@@ -90,19 +113,19 @@ QUnit.test('bsSelect programmatische Suche mit Präfix', function(assert) {
     });
 });
 
-QUnit.test('bsSelect vordefinierter Präfix via data-attribute', function(assert) {
+QUnit.test('bsSelect predefined prefix via data attribute', function(assert) {
     var done = assert.async();
     var $select = $('<select id="dataAttrSearchSelect" data-search-query="Avocado"><option value="1">Apple</option><option value="2">Banana</option><option value="3">Avocado</option><option value="4">Apricot</option></select>');
     $('body').append($select);
 
     $(document).ready(function() {
         $select.bsSelect();
-        var $dropdown = $select.next('.js-bs-select-dropdown');
-        var $visibleItems = $dropdown.find('.dropdown-item:visible');
-        assert.equal($visibleItems.length, 1, 'Ein Element sichtbar beim Start (Avocado)');
+        var $dropdown = $select.closest('.js-bs-select-dropdown');
+        var $visibleItems = getVisibleDropdownItems($dropdown);
+        assert.equal($visibleItems.length, 1, 'One item is visible on init (Avocado)');
 
         var $prefixText = $dropdown.find('.input-group-text');
-        assert.equal($prefixText.text(), 'Avocado', 'Präfix enthält "Avocado"');
+        assert.equal($prefixText.text(), 'Avocado', 'Prefix contains "Avocado"');
 
         $select.bsSelect('destroy');
         $select.remove();
@@ -110,30 +133,30 @@ QUnit.test('bsSelect vordefinierter Präfix via data-attribute', function(assert
     });
 });
 
-QUnit.test('bsSelect Suche mit Leerzeichen erlaubt', function(assert) {
+QUnit.test('bsSelect search allows spaces', function(assert) {
     var done = assert.async();
     var $select = $('<select id="spaceSearchSelect"><option value="1">Apple Pie</option><option value="2">Banana</option></select>');
     $('body').append($select);
 
     $(document).ready(function() {
         $select.bsSelect();
-        var $dropdown = $select.next('.js-bs-select-dropdown');
+        var $dropdown = $select.closest('.js-bs-select-dropdown');
         var $searchInput = $dropdown.find('input[type="search"]');
 
-        // Simuliere Leertaste (keydown)
+        // Simulate space key (keydown).
         var event = $.Event('keydown');
         event.code = 'Space';
         $searchInput.trigger(event);
 
-        assert.notOk(event.isDefaultPrevented(), 'Leertaste wurde NICHT unterbunden');
+        assert.notOk(event.isDefaultPrevented(), 'Space key was not prevented');
 
-        // Simuliere Eingabe mit Leerzeichen
+        // Simulate input with a trailing space.
         $searchInput.val('Apple ').trigger('input');
-        assert.equal($searchInput.val(), 'Apple ', 'Leerzeichen am Ende bleiben im Suchfeld erhalten');
+        assert.equal($searchInput.val(), 'Apple ', 'Trailing space remains in the search field');
 
-        // Simuliere Eingabe nur Leerzeichen
+        // Simulate input containing only spaces.
         $searchInput.val('   ').trigger('input');
-        assert.equal($searchInput.val(), '   ', 'Mehrere Leerzeichen bleiben im Suchfeld erhalten');
+        assert.equal($searchInput.val(), '   ', 'Multiple spaces remain in the search field');
 
         $select.bsSelect('destroy');
         $select.remove();
@@ -141,27 +164,29 @@ QUnit.test('bsSelect Suche mit Leerzeichen erlaubt', function(assert) {
     });
 });
 
-QUnit.test('bsSelect vordefinierte Suche bleibt nach Schließen erhalten', function(assert) {
+QUnit.test('bsSelect predefined search prefix is kept after close', function(assert) {
     var done = assert.async();
     var $select = $('<select id="persistSearchSelect" data-search-query="Apple"><option value="1">Apple</option><option value="2">Banana</option></select>');
     $('body').append($select);
 
     $(document).ready(function() {
         $select.bsSelect();
-        var $dropdown = $select.next('.js-bs-select-dropdown');
+        var $dropdown = $select.closest('.js-bs-select-dropdown');
         var $searchInput = $dropdown.find('input[type="search"]');
 
-        assert.equal($searchInput.val(), 'Apple', 'Initialer Suchwert ist "Apple"');
+        var $prefixText = $dropdown.find('.input-group-text');
+        assert.equal($prefixText.text(), 'Apple', 'Search field prefix contains "Apple"');
+        assert.equal($searchInput.val(), '', 'The actual search field is initially empty');
 
-        // Suche ändern
+        // Change the search input.
         $searchInput.val('Banana').trigger('input');
-        assert.equal($searchInput.val(), 'Banana', 'Suchwert auf "Banana" geändert');
+        assert.equal($searchInput.val(), 'Banana', 'Search value changed to "Banana"');
 
-        // Dropdown schließen simulieren
+        // Simulate closing the dropdown.
         $dropdown.trigger('hidden.bs.dropdown');
 
         setTimeout(function() {
-            assert.equal($searchInput.val(), 'Apple', 'Nach dem Schließen ist der Suchwert wieder "Apple" (vordefiniert)');
+            assert.equal($searchInput.val(), '', 'Search field is empty again after closing');
             $select.bsSelect('destroy');
             $select.remove();
             done();

@@ -8,6 +8,9 @@
     <link href="../vendor/twbs/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet">
     <!--suppress CssUnusedSymbol -->
     <style>
+        .bs-select {
+            display:none
+        }
         /*.dropdown-item:active,*/
         /*.dropdown-item.active {*/
         /*    background-color: transparent;*/
@@ -44,7 +47,7 @@
                     <td>
 
                         <label for="select1" class="d-none"></label>
-                        <select id="select1" data-btn-class="btn-primary" name="test1">
+                        <select id="select1" data-btn-class="btn-primary" name="test1" class="bs-select">
                             <option value="1">Item 1</option>
                             <option value="2" selected>Item 2</option>
                             <option value="3">Item 3</option>
