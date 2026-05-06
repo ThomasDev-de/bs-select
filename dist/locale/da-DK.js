@@ -1,0 +1,9 @@
+window.bsSelectTranslations = {
+    btnEmptyText: "Vælg venligst..",
+    deselectAllText: "Fravælg alle",
+    selectAllText: "Vælg alle",
+    searchText: "Søg..",
+    showSelectedText: function (count, total) {
+        return count + ' af ' + total + ' valgt';
+    },
+};

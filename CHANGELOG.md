@@ -2,6 +2,14 @@
 
 All important changes to this project are documented in this file.
 
+## [2.1.36] - 2026-05-06
+
+### Added
+- Added additional European locale files: `cs-CZ`, `da-DK`, `el-GR`, `en-GB`, `es-ES`, `fi-FI`, `fr-FR`, `hu-HU`, `it-IT`, `nb-NO`, `nl-NL`, `pl-PL`, `pt-PT`, `ro-RO`, `sk-SK`, and `sv-SE`.
+
+### Changed
+- README now documents the available locale files.
+
 ## [2.1.35] - 2026-05-05
 
 ### Added

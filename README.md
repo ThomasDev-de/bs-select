@@ -10,6 +10,7 @@ compatibility and modern design standards.
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Locales](#locales)
 - [Options](#options)
 - [Methods](#methods)
 - [Events](#events)
@@ -46,8 +47,8 @@ composer require webcito/bs-select
 or use the GitHub CDN (jsDelivr):
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.35/dist/locale/de-DE.min.js" type="text/javascript"></script> <!-- optional -->
-<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.35/dist/jquery.bs-select.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.36/dist/locale/de-DE.min.js" type="text/javascript"></script> <!-- optional -->
+<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.36/dist/jquery.bs-select.min.js" type="text/javascript"></script>
 ```
 
 ## Set global defaults
@@ -101,6 +102,16 @@ All selects with the attribute `[data-bs-toggle="select"]` or `[data-toggle="sel
         $('select').bsSelect();
 </script>
 ```
+
+## Locales
+
+Locale files are optional and set the global `window.bsSelectTranslations` object. Include one locale file before
+`jquery.bs-select.js`.
+
+Available locale files:
+
+`cs-CZ`, `da-DK`, `de-DE`, `el-GR`, `en-GB`, `en-US`, `es-ES`, `fi-FI`, `fr-FR`, `hu-HU`, `it-IT`, `nb-NO`, `nl-NL`,
+`pl-PL`, `pt-PT`, `ro-RO`, `sk-SK`, `sv-SE`.
 
 ## option[data-attributes]
 

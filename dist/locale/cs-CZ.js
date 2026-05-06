@@ -1,0 +1,9 @@
+window.bsSelectTranslations = {
+    btnEmptyText: "Vyberte prosím..",
+    deselectAllText: "Zrušit výběr všeho",
+    selectAllText: "Vybrat vše",
+    searchText: "Hledat..",
+    showSelectedText: function (count, total) {
+        return count + ' z ' + total + ' vybrano';
+    },
+};

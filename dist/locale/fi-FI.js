@@ -1,0 +1,9 @@
+window.bsSelectTranslations = {
+    btnEmptyText: "Valitse..",
+    deselectAllText: "Poista kaikki valinnat",
+    selectAllText: "Valitse kaikki",
+    searchText: "Hae..",
+    showSelectedText: function (count, total) {
+        return count + ' / ' + total + ' valittu';
+    },
+};

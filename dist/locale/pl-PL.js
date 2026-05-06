@@ -1,0 +1,9 @@
+window.bsSelectTranslations = {
+    btnEmptyText: "Wybierz..",
+    deselectAllText: "Odznacz wszystko",
+    selectAllText: "Zaznacz wszystko",
+    searchText: "Szukaj..",
+    showSelectedText: function (count, total) {
+        return count + ' z ' + total + ' wybrano';
+    },
+};

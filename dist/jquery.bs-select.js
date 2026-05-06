@@ -6,8 +6,8 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.35
- * @date 2026-05-04
+ * @version 2.1.36
+ * @date 2026-05-06
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
  * @fileOverview README.md
@@ -63,7 +63,7 @@
          * @class
          */
         $.bsSelect = {
-            version: '2.1.35',
+            version: '2.1.36',
             setDefaults: function (options) {
                 this.DEFAULTS = $.extend({}, this.DEFAULTS, options || {});
             },

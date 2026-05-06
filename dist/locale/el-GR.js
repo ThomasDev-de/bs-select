@@ -1,0 +1,9 @@
+window.bsSelectTranslations = {
+    btnEmptyText: "Παρακαλώ επιλέξτε..",
+    deselectAllText: "Αποεπιλογή όλων",
+    selectAllText: "Επιλογή όλων",
+    searchText: "Αναζήτηση..",
+    showSelectedText: function (count, total) {
+        return count + ' από ' + total + ' επιλεγμένα';
+    },
+};
