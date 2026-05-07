@@ -157,17 +157,21 @@
             if (!isValueEmpty(trimmedPattern)) {
                 const search = trimmedPattern.toUpperCase();
                 searchElements.each(function (index, value) {
-                    let currentName = $(value).text().trim();
+                    const $value = $(value);
+                    const searchSource = $value.data('search');
+                    let currentName = typeof searchSource === 'string' && !isValueEmpty(searchSource)
+                        ? searchSource.trim()
+                        : $value.text().trim();
                     if (currentName.toUpperCase().indexOf(search) > -1) {
                         if (settings && settings.debug) {
                             console.log('bsSelect:doSearch elements found:', currentName);
                         }
-                        $(value).removeClass(D_NONE).addClass('d-flex');
+                        $value.removeClass(D_NONE).addClass('d-flex');
                     } else {
                         if (settings && settings.debug) {
                             console.log('bsSelect:doSearch elements not found:', currentName);
                         }
-                        $(value).addClass(D_NONE).removeClass('d-flex');
+                        $value.addClass(D_NONE).removeClass('d-flex');
                     }
                 });
                 dropdownHeaders.addClass(D_NONE);
@@ -1130,6 +1134,7 @@
                 }
 
                 const itemClass = settings.menuItemClass === null ? '' : settings.menuItemClass;
+                const searchText = [element.text(), element.data('subtext') || ''].join(' ').trim();
 
                 const $drowDownItemWrapper = $('<div>', {
                     tabindex: i,
@@ -1141,6 +1146,7 @@
                     'data-role': 'option',
                     'data-og-index': optGrpIndex,
                     'data-index': i,
+                    'data-search': searchText,
                     class: `dropdown-item ${selected} ${disabledClass} px-2 d-flex flex-nowrap align-items-center ${itemClass} `,
                     css: {
                         cursor: 'pointer'

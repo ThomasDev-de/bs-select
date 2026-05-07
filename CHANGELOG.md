@@ -2,6 +2,11 @@
 
 All important changes to this project are documented in this file.
 
+## [dev-main]
+
+### Fixed
+- Search now also matches option `subtext` values in addition to the visible option text.
+
 ## [2.1.36] - 2026-05-06
 
 ### Added
