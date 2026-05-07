@@ -981,7 +981,10 @@
             });
 
             const $dropdownMenu = $('<div>', {
-                class: 'dropdown-menu pl-1 ps-1 ' + settings.menuClass ?? ''
+                class: 'dropdown-menu pl-1 ps-1 ' + settings.menuClass ?? '',
+                css: {
+                    maxWidth: 'calc(100vw - 1rem)'
+                }
             }).appendTo($dropdown);
 
             let searchInput = '';
@@ -995,9 +998,9 @@
             if (true === settings.search) {
                 const query = settings.searchQuery || $select.attr('data-search-query');
                 if (!isValueEmpty(query)) {
-                    searchInput = `<div style="min-width: 250px" class="input-group input-group-sm mr-auto me-auto"><span class="input-group-text">${query}</span><input type="search" autocomplete="off" class="form-control" placeholder="${settings.searchText}"></div>`;
+                    searchInput = `<div style="width: min(250px, calc(100vw - 7rem)); max-width: 100%;" class="input-group input-group-sm mr-auto me-auto"><span class="input-group-text">${query}</span><input type="search" autocomplete="off" class="form-control" placeholder="${settings.searchText}"></div>`;
                 } else {
-                    searchInput = `<input style="min-width: 250px" type="search" autocomplete="off" class="form-control form-control-sm mr-auto me-auto" placeholder="${settings.searchText}">`;
+                    searchInput = `<input style="width: min(250px, calc(100vw - 7rem)); max-width: 100%;" type="search" autocomplete="off" class="form-control form-control-sm mr-auto me-auto" placeholder="${settings.searchText}">`;
                 }
             }
 

@@ -6,6 +6,7 @@ All important changes to this project are documented in this file.
 
 ### Fixed
 - Search now also matches option `subtext` values in addition to the visible option text.
+- Dropdown menu and search field now respect viewport width on mobile devices to prevent horizontal overflow.
 
 ## [2.1.36] - 2026-05-06
 
