@@ -9,6 +9,7 @@
   "asi": true,
   "globals": {
     "jQuery": true,
-    "bootstrap": true
+    "bootstrap": true,
+    "QUnit": true
   }
 }

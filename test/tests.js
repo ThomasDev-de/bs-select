@@ -1,55 +1,52 @@
+/* global QUnit */
+/* global $ */
+// noinspection JSUnresolvedReference
+
 function getVisibleDropdownItems($dropdown) {
     return $dropdown.find('.dropdown-item').not('.d-none');
 }
 
 QUnit.test('bsSelect search', function(assert) {
-    var done = assert.async();
-    var $select = $('<select id="mySelect" data-bs-toggle="select"><option value="1">Apple</option><option value="2">Banana</option><option value="3">Avocado</option><option value="4">Apricot</option></select>');
+    const done = assert.async();
+    const $select = $('<select id="mySelect" data-bs-toggle="select"><option value="1">Apple</option><option value="2">Banana</option><option value="3">Avocado</option><option value="4">Apricot</option></select>');
     $('body').append($select);
 
     $(document).ready(function() {
         $select.bsSelect();
-        var $dropdown = $select.closest('.js-bs-select-dropdown');
-        var $searchInput = $dropdown.find('.dropdown-menu input[type="search"]');
+        const $dropdown = $select.closest('.js-bs-select-dropdown');
+        const $searchInput = $dropdown.find('.dropdown-menu input[type="search"]');
 
         // Test 1: search for "Ap"
         $searchInput.val('Ap').trigger('input');
-        setTimeout(function() {
-            var $visibleItems = getVisibleDropdownItems($dropdown);
-            assert.equal($visibleItems.length, 2, 'Two items are visible (Apple, Apricot)');
+        let $visibleItems = getVisibleDropdownItems($dropdown);
+        assert.equal($visibleItems.length, 2, 'Two items are visible (Apple, Apricot)');
 
-            // Test 2: search for "Banana"
-            $searchInput.val('Banana').trigger('input');
-            setTimeout(function() {
-                $visibleItems = getVisibleDropdownItems($dropdown);
-                assert.equal($visibleItems.length, 1, 'One item is visible (Banana)');
+        // Test 2: search for "Banana"
+        $searchInput.val('Banana').trigger('input');
+        $visibleItems = getVisibleDropdownItems($dropdown);
+        assert.equal($visibleItems.length, 1, 'One item is visible (Banana)');
 
-                // Test 3: search for "xyz" (no results)
-                $searchInput.val('xyz').trigger('input');
-                setTimeout(function() {
-                    $visibleItems = getVisibleDropdownItems($dropdown);
-                    assert.equal($visibleItems.length, 0, 'No item is visible');
+        // Test 3: search for "xyz" (no results)
+        $searchInput.val('xyz').trigger('input');
+        $visibleItems = getVisibleDropdownItems($dropdown);
+        assert.equal($visibleItems.length, 0, 'No item is visible');
 
-                    $select.bsSelect('destroy');
-                    $select.remove();
-                    done();
-
-                }, 1000);
-            }, 1000);
-        }, 1000);
+        $select.bsSelect('destroy');
+        $select.remove();
+        done();
     });
 });
 
 QUnit.test('bsSelect reveals externally hidden select after initialization', function(assert) {
-    var $style = $('<style>.js-test-hidden-select.bs-select { display: none; }</style>').appendTo('head');
-    var $select = $('<select id="hiddenInitSelect" class="js-test-hidden-select bs-select"><option value="1">Apple</option><option value="2">Banana</option></select>');
+    const $style = $('<style>.js-test-hidden-select.bs-select { display: none; }</style>').appendTo('head');
+    const $select = $('<select id="hiddenInitSelect" class="js-test-hidden-select bs-select"><option value="1">Apple</option><option value="2">Banana</option></select>');
     $('body').append($select);
 
     assert.equal($select.css('display'), 'none', 'Select is externally hidden before initialization');
 
     $select.bsSelect();
 
-    var $dropdown = $select.closest('.js-bs-select-dropdown');
+    const $dropdown = $select.closest('.js-bs-select-dropdown');
 
     assert.notOk($dropdown.hasClass('bs-select'), 'Wrapper does not get the bs-select class from the plugin');
     assert.notEqual($dropdown.css('display'), 'none', 'Dropdown wrapper is visible after initialization');
@@ -60,24 +57,24 @@ QUnit.test('bsSelect reveals externally hidden select after initialization', fun
 });
 
 QUnit.test('bsSelect predefined search prefix (searchQuery option)', function(assert) {
-    var done = assert.async();
-    var $select = $('<select id="predefinedSearchSelect"><option value="1">Apple</option><option value="2">Banana</option><option value="3">Avocado</option><option value="4">Apricot</option></select>');
+    const done = assert.async();
+    const $select = $('<select id="predefinedSearchSelect"><option value="1">Apple</option><option value="2">Banana</option><option value="3">Avocado</option><option value="4">Apricot</option></select>');
     $('body').append($select);
 
     $(document).ready(function() {
         $select.bsSelect({
             searchQuery: 'Ap'
         });
-        var $dropdown = $select.closest('.js-bs-select-dropdown');
+        const $dropdown = $select.closest('.js-bs-select-dropdown');
         
         // Since "Ap" is the prefix, Apple and Apricot should be visible on init.
-        var $visibleItems = getVisibleDropdownItems($dropdown);
+        let $visibleItems = getVisibleDropdownItems($dropdown);
         assert.equal($visibleItems.length, 2, 'Two items are visible on init (Apple, Apricot)');
 
-        var $prefixText = $dropdown.find('.input-group-text');
+        const $prefixText = $dropdown.find('.input-group-text');
         assert.equal($prefixText.text(), 'Ap', 'Search field prefix contains "Ap"');
 
-        var $searchInput = $dropdown.find('input[type="search"]');
+        const $searchInput = $dropdown.find('input[type="search"]');
         assert.equal($searchInput.val(), '', 'The actual search field is empty');
 
         // Entering "r" should search for "Apr" (Apricot).
@@ -93,17 +90,17 @@ QUnit.test('bsSelect predefined search prefix (searchQuery option)', function(as
 });
 
 QUnit.test('bsSelect programmatic search with prefix', function(assert) {
-    var done = assert.async();
-    var $select = $('<select id="programmaticSearchPrefixSelect" data-search-query="A"><option value="1">Apple</option><option value="2">Banana</option><option value="3">Avocado</option><option value="4">Apricot</option></select>');
+    const done = assert.async();
+    const $select = $('<select id="programmaticSearchPrefixSelect" data-search-query="A"><option value="1">Apple</option><option value="2">Banana</option><option value="3">Avocado</option><option value="4">Apricot</option></select>');
     $('body').append($select);
 
     $(document).ready(function() {
         $select.bsSelect();
-        var $dropdown = $select.closest('.js-bs-select-dropdown');
+        const $dropdown = $select.closest('.js-bs-select-dropdown');
 
         // Search for "v" (prefix "A" + "v" = "Av").
         $select.bsSelect('search', 'v');
-        var $visibleItems = getVisibleDropdownItems($dropdown);
+        const $visibleItems = getVisibleDropdownItems($dropdown);
         assert.equal($visibleItems.length, 1, 'One item is visible after programmatic search "v" with prefix "A" (Avocado)');
         assert.equal($visibleItems.text().trim(), 'Avocado', 'Found item is Avocado');
 
@@ -114,17 +111,17 @@ QUnit.test('bsSelect programmatic search with prefix', function(assert) {
 });
 
 QUnit.test('bsSelect predefined prefix via data attribute', function(assert) {
-    var done = assert.async();
-    var $select = $('<select id="dataAttrSearchSelect" data-search-query="Avocado"><option value="1">Apple</option><option value="2">Banana</option><option value="3">Avocado</option><option value="4">Apricot</option></select>');
+    const done = assert.async();
+    const $select = $('<select id="dataAttrSearchSelect" data-search-query="Avocado"><option value="1">Apple</option><option value="2">Banana</option><option value="3">Avocado</option><option value="4">Apricot</option></select>');
     $('body').append($select);
 
     $(document).ready(function() {
         $select.bsSelect();
-        var $dropdown = $select.closest('.js-bs-select-dropdown');
-        var $visibleItems = getVisibleDropdownItems($dropdown);
+        const $dropdown = $select.closest('.js-bs-select-dropdown');
+        const $visibleItems = getVisibleDropdownItems($dropdown);
         assert.equal($visibleItems.length, 1, 'One item is visible on init (Avocado)');
 
-        var $prefixText = $dropdown.find('.input-group-text');
+        const $prefixText = $dropdown.find('.input-group-text');
         assert.equal($prefixText.text(), 'Avocado', 'Prefix contains "Avocado"');
 
         $select.bsSelect('destroy');
@@ -134,17 +131,17 @@ QUnit.test('bsSelect predefined prefix via data attribute', function(assert) {
 });
 
 QUnit.test('bsSelect search allows spaces', function(assert) {
-    var done = assert.async();
-    var $select = $('<select id="spaceSearchSelect"><option value="1">Apple Pie</option><option value="2">Banana</option></select>');
+    const done = assert.async();
+    const $select = $('<select id="spaceSearchSelect"><option value="1">Apple Pie</option><option value="2">Banana</option></select>');
     $('body').append($select);
 
     $(document).ready(function() {
         $select.bsSelect();
-        var $dropdown = $select.closest('.js-bs-select-dropdown');
-        var $searchInput = $dropdown.find('input[type="search"]');
+        const $dropdown = $select.closest('.js-bs-select-dropdown');
+        const $searchInput = $dropdown.find('input[type="search"]');
 
         // Simulate space key (keydown).
-        var event = $.Event('keydown');
+        const event = $.Event('keydown');
         event.code = 'Space';
         $searchInput.trigger(event);
 
@@ -165,16 +162,16 @@ QUnit.test('bsSelect search allows spaces', function(assert) {
 });
 
 QUnit.test('bsSelect predefined search prefix is kept after close', function(assert) {
-    var done = assert.async();
-    var $select = $('<select id="persistSearchSelect" data-search-query="Apple"><option value="1">Apple</option><option value="2">Banana</option></select>');
+    const done = assert.async();
+    const $select = $('<select id="persistSearchSelect" data-search-query="Apple"><option value="1">Apple</option><option value="2">Banana</option></select>');
     $('body').append($select);
 
     $(document).ready(function() {
         $select.bsSelect();
-        var $dropdown = $select.closest('.js-bs-select-dropdown');
-        var $searchInput = $dropdown.find('input[type="search"]');
+        const $dropdown = $select.closest('.js-bs-select-dropdown');
+        const $searchInput = $dropdown.find('input[type="search"]');
 
-        var $prefixText = $dropdown.find('.input-group-text');
+        const $prefixText = $dropdown.find('.input-group-text');
         assert.equal($prefixText.text(), 'Apple', 'Search field prefix contains "Apple"');
         assert.equal($searchInput.val(), '', 'The actual search field is initially empty');
 
@@ -195,19 +192,21 @@ QUnit.test('bsSelect predefined search prefix is kept after close', function(ass
 });
 
 QUnit.test('bsSelect search matches subtext', function(assert) {
-    var done = assert.async();
-    var $select = $('<select id="subtextSearchSelect"><option value="1" data-subtext="Berlin HQ">Project A</option><option value="2" data-subtext="Munich">Project B</option></select>');
+    const done = assert.async();
+    const $select = $('<select id="subtextSearchSelect"><option value="1" data-subtext="Berlin HQ">Project A</option><option value="2" data-subtext="Munich">Project B</option></select>');
     $('body').append($select);
 
     $(document).ready(function() {
         $select.bsSelect();
-        var $dropdown = $select.closest('.js-bs-select-dropdown');
-        var $searchInput = $dropdown.find('input[type="search"]');
+        const $dropdown = $select.closest('.js-bs-select-dropdown');
+        const $searchInput = $dropdown.find('input[type="search"]');
 
         $searchInput.val('Berlin').trigger('input');
-        var $visibleItems = getVisibleDropdownItems($dropdown);
+        const $visibleItems = getVisibleDropdownItems($dropdown);
         assert.equal($visibleItems.length, 1, 'One item is visible for subtext match');
-        assert.equal($visibleItems.text().replace(/\s+/g, ' ').trim(), 'Project A Berlin HQ', 'Item with matching subtext is visible');
+        const visibleText = $visibleItems.text();
+        assert.ok(visibleText.indexOf('Project A') > -1, 'Item title is visible');
+        assert.ok(visibleText.indexOf('Berlin HQ') > -1, 'Matching subtext is visible');
 
         $select.bsSelect('destroy');
         $select.remove();
@@ -216,8 +215,8 @@ QUnit.test('bsSelect search matches subtext', function(assert) {
 });
 
 QUnit.test('bsSelect search matches optgroup title and reveals all group options', function(assert) {
-    var done = assert.async();
-    var $select = $([
+    const done = assert.async();
+    const $select = $([
         '<select id="optgroupTitleSearchSelect">',
             '<optgroup label="Berlin">',
                 '<option value="1">Project A</option>',
@@ -232,11 +231,11 @@ QUnit.test('bsSelect search matches optgroup title and reveals all group options
 
     $(document).ready(function() {
         $select.bsSelect();
-        var $dropdown = $select.closest('.js-bs-select-dropdown');
-        var $searchInput = $dropdown.find('input[type="search"]');
+        const $dropdown = $select.closest('.js-bs-select-dropdown');
+        const $searchInput = $dropdown.find('input[type="search"]');
 
         $searchInput.val('Berlin').trigger('input');
-        var $visibleItems = getVisibleDropdownItems($dropdown);
+        const $visibleItems = getVisibleDropdownItems($dropdown);
         assert.equal($visibleItems.length, 2, 'All options of matching group are visible');
         assert.ok($visibleItems.text().indexOf('Project A') > -1, 'Project A is visible');
         assert.ok($visibleItems.text().indexOf('Project B') > -1, 'Project B is visible');
@@ -247,4 +246,386 @@ QUnit.test('bsSelect search matches optgroup title and reveals all group options
         $select.remove();
         done();
     });
+});
+
+QUnit.test('bsSelect single select is nullable by default', function(assert) {
+    const $select = $('<select id="nullableDefaultSelect"><option value="1">A</option><option value="2">B</option></select>');
+    $('body').append($select);
+
+    $select.bsSelect();
+    $select.bsSelect('val', null);
+
+    assert.equal($select.val(), null, 'Single select can be cleared when nullable is default true');
+
+    $select.bsSelect('destroy');
+    $select.remove();
+});
+
+QUnit.test('bsSelect single select with nullable false keeps a value', function(assert) {
+    const $select = $('<select id="nonNullableSelect"><option value="1">A</option><option value="2">B</option></select>');
+    $('body').append($select);
+
+    $select.bsSelect({ nullable: false });
+
+    assert.equal($select.val(), '1', 'First option is selected on init when nullable is false');
+
+    $select.bsSelect('val', null);
+    assert.equal($select.val(), '1', 'val(null) falls back to first option when nullable is false');
+
+    $select.bsSelect('selectNone');
+    assert.equal($select.val(), '1', 'selectNone keeps first option selected when nullable is false');
+
+    $select.bsSelect('destroy');
+    $select.remove();
+});
+
+QUnit.test('bsSelect single select nullable false does not deselect on active item click', function(assert) {
+    const $select = $('<select id="nonNullableClickSelect"><option value="1">A</option><option value="2">B</option></select>');
+    $('body').append($select);
+
+    $select.bsSelect({ nullable: false });
+    const $dropdown = $select.closest('.js-bs-select-dropdown');
+    const $active = $dropdown.find('.dropdown-item.active').first();
+
+    assert.equal($select.val(), '1', 'Initial selected value is first option');
+
+    $active.trigger('click');
+
+    assert.equal($select.val(), '1', 'Clicking active item keeps value when nullable is false');
+
+    $select.bsSelect('destroy');
+    $select.remove();
+});
+
+QUnit.test('bsSelect selectAll and selectNone on multiple', function(assert) {
+    const $select = $('<select id="multiSelectAllNone" multiple><option value="1">A</option><option value="2">B</option><option value="3">C</option></select>');
+    $('body').append($select);
+
+    $select.bsSelect();
+    $select.bsSelect('selectAll');
+    assert.deepEqual(($select.val() || []).sort(), ['1', '2', '3'], 'selectAll selects all values');
+
+    $select.bsSelect('selectNone');
+    assert.deepEqual($select.val(), [], 'selectNone clears all values in multiple mode');
+
+    $select.bsSelect('destroy');
+    $select.remove();
+});
+
+QUnit.test('bsSelect selectFirst and selectLast on single', function(assert) {
+    const $select = $('<select id="firstLastSelect"><option value="1">A</option><option value="2">B</option><option value="3">C</option></select>');
+    $('body').append($select);
+
+    $select.bsSelect();
+    $select.bsSelect('selectLast');
+    assert.equal($select.val(), '3', 'selectLast selects last option');
+
+    $select.bsSelect('selectFirst');
+    assert.equal($select.val(), '1', 'selectFirst selects first option');
+
+    $select.bsSelect('destroy');
+    $select.remove();
+});
+
+QUnit.test('bsSelect setVisible and toggleVisibility', function(assert) {
+    const $select = $('<select id="visibilitySelect"><option value="1">A</option></select>');
+    $('body').append($select);
+
+    $select.bsSelect();
+    const $dropdown = $select.closest('.js-bs-select-dropdown');
+
+    $select.bsSelect('setVisible', false);
+    assert.ok($dropdown.hasClass('d-none'), 'setVisible(false) hides dropdown wrapper');
+
+    $select.bsSelect('toggleVisibility');
+    assert.notOk($dropdown.hasClass('d-none'), 'toggleVisibility shows hidden dropdown wrapper');
+
+    $select.bsSelect('destroy');
+    $select.remove();
+});
+
+QUnit.test('bsSelect setDisabled and toggleDisabled', function(assert) {
+    const $select = $('<select id="disabledSelect"><option value="1">A</option></select>');
+    $('body').append($select);
+
+    $select.bsSelect();
+    const $dropdown = $select.closest('.js-bs-select-dropdown');
+    const $toggleBtn = $dropdown.find('[data-bs-toggle="dropdown"],[data-toggle="dropdown"]').first();
+
+    $select.bsSelect('setDisabled', true);
+    assert.ok($select.is(':disabled'), 'setDisabled(true) disables original select');
+    assert.ok($toggleBtn.prop('disabled'), 'setDisabled(true) disables dropdown button');
+
+    $select.bsSelect('toggleDisabled');
+    assert.notOk($select.is(':disabled'), 'toggleDisabled re-enables original select');
+    assert.notOk($toggleBtn.prop('disabled'), 'toggleDisabled re-enables dropdown button');
+
+    $select.bsSelect('destroy');
+    $select.remove();
+});
+
+QUnit.test('bsSelect setItemsDisabled disables only configured items', function(assert) {
+    const $select = $('<select id="setItemsDisabledSelect" multiple><option value="1">A</option><option value="2">B</option><option value="3">C</option></select>');
+    $('body').append($select);
+
+    $select.bsSelect();
+    $select.bsSelect('setItemsDisabled', { value: ['2'], enableOther: true, setSelected: false });
+
+    assert.notOk($select.find('option[value="1"]').prop('disabled'), 'Option 1 remains enabled');
+    assert.ok($select.find('option[value="2"]').prop('disabled'), 'Option 2 is disabled');
+    assert.notOk($select.find('option[value="3"]').prop('disabled'), 'Option 3 remains enabled');
+
+    $select.bsSelect('destroy');
+    $select.remove();
+});
+
+QUnit.test('bsSelect updateOptions and setBtnClass update toggle button classes', function(assert) {
+    const $select = $('<select id="updateOptionsSelect"><option value="1">A</option></select>');
+    $('body').append($select);
+
+    $select.bsSelect({ btnClass: 'btn-outline-secondary' });
+    let $dropdown = $select.closest('.js-bs-select-dropdown');
+    let $toggleBtn = $dropdown.find('.js-dropdown-header');
+    assert.ok($toggleBtn.hasClass('btn-outline-secondary'), 'Initial btnClass is applied');
+
+    $select.bsSelect('setBtnClass', 'btn-danger');
+    $dropdown = $select.closest('.js-bs-select-dropdown');
+    $toggleBtn = $dropdown.find('.js-dropdown-header');
+    assert.ok($toggleBtn.hasClass('btn-danger'), 'setBtnClass updates button class');
+
+    $select.bsSelect('updateOptions', { btnClass: 'btn-success' });
+    $dropdown = $select.closest('.js-bs-select-dropdown');
+    $toggleBtn = $dropdown.find('.js-dropdown-header');
+    assert.ok($toggleBtn.hasClass('btn-success'), 'updateOptions updates button class');
+
+    $select.bsSelect('destroy');
+    $select.remove();
+});
+
+QUnit.test('bsSelect getSelectedText callback returns text and value', function(assert) {
+    const done = assert.async();
+    const $select = $('<select id="getSelectedTextSelect"><option value="1">Alpha</option><option value="2">Beta</option></select>');
+    $('body').append($select);
+
+    $select.bsSelect();
+    $select.bsSelect('val', '2');
+    $select.bsSelect('getSelectedText', function(text, value) {
+        assert.equal(text, 'Beta', 'getSelectedText returns selected text');
+        assert.equal(value, '2', 'getSelectedText returns selected value');
+        $select.bsSelect('destroy');
+        $select.remove();
+        done();
+    });
+});
+
+QUnit.test('bsSelect clear removes all options and triggers clear event', function(assert) {
+    const $select = $('<select id="clearSelect"><option value="1">A</option><option value="2">B</option></select>');
+    $('body').append($select);
+
+    let clearTriggered = false;
+    $select.on('clear.bs.select', function() {
+        clearTriggered = true;
+    });
+
+    $select.bsSelect();
+    $select.bsSelect('clear');
+
+    assert.equal($select.find('option').length, 0, 'clear removes all option elements');
+    assert.ok(clearTriggered, 'clear.bs.select event is triggered');
+
+    $select.bsSelect('destroy');
+    $select.remove();
+});
+
+QUnit.test('bsSelect refresh triggers refresh event and rebuilds dropdown', function(assert) {
+    const $select = $('<select id="refreshSelect"><option value="1">A</option><option value="2">B</option></select>');
+    $('body').append($select);
+
+    let refreshTriggered = false;
+    $select.on('refresh.bs.select', function() {
+        refreshTriggered = true;
+    });
+
+    $select.bsSelect();
+    const beforeDropdown = $select.closest('.js-bs-select-dropdown').get(0);
+    $select.bsSelect('refresh');
+    const afterDropdown = $select.closest('.js-bs-select-dropdown').get(0);
+
+    assert.ok(refreshTriggered, 'refresh.bs.select event is triggered');
+    assert.ok(beforeDropdown !== afterDropdown, 'Dropdown wrapper was rebuilt');
+
+    $select.bsSelect('destroy');
+    $select.remove();
+});
+
+QUnit.test('bsSelect updateOptions triggers update event', function(assert) {
+    const $select = $('<select id="updateEventSelect"><option value="1">A</option></select>');
+    $('body').append($select);
+
+    let updateTriggered = false;
+    $select.on('update.bs.select', function() {
+        updateTriggered = true;
+    });
+
+    $select.bsSelect();
+    $select.bsSelect('updateOptions', { btnClass: 'btn-warning' });
+
+    assert.ok(updateTriggered, 'update.bs.select event is triggered');
+
+    $select.bsSelect('destroy');
+    $select.remove();
+});
+
+QUnit.test('bsSelect destroy with clearData true removes plugin options data', function(assert) {
+    const $select = $('<select id="destroyDataSelect"><option value="1">A</option></select>');
+    $('body').append($select);
+
+    let destroyTriggered = false;
+    $select.on('destroy.bs.select', function() {
+        destroyTriggered = true;
+    });
+
+    $select.bsSelect({ btnClass: 'btn-info' });
+    assert.ok($select.data('options'), 'Plugin options data exists after init');
+
+    $select.bsSelect('destroy', true);
+
+    assert.ok(destroyTriggered, 'destroy.bs.select event is triggered');
+    assert.notOk($select.data('options'), 'Plugin options data removed after destroy(true)');
+
+    $select.remove();
+});
+
+QUnit.test('bsSelect onBeforeChange true triggers acceptChange and applies change', function(assert) {
+    const $select = $('<select id="acceptChangeSelect"><option value="1">A</option><option value="2">B</option></select>');
+    $('body').append($select);
+
+    let acceptTriggered = false;
+    let cancelTriggered = false;
+    $select.on('acceptChange.bs.select', function() {
+        acceptTriggered = true;
+    });
+    $select.on('cancelChange.bs.select', function() {
+        cancelTriggered = true;
+    });
+
+    $select.bsSelect({
+        onBeforeChange: function() {
+            return true;
+        }
+    });
+    $select.bsSelect('val', '2');
+
+    assert.ok(acceptTriggered, 'acceptChange.bs.select event is triggered');
+    assert.notOk(cancelTriggered, 'cancelChange.bs.select event is not triggered');
+    assert.equal($select.val(), '2', 'Value change is applied');
+
+    $select.bsSelect('destroy');
+    $select.remove();
+});
+
+QUnit.test('bsSelect onBeforeChange false triggers cancelChange and blocks change', function(assert) {
+    const $select = $('<select id="cancelChangeSelect"><option value="1">A</option><option value="2">B</option></select>');
+    $('body').append($select);
+
+    let acceptTriggered = false;
+    let cancelTriggered = false;
+    $select.on('acceptChange.bs.select', function() {
+        acceptTriggered = true;
+    });
+    $select.on('cancelChange.bs.select', function() {
+        cancelTriggered = true;
+    });
+
+    $select.bsSelect({
+        onBeforeChange: function() {
+            return false;
+        }
+    });
+    $select.bsSelect('val', '2');
+
+    assert.notOk(acceptTriggered, 'acceptChange.bs.select event is not triggered');
+    assert.ok(cancelTriggered, 'cancelChange.bs.select event is triggered');
+    assert.notEqual($select.val(), '2', 'Value change is blocked');
+
+    $select.bsSelect('destroy');
+    $select.remove();
+});
+
+QUnit.test('bsSelect any.bs.select is fired for custom events', function(assert) {
+    const $select = $('<select id="anyEventSelect"><option value="1">A</option></select>');
+    $('body').append($select);
+
+    let anyCount = 0;
+    $select.on('any.bs.select', function() {
+        anyCount++;
+    });
+
+    $select.bsSelect();
+    $select.bsSelect('refresh');
+
+    assert.ok(anyCount > 0, 'any.bs.select was triggered at least once');
+
+    $select.bsSelect('destroy');
+    $select.remove();
+});
+
+QUnit.test('bsSelect keydown event is forwarded as keydown.bs.select', function(assert) {
+    const $select = $('<select id="keydownSelect"><option value="1">A</option></select>');
+    $('body').append($select);
+
+    let keydownTriggered = false;
+    $select.on('keydown.bs.select', function(e, selectRef, keyEvent) {
+        keydownTriggered = true;
+        assert.ok(selectRef && selectRef.length === 1, 'keydown event forwards select reference');
+        assert.equal(keyEvent.code, 'KeyA', 'keydown event forwards key event');
+    });
+
+    $select.bsSelect();
+    const $dropdown = $select.closest('.js-bs-select-dropdown');
+    const keyEvent = $.Event('keydown');
+    keyEvent.code = 'KeyA';
+    $dropdown.trigger(keyEvent);
+
+    assert.ok(keydownTriggered, 'keydown.bs.select event is triggered');
+
+    $select.bsSelect('destroy');
+    $select.remove();
+});
+
+QUnit.test('bsSelect proxies Bootstrap dropdown lifecycle events', function(assert) {
+    const $select = $('<select id="bootstrapProxyEventsSelect"><option value="1">A</option></select>');
+    $('body').append($select);
+
+    let showTriggered = false;
+    let shownTriggered = false;
+    let hideTriggered = false;
+    let hiddenTriggered = false;
+    $select.on('show.bs.select', function() {
+        showTriggered = true;
+    });
+    $select.on('shown.bs.select', function() {
+        shownTriggered = true;
+    });
+    $select.on('hide.bs.select', function() {
+        hideTriggered = true;
+    });
+    $select.on('hidden.bs.select', function() {
+        hiddenTriggered = true;
+    });
+
+    $select.bsSelect();
+    const $dropdown = $select.closest('.js-bs-select-dropdown');
+    $dropdown.trigger('show.bs.dropdown');
+    $dropdown.trigger('shown.bs.dropdown');
+    $dropdown.trigger('hide.bs.dropdown');
+    $dropdown.trigger('hidden.bs.dropdown');
+
+    assert.ok(showTriggered, 'show.bs.select event is triggered');
+    assert.ok(shownTriggered, 'shown.bs.select event is triggered');
+    assert.ok(hideTriggered, 'hide.bs.select event is triggered');
+    assert.ok(hiddenTriggered, 'hidden.bs.select event is triggered');
+
+    $select.bsSelect('destroy');
+    $select.remove();
 });

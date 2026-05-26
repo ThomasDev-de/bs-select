@@ -6,7 +6,7 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.37
+ * @version 2.1.38
  * @date 2026-05-26
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
@@ -63,7 +63,7 @@
          * @class
          */
         $.bsSelect = {
-            version: '2.1.37',
+            version: '2.1.38',
             setDefaults: function (options) {
                 this.DEFAULTS = $.extend({}, this.DEFAULTS, options || {});
             },
@@ -119,7 +119,8 @@
                 onKeyDown: null,
                 value: undefined,
                 selectAllOnInit: false,
-                searchQuery: null
+                searchQuery: null,
+                nullable: true
             }
         };
 
@@ -718,6 +719,10 @@
             const toggleCheckIcon = multiple && settings.showMultipleCheckboxes;
             return new Promise((resolve) => {
                 if (onBeforeChange(selectElement)) {
+                    if (!multiple && settings && settings.nullable === false && setActive === false && items.filter('.active').length) {
+                        resolve();
+                        return;
+                    }
 
                     const beforeValues = selectElement.val();
                     if (setActive) {
@@ -840,6 +845,32 @@
             return false; // All other values are considered non-empty (including numbers)
         }
 
+        function getFirstSelectableOption($select) {
+            return $select.find('option').filter(function () {
+                const $option = $(this);
+                return !$option.is('[disabled]') && !$option.hasClass('disabled');
+            }).first();
+        }
+
+        function enforceNonNullableSingleSelection($select) {
+            const settings = $select.data('options');
+            const multiple = $select.prop('multiple');
+
+            if (!settings || settings.nullable !== false || multiple) {
+                return;
+            }
+
+            if (!isValueEmpty($select.val())) {
+                return;
+            }
+
+            const $firstSelectable = getFirstSelectableOption($select);
+            if ($firstSelectable.length) {
+                $select.find('option').prop('selected', false);
+                $firstSelectable.prop('selected', true);
+            }
+        }
+
         function shouldRevealAfterInit($select) {
             return $select.hasClass(SELECT_CLASS) && $select.css('display') === 'none';
         }
@@ -883,7 +914,7 @@
 
             // If the select element does not allow multiple selections and no value is currently selected,
             // reset the selectedIndex property to -1 to ensure no option is selected by default.
-            if (!multiple && isValueEmpty($select.val())) {
+            if (!multiple && settings.nullable !== false && isValueEmpty($select.val())) {
                 $select.prop("selectedIndex", -1);
             }
 
@@ -895,6 +926,13 @@
                 selectedValue = $select.find('option').map(function () {
                     return $(this).val();
                 }).get();
+            }
+
+            if (!multiple && settings.nullable === false && isValueEmpty(selectedValue)) {
+                const $firstSelectable = getFirstSelectableOption($select);
+                if ($firstSelectable.length) {
+                    selectedValue = $firstSelectable.val();
+                }
             }
 
             // If the select element allows multiple selections and the provided selectedValue is not an array,
@@ -1383,6 +1421,7 @@
          * @param {jQuery} $select The jQuery object representing the select element.
          */
         function val($select) {
+            enforceNonNullableSingleSelection($select);
             // Retrieve the dropdown wrapper element associated with the select element.
             const $dropdown = getDropDown($select);
 
@@ -1775,7 +1814,26 @@
                         case 'selectNone': {
                             // Check if onBeforeChange allows the operation
                             if (onBeforeChange($select)) {
-                                toggleAllItemsState($select, false);
+                                if ($select.prop('multiple')) {
+                                    toggleAllItemsState($select, false);
+                                } else {
+                                    const settings = $select.data('options');
+                                    if (settings && settings.nullable === false) {
+                                        const $firstSelectable = getFirstSelectableOption($select);
+                                        if ($firstSelectable.length) {
+                                            $select.val($firstSelectable.val());
+                                        }
+                                    } else {
+                                        $select.val(null);
+                                    }
+
+                                    val($select);
+                                    const afterValues = getSelectedValuesFromDropdown($select);
+                                    if (hasValueChanged(beforeValues, afterValues)) {
+                                        trigger($select, 'change.bs.select', [beforeValues, afterValues]);
+                                    }
+                                    trigger($select, 'selectNone.bs.select');
+                                }
                             }
                         }
                             break;

@@ -4,6 +4,25 @@ All important changes to this project are documented in this file.
 
 ## [dev-main]
 
+## [2.1.38] - 2026-05-26
+
+### Added
+- New option `nullable` (default `true`) to control whether single-selects can be empty.
+- Demo now includes both single-select variants: `nullable: true` and `nullable: false`.
+
+### Changed
+- For single-selects with `nullable: false`, initialization and `val(null)` now keep/select the first selectable option.
+- `selectNone` on single-select respects `nullable` and does not clear when `nullable: false`.
+- README documents that `btnEmptyText` is only shown for single-selects when `nullable` is `true`.
+
+### Fixed
+- Single-select with `nullable: false`: clicking the currently selected dropdown item no longer deselects it.
+- Added tests for nullable default behavior, non-nullable fallback behavior, and non-nullable active-item click behavior.
+
+### Tests
+- Expanded `test/tests.js` coverage across core methods (`selectAll`, `selectNone`, `selectFirst`, `selectLast`, `setVisible`, `toggleVisibility`, `setDisabled`, `toggleDisabled`, `setItemsDisabled`, `updateOptions`, `setBtnClass`, `getSelectedText`, `clear`, `refresh`, `destroy`).
+- Added event coverage for `clear.bs.select`, `refresh.bs.select`, `update.bs.select`, `destroy.bs.select`, `acceptChange.bs.select`, `cancelChange.bs.select`, `any.bs.select`, `keydown.bs.select`, and proxied Bootstrap lifecycle events (`show/shown/hide/hidden`).
+
 ## [2.1.37] - 2026-05-26
 
 ### Added

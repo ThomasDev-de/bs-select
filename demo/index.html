@@ -101,11 +101,19 @@
             <div class="row g-3">
                 <div class="col-lg-6">
                     <div class="demo-control">
-                        <label for="select1" class="demo-label">Single Select</label>
+                        <label for="select1" class="demo-label">Single Select (nullable: true)</label>
                         <select id="select1" data-btn-class="btn-primary" name="test1" class="bs-select">
                             <option value="1">Item 1</option>
                             <option value="2" selected>Item 2</option>
                             <option value="3">Item 3</option>
+                        </select>
+                    </div>
+                    <div class="demo-control">
+                        <label for="select1NonNullable" class="demo-label">Single Select (nullable: false)</label>
+                        <select id="select1NonNullable" data-btn-class="btn-outline-primary" data-nullable="false" class="bs-select">
+                            <option value="10">Strict Item 1</option>
+                            <option value="20">Strict Item 2</option>
+                            <option value="30">Strict Item 3</option>
                         </select>
                     </div>
                     <div class="demo-control">
@@ -226,6 +234,7 @@
                 showSubtext: true,
             });
             const select1 = $('#select1');
+            const select1NonNullable = $('#select1NonNullable');
             const select2 = $('#select2');
             const select3 = $('#select3');
             const select4 = $('#select4');
@@ -261,7 +270,10 @@
             }
 
             select1.bsSelect({
-                menuInnerClass: 'border border-5 border-warning rounded-5 m-2'
+                menuInnerClass: ''
+            });
+            select1NonNullable.bsSelect({
+                nullable: false
             });
             select1.on('change.bs.select', function () {
                 select1.bsSelect('getSelectedText', function (text) {
