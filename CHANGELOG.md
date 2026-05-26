@@ -4,6 +4,13 @@ All important changes to this project are documented in this file.
 
 ## [dev-main]
 
+## [2.1.37] - 2026-05-26
+
+### Added
+- Search now also matches `optgroup` titles.
+- If an `optgroup` title matches the search term, all options of that group are shown.
+- Demo page now includes a dedicated "Search By Group Title" example (location -> projects).
+
 ### Fixed
 - Search now also matches option `subtext` values in addition to the visible option text.
 - Dropdown menu and search field now respect viewport width on mobile devices to prevent horizontal overflow.

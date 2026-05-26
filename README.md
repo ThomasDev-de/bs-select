@@ -47,8 +47,8 @@ composer require webcito/bs-select
 or use the GitHub CDN (jsDelivr):
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.36/dist/locale/de-DE.min.js" type="text/javascript"></script> <!-- optional -->
-<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.36/dist/jquery.bs-select.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.37/dist/locale/de-DE.min.js" type="text/javascript"></script> <!-- optional -->
+<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.37/dist/jquery.bs-select.min.js" type="text/javascript"></script>
 ```
 
 ## Set global defaults
@@ -126,7 +126,7 @@ Available locale files:
 |------------------------|-------------------------------|------------------|-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | value                  | [data-value]                  | `mixed`          | `undefined`                         | *If a value is passed here, this value (if available) will be preselected during initialization. Otherwise the value of the native select is adopted.The value is only taken into account during the initial initialization (not for 'updateOptions').* |
 | selectAllOnInit        | [data-select-all-on-init]     | `bool`           | `false`                             | *If `true` and the select is `multiple`, all options are selected during initialization. If `value` is also set, `selectAllOnInit` takes precedence.* |
-| search                 | [data-search]                 | `bool`           | `true`                              | *adds a search function to the menu*                                                                                                                                                                                                                    |
+| search                 | [data-search]                 | `bool`           | `true`                              | *adds a search function to the menu. Search matches option text, option `data-subtext`, and `optgroup` labels (group label match reveals all options in that group).*                                                                                                                                                         |
 | searchText             | [data-search-text]            | `string`         | `Search..`                          | "Placeholder for search input box*                                                                                                                                                                                                                      |
 | searchQuery            | [data-search-query]           | `string`         | `null`                              | *predefined search prefix fixed as `input-group-text` in the search field. The search query becomes `prefix + user input`.*                                                                                                                              |
 | btnWidth               | [data-btn-width]              | `string`         | `fit-content`                       | *the css width of the dropdown button*                                                                                                                                                                                                                  |
@@ -166,8 +166,8 @@ $('select').bsSelect('method', param);
 
 | method               | example                                                                       | description                                                                                                               |
 |----------------------|-------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
-| `'show'`             | `$('select').bsSelect('show');`                                               | Opens the dropdown                                                                                                        |
-| `'hide'`             | `$('select').bsSelect('hide');`                                               | Closes the dropdown                                                                                                       | 
+| `'show'`             | `$('select').bsSelect('show');`                                               | Opens the dropdown menu (does not change overall control visibility)                                                     |
+| `'hide'`             | `$('select').bsSelect('hide');`                                               | Closes the dropdown menu (does not change overall control visibility)                                                    | 
 | `'val'`              | `$('select').bsSelect('val', 1);`                                             | Changes the value of the select                                                                                           | 
 | `'search'`          | `$('select').bsSelect('search', 'query');`                                    | Programmatically filters the dropdown list. If a `searchQuery` prefix is set, it will be prepended to the query.          |
 | `'selectAll'`        | `$('select').bsSelect('selectAll');`                                          | Selects all values                                                                                                        | 

@@ -6,142 +6,211 @@
     <title>jQuery - Bootstrap - Select</title>
     <link href="../vendor/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../vendor/twbs/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet">
-    <!--suppress CssUnusedSymbol -->
     <style>
         .bs-select {
-            display:none
+            display: none;
         }
-        /*.dropdown-item:active,*/
-        /*.dropdown-item.active {*/
-        /*    background-color: transparent;*/
-        /*    color: white;*/
-        /*}*/
-
-        /*.dropdown-item {*/
-        /*    font-size: 11px;*/
-        /*}*/
-
-        /*.dropdown-item .js-icon-checklist {*/
-        /*    font-size: 14px;*/
-        /*}*/
+        body {
+            background: #111827;
+            color: #e5e7eb;
+        }
+        .demo-shell {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 2.5rem 1rem 3rem;
+        }
+        .demo-topbar {
+            border-bottom: 1px solid #374151;
+            padding-bottom: 1rem;
+            margin-bottom: 1.25rem;
+        }
+        .demo-subtitle {
+            color: #9ca3af;
+            max-width: 900px;
+            margin-bottom: 0;
+        }
+        .demo-band {
+            background: #1f2937;
+            border: 1px solid #374151;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .demo-title {
+            font-size: .85rem;
+            text-transform: uppercase;
+            letter-spacing: .02em;
+            color: #93c5fd;
+            margin-bottom: .5rem;
+        }
+        .demo-grid {
+            display: grid;
+            grid-template-columns: minmax(320px, 2fr) minmax(320px, 1fr);
+            gap: 1rem;
+            align-items: start;
+        }
+        .demo-control {
+            margin-bottom: 1rem;
+        }
+        .demo-control:last-child {
+            margin-bottom: 0;
+        }
+        .demo-label {
+            display: block;
+            font-size: .9rem;
+            color: #d1d5db;
+            margin-bottom: .5rem;
+        }
+        .demo-hint {
+            display: block;
+            margin-top: .5rem;
+            color: #9ca3af;
+            font-size: .8rem;
+        }
+        #debug {
+            max-height: 460px;
+            min-height: 280px;
+            background: #0f172a;
+            color: #e2e8f0;
+            border: 1px solid #334155;
+        }
+        @media (max-width: 992px) {
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
-<body class="container py-5" style="opacity: 0">
-<h1 class="d-flex justify-content-between">
-    <i class="bi bi-menu-button me-5 text-info" style="font-size: 2em"></i>
-    <span>jQuery - Bootstrap - Select</span>
-    <a href="https://github.com/ThomasDev-de/bs-select" class=" ms-auto"><i class="bi bi-github"></i></a>
-</h1>
-<p>
-    This jQuery plugin converts a simple select element into a bootstrap dropdown element.
-    It offers many options,
-    methods and events for further processing.
-    It was developed on the basis of jQuery 3.6, Bootstrap 5.3 and Bootstrap icons.
-</p>
-<form action="" method="get">
-    <div class="d-flex">
-        <div class="p-3">
-            <table class="table w-100">
-                <tr>
-                    <td class="w-25">single select</td>
-                    <td>
+<body style="opacity: 0">
+<main class="demo-shell">
+    <header class="demo-topbar d-flex flex-wrap align-items-center gap-3">
+        <h1 class="h3 mb-0 d-flex align-items-center">
+            <i class="bi bi-menu-button-wide-fill me-2 text-info"></i>
+            bs-select Demo
+        </h1>
+        <a href="https://github.com/ThomasDev-de/bs-select" class="ms-auto text-decoration-none text-light">
+            <i class="bi bi-github me-1"></i>GitHub
+        </a>
+        <p class="demo-subtitle w-100">
+            Real usage examples for single/multi select, grouped options, searchable lists and programmatic control.
+        </p>
+    </header>
 
-                        <label for="select1" class="d-none"></label>
+    <form action="" method="get">
+        <section class="demo-band">
+            <div class="demo-title">Core Examples</div>
+            <div class="row g-3">
+                <div class="col-lg-6">
+                    <div class="demo-control">
+                        <label for="select1" class="demo-label">Single Select</label>
                         <select id="select1" data-btn-class="btn-primary" name="test1" class="bs-select">
                             <option value="1">Item 1</option>
                             <option value="2" selected>Item 2</option>
                             <option value="3">Item 3</option>
                         </select>
-                        <!--                        <button type="submit">test submit</button>-->
-                    </td>
-                </tr>
-                <tr>
-                    <td>multiple select</td>
-                    <td><label for="select2" class="d-none"></label><select multiple id="select2"
-                                                                            data-show-selection-as-list="true"></select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>multiple select with option groups</td>
-                    <td><label for="select3" class="d-none"></label>
+                    </div>
+                    <div class="demo-control">
+                        <label for="select2" class="demo-label">Multiple Select</label>
+                        <select multiple id="select2" data-show-selection-as-list="true"></select>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="demo-control">
+                        <label for="select3" class="demo-label">Multiple With Option Groups</label>
                         <select multiple id="select3" data-show-selection-as-list="false"
                                 data-drop-direction="dropped"
-                                data-btn-class="btn-outline-danger  btn-sm"></select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>fixed presearch prefix</td>
-                    <td>
-                        <label for="selectPresearch" class="d-none"></label>
+                                data-btn-class="btn-outline-danger btn-sm"></select>
+                    </div>
+                    <div class="demo-control">
+                        <label for="selectPresearch" class="demo-label">Fixed Search Prefix</label>
                         <select id="selectPresearch" data-search-query="Item 1" data-btn-class="btn-outline-success">
                             <option value="1">Item 1</option>
                             <option value="10">Item 10</option>
                             <option value="11">Item 11</option>
                             <option value="2">Item 2</option>
                         </select>
-                        <small class="text-muted d-block mt-1">Search field has fixed "Item 1" prefix. Search results are "Item 1" + input.</small>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <small class="text-uppercase mb-3 d-block">playground</small>
-                        <div class="d-flex flex-wrap align-items-start">
-                            <button id="btnInit" class="btn btn-outline-warning btn-sm me-1 mb-1">init</button>
-                            <button id="btnShow" class="btn btn-outline-warning btn-sm me-1 mb-1">show</button>
-                            <button id="btnHide" class="btn btn-outline-warning btn-sm me-1 mb-1">hide</button>
-                            <button id="btnVal" class="btn btn-outline-warning btn-sm me-1 mb-1">val (2)</button>
-                            <button id="btnAll" class="btn btn-outline-warning btn-sm me-1 mb-1">selectAll</button>
-                            <button id="btnNone" class="btn btn-outline-warning btn-sm me-1 mb-1">selectNone</button>
-                            <button id="selectFirst" class="btn btn-outline-warning btn-sm me-1 mb-1">selectFirst</button>
-                            <button id="selectLast" class="btn btn-outline-warning btn-sm me-1 mb-1">selectLast</button>
-                            <button id="btnRefresh" class="btn btn-outline-warning btn-sm me-1 mb-1">refresh</button>
-                            <button id="btnUpdate" class="btn btn-outline-warning btn-sm me-1 mb-1">update options</button>
-                            <button id="setBtnClass" class="btn btn-outline-warning btn-sm me-1 mb-1">setBtnClass btn-primary</button>
-                            <button id="toggleDisabled" class="btn btn-outline-warning btn-sm me-1 mb-1">toggleDisabled</button>
-<!--                            <button id="setValueDisabled" class="btn btn-outline-warning btn-sm me-1 mb-1">setItemsDisabled [2,3]</button>-->
-                            <button id="btnDestroy" class="btn btn-outline-warning btn-sm me-1 mb-1">destroy</button>
-                            <button id="btnVisible" class="btn btn-outline-warning btn-sm me-1 mb-1">toggleVisibility</button>
+                        <small class="demo-hint">Prefix remains fixed as "Item 1", input is appended to it.</small>
+                    </div>
+                </div>
+            </div>
+        </section>
 
+        <section class="demo-band">
+            <div class="demo-title">Search By Group Title</div>
+            <div class="demo-control mb-0">
+                <label for="selectProjectsByLocation" class="demo-label">Projects Grouped By Location</label>
+                <select id="selectProjectsByLocation" multiple data-show-multiple-checkboxes="true">
+                    <optgroup label="Berlin Campus">
+                        <option value="berlin-1" data-subtext="Frontend">Project Atlas</option>
+                        <option value="berlin-2" data-subtext="Backend">Project Nova</option>
+                        <option value="berlin-3" data-subtext="Data">Project Pulse</option>
+                    </optgroup>
+                    <optgroup label="Hamburg Port">
+                        <option value="hamburg-1" data-subtext="Migration">Project Harbor</option>
+                        <option value="hamburg-2" data-subtext="ERP">Project Tide</option>
+                    </optgroup>
+                    <optgroup label="Munich Lab">
+                        <option value="munich-1" data-subtext="AI">Project Alpine</option>
+                        <option value="munich-2" data-subtext="QA">Project Summit</option>
+                    </optgroup>
+                </select>
+                <small class="demo-hint">Try searching for "Berlin". The full "Berlin Campus" group is shown.</small>
+                <div class="d-flex flex-wrap gap-1 mt-2">
+                    <button id="btnLocationShow" class="btn btn-outline-info btn-sm">show</button>
+                    <button id="btnLocationHide" class="btn btn-outline-info btn-sm">hide</button>
+                    <button id="btnLocationVisible" class="btn btn-outline-info btn-sm">toggleVisibility</button>
+                </div>
+            </div>
+        </section>
 
-                        </div>
-                    </td>
-                    <td>
-                        <div class="d-flex">
-                            <div>
-                                <label for="select4" class="d-none"></label>
-                                <select
-                                        multiple
-                                        data-debug="true"
-                                        data-debug-element="#debug"
-                                        id="select4"
-                                        data-show-selection-as-list="false"
-                                        data-show-action-menu="false"
-                                        data-drop-direction="dropdown-center"
-                                        data-btn-split="true"
-                                        data-btn-class="btn-info">
-                                    <option value="1" data-subtext="Item 1 long description">Item 1 long description</option>
-                                    <option value="2">Item 2</option>
-                                    <option value="3">Item 3</option>
-                                    <option value="4">Item 4</option>
-                                    <option value="5">Item 5</option>
-                                    <option value="6">Item 6</option>
-                                </select>
-                            </div>
-                            <div class="px-2">
-                                <small class="text-uppercase mb-3 d-block">Console of playground</small>
-                                <div id="debug" class="font-monospace border d-flex flex-column overflow-auto p-3"
-                                     style="max-height: 500px"></div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div class="flex-fill d-flex flex-column p-3" data-bs-theme="light">
-
-        </div>
-    </div>
-</form>
+        <section class="demo-band">
+            <div class="demo-title">Playground</div>
+            <div class="demo-grid">
+                <div>
+                    <div class="demo-control">
+                        <label for="select4" class="demo-label">Interactive Select</label>
+                        <select
+                            multiple
+                            data-debug="true"
+                            data-debug-element="#debug"
+                            id="select4"
+                            data-show-selection-as-list="false"
+                            data-show-action-menu="false"
+                            data-drop-direction="dropdown-center"
+                            data-btn-split="true"
+                            data-btn-class="btn-info">
+                            <option value="1" data-subtext="Item 1 long description">Item 1 long description</option>
+                            <option value="2">Item 2</option>
+                            <option value="3">Item 3</option>
+                            <option value="4">Item 4</option>
+                            <option value="5">Item 5</option>
+                            <option value="6">Item 6</option>
+                        </select>
+                    </div>
+                    <div class="d-flex flex-wrap gap-1">
+                        <button id="btnInit" class="btn btn-outline-warning btn-sm">init</button>
+                        <button id="btnShow" class="btn btn-outline-warning btn-sm">show</button>
+                        <button id="btnHide" class="btn btn-outline-warning btn-sm">hide</button>
+                        <button id="btnVal" class="btn btn-outline-warning btn-sm">val (2)</button>
+                        <button id="btnAll" class="btn btn-outline-warning btn-sm">selectAll</button>
+                        <button id="btnNone" class="btn btn-outline-warning btn-sm">selectNone</button>
+                        <button id="selectFirst" class="btn btn-outline-warning btn-sm">selectFirst</button>
+                        <button id="selectLast" class="btn btn-outline-warning btn-sm">selectLast</button>
+                        <button id="btnRefresh" class="btn btn-outline-warning btn-sm">refresh</button>
+                        <button id="btnUpdate" class="btn btn-outline-warning btn-sm">update options</button>
+                        <button id="setBtnClass" class="btn btn-outline-warning btn-sm">setBtnClass btn-primary</button>
+                        <button id="toggleDisabled" class="btn btn-outline-warning btn-sm">toggleDisabled</button>
+                        <button id="btnDestroy" class="btn btn-outline-warning btn-sm">destroy</button>
+                        <button id="btnVisible" class="btn btn-outline-warning btn-sm">toggleVisibility</button>
+                    </div>
+                </div>
+                <div>
+                    <label for="debug" class="demo-label">Console</label>
+                    <div id="debug" class="font-monospace d-flex flex-column overflow-auto p-3"></div>
+                </div>
+            </div>
+        </section>
+    </form>
+</main>
 <script src="../vendor/components/jquery/jquery.min.js"></script>
 <script src="../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -161,6 +230,7 @@
             const select3 = $('#select3');
             const select4 = $('#select4');
             const selectPresearch = $('#selectPresearch');
+            const selectProjectsByLocation = $('#selectProjectsByLocation');
             const groups = [];
             let options = [];
             for (let i = 1, j = 0; i <= 100; i++) {
@@ -205,6 +275,10 @@
                 search:false
             });
             selectPresearch.bsSelect();
+            selectProjectsByLocation.bsSelect({
+                showMultipleCheckboxes: true,
+                search: true
+            });
             select4.bsSelect({
                 btnClass: 'text-nowrap btn btn-success',
                 showMultipleCheckboxes: true,
@@ -262,6 +336,24 @@
 
 
             });
+            $('#btnLocationShow').on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.setTimeout(function () {
+                    selectProjectsByLocation.bsSelect('show');
+                }, 0);
+            });
+            $('#btnLocationHide').on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.setTimeout(function () {
+                    selectProjectsByLocation.bsSelect('hide');
+                }, 0);
+            });
+            $('#btnLocationVisible').on('click', function (e) {
+                e.preventDefault();
+                selectProjectsByLocation.bsSelect('toggleVisibility');
+            });
 
             $('#btnInit').on('click', function (e) {
                 e.preventDefault();
@@ -274,11 +366,17 @@
 
             $('#btnShow').on('click', function (e) {
                 e.preventDefault();
-                select4.bsSelect('show')
+                e.stopPropagation();
+                window.setTimeout(function () {
+                    select4.bsSelect('show');
+                }, 0);
             });
             $('#btnHide').on('click', function (e) {
                 e.preventDefault();
-                select4.bsSelect('hide')
+                e.stopPropagation();
+                window.setTimeout(function () {
+                    select4.bsSelect('hide');
+                }, 0);
             });
             $('#btnRefresh').on('click', function (e) {
                 e.preventDefault();

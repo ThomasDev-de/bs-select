@@ -6,8 +6,8 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.36
- * @date 2026-05-06
+ * @version 2.1.37
+ * @date 2026-05-26
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
  * @fileOverview README.md
@@ -63,7 +63,7 @@
          * @class
          */
         $.bsSelect = {
-            version: '2.1.36',
+            version: '2.1.37',
             setDefaults: function (options) {
                 this.DEFAULTS = $.extend({}, this.DEFAULTS, options || {});
             },
@@ -156,17 +156,35 @@
             const trimmedPattern = fullPattern.trim();
             if (!isValueEmpty(trimmedPattern)) {
                 const search = trimmedPattern.toUpperCase();
+                const groupTitleMatches = {};
+                const visibleOptionByGroup = {};
+
+                dropdownHeaders.each(function (index, header) {
+                    const $header = $(header);
+                    const groupIndex = String($header.data('ogIndex'));
+                    const groupLabel = $header.text().trim();
+                    groupTitleMatches[groupIndex] = groupLabel.toUpperCase().indexOf(search) > -1;
+                });
+
                 searchElements.each(function (index, value) {
                     const $value = $(value);
                     const searchSource = $value.data('search');
-                    let currentName = typeof searchSource === 'string' && !isValueEmpty(searchSource)
+                    const groupIndex = String($value.data('ogIndex'));
+                    const currentName = typeof searchSource === 'string' && !isValueEmpty(searchSource)
                         ? searchSource.trim()
                         : $value.text().trim();
-                    if (currentName.toUpperCase().indexOf(search) > -1) {
+                    const isOptionMatch = currentName.toUpperCase().indexOf(search) > -1;
+                    const isGroupTitleMatch = groupTitleMatches[groupIndex] === true;
+                    const isVisible = isOptionMatch || isGroupTitleMatch;
+
+                    if (isVisible) {
                         if (settings && settings.debug) {
                             console.log('bsSelect:doSearch elements found:', currentName);
                         }
                         $value.removeClass(D_NONE).addClass('d-flex');
+                        if (groupIndex !== 'undefined') {
+                            visibleOptionByGroup[groupIndex] = true;
+                        }
                     } else {
                         if (settings && settings.debug) {
                             console.log('bsSelect:doSearch elements not found:', currentName);
@@ -174,7 +192,17 @@
                         $value.addClass(D_NONE).removeClass('d-flex');
                     }
                 });
-                dropdownHeaders.addClass(D_NONE);
+
+                dropdownHeaders.each(function (index, header) {
+                    const $header = $(header);
+                    const groupIndex = String($header.data('ogIndex'));
+                    const hasVisibleOption = visibleOptionByGroup[groupIndex] === true;
+                    if (hasVisibleOption) {
+                        $header.removeClass(D_NONE);
+                    } else {
+                        $header.addClass(D_NONE);
+                    }
+                });
             } else {
                 if (settings && settings.debug) {
                     console.log('bsSelect:doSearch is empty');

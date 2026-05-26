@@ -193,3 +193,58 @@ QUnit.test('bsSelect predefined search prefix is kept after close', function(ass
         }, 100);
     });
 });
+
+QUnit.test('bsSelect search matches subtext', function(assert) {
+    var done = assert.async();
+    var $select = $('<select id="subtextSearchSelect"><option value="1" data-subtext="Berlin HQ">Project A</option><option value="2" data-subtext="Munich">Project B</option></select>');
+    $('body').append($select);
+
+    $(document).ready(function() {
+        $select.bsSelect();
+        var $dropdown = $select.closest('.js-bs-select-dropdown');
+        var $searchInput = $dropdown.find('input[type="search"]');
+
+        $searchInput.val('Berlin').trigger('input');
+        var $visibleItems = getVisibleDropdownItems($dropdown);
+        assert.equal($visibleItems.length, 1, 'One item is visible for subtext match');
+        assert.equal($visibleItems.text().replace(/\s+/g, ' ').trim(), 'Project A Berlin HQ', 'Item with matching subtext is visible');
+
+        $select.bsSelect('destroy');
+        $select.remove();
+        done();
+    });
+});
+
+QUnit.test('bsSelect search matches optgroup title and reveals all group options', function(assert) {
+    var done = assert.async();
+    var $select = $([
+        '<select id="optgroupTitleSearchSelect">',
+            '<optgroup label="Berlin">',
+                '<option value="1">Project A</option>',
+                '<option value="2">Project B</option>',
+            '</optgroup>',
+            '<optgroup label="Hamburg">',
+                '<option value="3">Project C</option>',
+            '</optgroup>',
+        '</select>'
+    ].join(''));
+    $('body').append($select);
+
+    $(document).ready(function() {
+        $select.bsSelect();
+        var $dropdown = $select.closest('.js-bs-select-dropdown');
+        var $searchInput = $dropdown.find('input[type="search"]');
+
+        $searchInput.val('Berlin').trigger('input');
+        var $visibleItems = getVisibleDropdownItems($dropdown);
+        assert.equal($visibleItems.length, 2, 'All options of matching group are visible');
+        assert.ok($visibleItems.text().indexOf('Project A') > -1, 'Project A is visible');
+        assert.ok($visibleItems.text().indexOf('Project B') > -1, 'Project B is visible');
+        assert.equal($dropdown.find('.dropdown-header:not(.d-none)').length, 1, 'Only one matching group header is visible');
+        assert.equal($dropdown.find('.dropdown-header:not(.d-none) strong').text().trim(), 'Berlin', 'Matching group header is visible');
+
+        $select.bsSelect('destroy');
+        $select.remove();
+        done();
+    });
+});
