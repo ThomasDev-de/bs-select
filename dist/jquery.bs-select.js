@@ -1,3 +1,6 @@
+/* global jQuery */
+// noinspection JSUnresolvedReference
+
 /**
  * **************************************************
  *                     bsSelect
@@ -12,6 +15,7 @@
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
  * @fileOverview README.md
  * @repository https://github.com/ThomasDev-de/bs-select (bsSelect)
+ * @donation "https://paypal.me/thomaskirsch1529
  *
  * Dependencies:
  * ---------------
@@ -127,7 +131,7 @@
         /**
          * Triggers a search within the dropdown.
          *
-         * @param {$} $select - The select element.
+         * @param {jQuery} $select - The select element.
          * @param {string} searchPattern - The search pattern to filter by.
          */
         function doSearch($select, searchPattern) {
@@ -171,9 +175,9 @@
                     const $value = $(value);
                     const searchSource = $value.data('search');
                     const groupIndex = String($value.data('ogIndex'));
-                    const currentName = typeof searchSource === 'string' && !isValueEmpty(searchSource)
-                        ? searchSource.trim()
-                        : $value.text().trim();
+                    const currentName = typeof searchSource === 'string' && !isValueEmpty(searchSource)?
+                        searchSource.trim():
+                        $value.text().trim();
                     const isOptionMatch = currentName.toUpperCase().indexOf(search) > -1;
                     const isGroupTitleMatch = groupTitleMatches[groupIndex] === true;
                     const isVisible = isOptionMatch || isGroupTitleMatch;
@@ -216,7 +220,7 @@
         /**
          * Triggers the specified event on the given select element.
          *
-         * @param {$} $select - The select element to trigger the event on.
+         * @param {jQuery} $select - The select element to trigger the event on.
          * @param {string} event - The name of the event to trigger.
          * @param {array} addParams - Additional trigger parameters.
          */
@@ -270,8 +274,8 @@
 
         /**
          * Fetches the dropdown that is superordinate to the select.
-         * @param {$} $select - The select element.
-         * @returns {$} - The dropdown element.
+         * @param {jQuery} $select - The select element.
+         * @returns {jQuery} - The dropdown element.
          */
         function getDropDown($select) {
             return $select.closest(`.${WRAPPER_CLASS}`);
@@ -545,8 +549,6 @@
             if (typeof window.bootstrap !== 'undefined' && window.bootstrap.Dropdown && window.bootstrap.Dropdown.VERSION) {
                 return parseInt(window.bootstrap.Dropdown.VERSION.split('.')[0], 10);
             }
-
-            return;
         }
 
         /**
@@ -882,7 +884,7 @@
         /**
          * Initializes a dropdown menu for a select element.
          *
-         * @param {Window.jQuery} $select - The select element to initialize the dropdown for.
+         * @param {jQuery} $select - The select element to initialize the dropdown for.
          * @param {boolean} fireTrigger - (Optional) Whether to fire the trigger event. Default is false.
          *
          * @return {$} - The initialized dropdown menu.
