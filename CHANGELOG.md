@@ -4,6 +4,12 @@ All important changes to this project are documented in this file.
 
 ## [dev-main]
 
+## [2.1.39] - 2026-08-25
+
+### Fixed
+- Tab navigation in open dropdowns no longer focuses the empty option wrapper before the first selectable item.
+- Disabled dropdown items are excluded from the tab order.
+
 ## [2.1.38] - 2026-05-26
 
 ### Added

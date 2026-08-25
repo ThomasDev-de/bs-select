@@ -1208,12 +1208,15 @@
                 const searchText = [element.text(), element.data('subtext') || ''].join(' ').trim();
 
                 const $drowDownItemWrapper = $('<div>', {
-                    tabindex: i,
                     class: classList,
                 }).appendTo($dropdownMenuInner);
 
                $('<a>', {
                     href: '#',
+                    // Keep the option itself in the tab order. The wrapper is
+                    // intentionally not focusable, otherwise an empty focus
+                    // stop is inserted before every dropdown item.
+                    tabindex: isDisabled ? -1 : 0,
                     'data-role': 'option',
                     'data-og-index': optGrpIndex,
                     'data-index': i,
