@@ -25,7 +25,7 @@ All important changes to this project are documented in this file.
 - Demo navigation now mirrors the actual section order and labels.
 - `menuInnerClass` demo choices now describe concrete spacing and surface variants.
 - Removed the form wrapper from the demo so playground button clicks no longer submit to the demo directory and cause a `403 Forbidden` response.
-- Demo navigation links now remain valid when the host injects a `<base>` element into the iframe.
+- Demo navigation now scrolls internally without navigating to the iframe base directory.
 - `setItemsDisabled` now emits `setItemsDisabled.bs.select` and emits `change.bs.select` when it changes selected values.
 
 ### Fixed
