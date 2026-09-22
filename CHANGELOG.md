@@ -4,7 +4,7 @@ All important changes to this project are documented in this file.
 
 ## [dev-main]
 
-## [2.1.39] - 2026-09-22
+## [2.1.40] - 2026-09-22
 
 ### Changed
 - `selectAll` and `selectNone` now leave disabled options unchanged, including options in disabled optgroups.
