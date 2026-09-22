@@ -4,7 +4,7 @@ All important changes to this project are documented in this file.
 
 ## [dev-main]
 
-## [2.1.40] - 2026-09-22
+## [2.1.40.1] - 2026-09-22
 
 ### Changed
 - `selectAll` and `selectNone` now leave disabled options unchanged, including options in disabled optgroups.
@@ -24,6 +24,7 @@ All important changes to this project are documented in this file.
 - Demo now presents `formatItem`, `formatSelectedText`, `menuClass`, and `menuInnerClass` in separate option rows.
 - Demo navigation now mirrors the actual section order and labels.
 - `menuInnerClass` demo choices now describe concrete spacing and surface variants.
+- Removed the form wrapper from the demo so playground button clicks no longer submit to the demo directory and cause a `403 Forbidden` response.
 - `setItemsDisabled` now emits `setItemsDisabled.bs.select` and emits `change.bs.select` when it changes selected values.
 
 ### Fixed

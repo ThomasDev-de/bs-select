@@ -47,8 +47,8 @@ composer require webcito/bs-select
 or use the GitHub CDN (jsDelivr):
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.40/dist/locale/de-DE.min.js" type="text/javascript"></script> <!-- optional -->
-<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.40/dist/jquery.bs-select.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.40.1/dist/locale/de-DE.min.js" type="text/javascript"></script> <!-- optional -->
+<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.40.1/dist/jquery.bs-select.min.js" type="text/javascript"></script>
 ```
 
 ## Set global defaults
