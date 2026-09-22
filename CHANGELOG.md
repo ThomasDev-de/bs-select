@@ -4,7 +4,27 @@ All important changes to this project are documented in this file.
 
 ## [dev-main]
 
-## [2.1.39] - 2026-08-25
+## [2.1.39] - 2026-09-22
+
+### Changed
+- `selectAll` and `selectNone` now leave disabled options unchanged, including options in disabled optgroups.
+- `selectAllOnInit` excludes disabled options, including options in disabled optgroups.
+- Disabled `optgroup`s are now recognized consistently in the dropdown UI and group selection controls.
+- `selectFirst` and `selectLast` now skip disabled options.
+- Demo redesigned as a fixed-navigation options showcase with live examples, alphabetically sorted option names, and English explanations.
+- README now documents the existing `setItemsDisabled` method, including `value`, `enableOther`, and `setSelected`.
+- Corrected README documentation for `showMultipleCheckboxes` and the default value of `showSelectionAsList`.
+- `formatItem`, `formatSelectedText`, and `getSelectedText` now work with options without an explicit `value` attribute.
+- `animatedMenu` now reveals `dropup` menus from the bottom.
+- Demo now presents `search` and `animatedMenu` as separate option rows, each with one live setting select.
+- Demo `showActionMenu` now uses a single-valued setting select and a separate multi-select target.
+- Demo `showMultipleCheckboxes` now uses a single-valued setting select and a separate multi-select target.
+- Demo `showSelectionAsList` now uses a single-valued setting select and a separate multi-select target.
+- Demo `showSubtext` now uses real option subtexts in its setting select.
+- Demo now presents `formatItem`, `formatSelectedText`, `menuClass`, and `menuInnerClass` in separate option rows.
+- Demo navigation now mirrors the actual section order and labels.
+- `menuInnerClass` demo choices now describe concrete spacing and surface variants.
+- `setItemsDisabled` now emits `setItemsDisabled.bs.select` and emits `change.bs.select` when it changes selected values.
 
 ### Fixed
 - Tab navigation in open dropdowns no longer focuses the empty option wrapper before the first selectable item.

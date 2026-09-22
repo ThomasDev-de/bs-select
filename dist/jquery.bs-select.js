@@ -9,7 +9,7 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.38
+ * @version 2.1.39
  * @date 2026-05-26
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
@@ -67,7 +67,7 @@
          * @class
          */
         $.bsSelect = {
-            version: '2.1.38',
+            version: '2.1.39',
             setDefaults: function (options) {
                 this.DEFAULTS = $.extend({}, this.DEFAULTS, options || {});
             },
@@ -78,7 +78,7 @@
                 return defCopy;
             },
             DEFAULTS: {
-                btnClass: 'btn-outline-dark',
+                btnClass: 'btn border text-start',
                 btnWidth: 'fit-content',
                 btnEmptyText: translations.btnEmptyText,
                 btnSplit: false,
@@ -367,12 +367,13 @@
             }
 
             menu.style.willChange = 'opacity, clip-path';
+            const opensUpward = $dropdown.hasClass('dropup') || $dropdown.hasClass('dropup-center');
 
             const animation = menu.animate(
                 [
                     {
                         opacity: 0,
-                        clipPath: 'inset(0 0 100% 0)'
+                        clipPath: opensUpward ? 'inset(100% 0 0 0)' : 'inset(0 0 100% 0)'
                     },
                     {
                         opacity: 1,
@@ -445,6 +446,17 @@
         }
 
         /**
+         * Finds an option by its DOM value property. This also supports options
+         * without an explicit value attribute, whose value is derived from
+         * their text by the browser.
+         */
+        function getOptionByValue($select, value) {
+            return $select.find('option').filter(function () {
+                return String(this.value) === String(value);
+            }).first();
+        }
+
+        /**
          * Sets the values of a select element based on its data options.
          *
          * @param {jQuery} $select - The jQuery object representing the select element.
@@ -479,8 +491,9 @@
             const dropdown = getDropDown($select);
             // Store the values before the change
             const beforeValues = $select.val();
-            // Get all the options within the select element
-            const options = $select.find('option');
+            // Bulk selection actions only affect selectable options. Disabled
+            // options keep their current selected state.
+            const options = getSelectableOptions($select);
             // Get the settings for the bs-select plugin
             const settings = $select.data('options');
             // Check if multiple selections are allowed
@@ -493,7 +506,8 @@
             const $dropdownMenuInner = dropdown.find('.js-menu-dropdown-inner');
 
             // Iterate through each option
-            options.each(function (i) {
+            options.each(function () {
+                const i = $select.find('option').index(this);
                 // Find the corresponding dropdown item element
                 const $item = dropdown.find('.dropdown-item[data-index="' + i + '"]');
                 // If selecting all
@@ -509,7 +523,22 @@
                 }
             });
 
-            dropdown.find('[data-role="optgroup"] [type="checkbox"]').prop('checked', state);
+            dropdown.find('[data-role="optgroup"] [type="checkbox"]').each(function () {
+                const $group = $(this).closest('[data-role="optgroup"]');
+                const groupIndex = $group.data('ogIndex');
+                const $groupItems = dropdown.find('.dropdown-item[data-og-index="' + groupIndex + '"]');
+                const $groupOptions = $groupItems.map(function () {
+                    return $select.find('option').eq($(this).data('index')).get(0);
+                });
+                const $selectableGroupOptions = $groupOptions.filter(function () {
+                    const $option = $(this);
+                    return !$option.is(':disabled') && !$option.hasClass('disabled');
+                });
+                const allSelectableSelected = $selectableGroupOptions.length > 0 &&
+                    $selectableGroupOptions.filter(':selected').length === $selectableGroupOptions.length;
+
+                $(this).prop('checked', state ? allSelectableSelected : false);
+            });
 
             // If using checkboxes for multiple selections
             if (toggleCheckIcon) {
@@ -637,7 +666,9 @@
                     const checked = $(e.currentTarget).is(':checked');
                     const groupIndex = $(e.currentTarget).closest('[data-role="optgroup"]').data('ogIndex');
 
-                    const options = $dropdown.find('[data-role="option"][data-og-index="' + groupIndex + '"]');
+                    const options = $dropdown
+                        .find('[data-role="option"][data-og-index="' + groupIndex + '"]')
+                        .not('.disabled');
                     toggleSelectedItem($dropdown, selectElement, multiple, options, checked).then(() => {
                         //
                     });
@@ -720,6 +751,12 @@
             const settings = selectElement.data('options');
             const toggleCheckIcon = multiple && settings.showMultipleCheckboxes;
             return new Promise((resolve) => {
+                items = items.not('.disabled');
+                if (!items.length) {
+                    resolve();
+                    return;
+                }
+
                 if (onBeforeChange(selectElement)) {
                     if (!multiple && settings && settings.nullable === false && setActive === false && items.filter('.active').length) {
                         resolve();
@@ -848,10 +885,18 @@
         }
 
         function getFirstSelectableOption($select) {
+            return getSelectableOptions($select).first();
+        }
+
+        /**
+         * Returns options that can be selected by a select-all action.
+         * The :disabled selector also includes options in disabled optgroups.
+         */
+        function getSelectableOptions($select) {
             return $select.find('option').filter(function () {
                 const $option = $(this);
-                return !$option.is('[disabled]') && !$option.hasClass('disabled');
-            }).first();
+                return !$option.is(':disabled') && !$option.hasClass('disabled');
+            });
         }
 
         function enforceNonNullableSingleSelection($select) {
@@ -925,7 +970,7 @@
             let selectedValue = (fireTrigger && typeof settings.value !== 'undefined') ? settings.value : $select.val();
 
             if (multiple && settings.selectAllOnInit === true) {
-                selectedValue = $select.find('option').map(function () {
+                selectedValue = getSelectableOptions($select).map(function () {
                     return $(this).val();
                 }).get();
             }
@@ -1137,6 +1182,7 @@
                 const isOptGroup = element.is("optgroup");
                 if (isOptGroup) {
                     optGrpIndex++;
+                    const isOptGroupDisabled = isSelectDisabled || element.is(':disabled') || element.hasClass('disabled');
                     const headerHTML = [
                         '<div class="d-flex js-bs-select-dropdown-header-inner flex-nowrap align-items-center justify-content-between w-100">',
                         `<strong>${element.attr('label')}</strong>`,
@@ -1155,7 +1201,13 @@
                         $('<div>', {
                             class: 'form-check form-switch custom-control custom-switch',
                             html: [
-                                `<input class="form-check-input custom-control-input" type="checkbox" role="switch" id="${uniquiId}">`,
+                                $('<input>', {
+                                    class: 'form-check-input custom-control-input',
+                                    type: 'checkbox',
+                                    role: 'switch',
+                                    id: uniquiId,
+                                    disabled: isOptGroupDisabled
+                                }).prop('outerHTML'),
                                 `<label class="form-check-label custom-control-label" for="${uniquiId}"></label>`
                             ].join('')
                         }).appendTo(dropdownHeader.find('.js-bs-select-dropdown-header-inner'));
@@ -1167,7 +1219,7 @@
 
                 const value = element.prop('value');
                 const inOptGroup = element.closest('optgroup').length !== 0;
-                const isDisabled = isSelectDisabled || element.is('[disabled]') || element.hasClass('disabled');
+                const isDisabled = isSelectDisabled || element.is(':disabled') || element.hasClass('disabled');
                 const disabledClass = isDisabled ? 'disabled' : '';
 
                 let isSelected = false;
@@ -1324,7 +1376,7 @@
                     // Multiple select:
                     if (selectedValues.length === 1) {
                         // Only one option is selected, so display its text and subtext (if available).
-                        let $option = $select.find(`option[value="${selectedValues[0]}"]`);
+                        let $option = getOptionByValue($select, selectedValues[0]);
                         subtext2 = settings.showSubtext && $option.data('subtext') ? $option.data('subtext') : null;
                         title2 = $option.text();
                         tooltip = $option.text();
@@ -1338,7 +1390,7 @@
                             // Construct the tooltip text by concatenating the text of each selected option.
                             let tooltips = [];
                             selectedValues.forEach(val => {
-                                let $option = $select.find(`option[value="${val}"]`);
+                                let $option = getOptionByValue($select, val);
                                 tooltips.push($option.text());
                             });
                             tooltip += tooltips.join(',');
@@ -1348,7 +1400,7 @@
                             let subtexts2 = [];
                             let tooltips = [];
                             selectedValues.forEach(val => {
-                                let $option = $select.find(`option[value="${val}"]`);
+                                let $option = getOptionByValue($select, val);
                                 let hasSubtext = settings.showSubtext && $option.data('subtext');
                                 subtexts2.push(hasSubtext ? $option.data('subtext') : null);
                                 texts2.push($option.text());
@@ -1361,7 +1413,7 @@
                     }
                 } else {
                     // Single select: Display the selected option's text and subtext (if available).
-                    let $option = $select.find(`option[value="${selectedValues}"]`);
+                    let $option = getOptionByValue($select, selectedValues);
                     if ($option.hasClass(D_NONE)) {
                         // If the selected option is hidden, display the default empty text.
                         title2 = settings.btnEmptyText;
@@ -1450,7 +1502,7 @@
             // Iterate over each selected value.
             values.forEach(value => {
                 // Globalen Index des Options-Elements ermitteln
-                let index = $select.find('option').index($select.find(`option[value="${value}"]`));
+                let index = $select.find('option').index(getOptionByValue($select, value));
 
                 // Dropdown-Element mit dem entsprechenden Index finden
                 const item = $dropdown.find(`.dropdown-item[data-index="${index}"]`);
@@ -1623,6 +1675,7 @@
         function setItemsDisabled($select, object) {
             // Check if the provided argument is an object.  If not, the function does nothing.
             if (typeof object === 'object') {
+                const beforeValues = $select.val();
 
                 // Ensure the 'value' property exists in the object. If not, initialize it as an empty array.
                 if (!object.hasOwnProperty('value')) {
@@ -1655,7 +1708,7 @@
                 // Iterate over the provided values to disable.
                 object.value.forEach(val => {
                     // Find the option element corresponding to the current value.
-                    const option = $select.find(`option[value="${val}"]`);
+                    const option = getOptionByValue($select, val);
 
                     // If 'setSelected' is provided (true or false), set the 'selected' property of the option accordingly.
                     if (object.setSelected !== null) {
@@ -1668,6 +1721,12 @@
 
                 // Re-initialize the bsSelect dropdown after modifying the original select element.
                 init($select, false);
+
+                const afterValues = $select.val();
+                if (hasValueChanged(beforeValues, afterValues)) {
+                    trigger($select, 'change.bs.select', [beforeValues, afterValues]);
+                }
+                trigger($select, 'setItemsDisabled.bs.select', [object, beforeValues, afterValues]);
             }
         }
 
@@ -1790,12 +1849,12 @@
                                 if (multiple && Array.isArray(value)) {
                                     const texts = [];
                                     value.forEach(val => {
-                                        texts.push($select.find('[value="' + val + '"]').text());
+                                        texts.push(getOptionByValue($select, val).text());
                                     });
                                     result = texts.join(', ');
                                 } else if (typeof value === 'string') {
                                     // If a single value is selected as a string, get the text for it
-                                    result = $select.find('[value="' + value + '"]').text();
+                                    result = getOptionByValue($select, value).text();
                                 } else {
                                     // Otherwise set the result to an empty string
                                     result = '';
@@ -1849,8 +1908,9 @@
                                 // Set the value to null and deselect all options initially
                                 $select.val(null);
                                 $select.find('option').prop('selected', false);
-                                // Select the first option
-                                $select.find('option:first').prop('selected', true);
+                                // Select the first selectable option
+                                const $firstSelectable = getFirstSelectableOption($select);
+                                $firstSelectable.prop('selected', true);
                                 // Update the plugin's internal state
                                 val($select);
                                 // Get values after the change
@@ -1884,7 +1944,7 @@
                                 // Clear selection and set last option as selected
                                 $select.val(null);
                                 $select.find('option').prop('selected', false);
-                                $select.find('option:last').prop('selected', true);
+                                getSelectableOptions($select).last().prop('selected', true);
                                 val($select);
                                 // Determine the newly set value
                                 const afterValues = getSelectedValuesFromDropdown($select);

@@ -47,8 +47,8 @@ composer require webcito/bs-select
 or use the GitHub CDN (jsDelivr):
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.38/dist/locale/de-DE.min.js" type="text/javascript"></script> <!-- optional -->
-<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.38/dist/jquery.bs-select.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.39/dist/locale/de-DE.min.js" type="text/javascript"></script> <!-- optional -->
+<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.39/dist/jquery.bs-select.min.js" type="text/javascript"></script>
 ```
 
 ## Set global defaults
@@ -125,7 +125,7 @@ Available locale files:
 | property               | data-attribute                | type             | default                             | desc                                                                                                                                                                                                                                                    |
 |------------------------|-------------------------------|------------------|-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | value                  | [data-value]                  | `mixed`          | `undefined`                         | *If a value is passed here, this value (if available) will be preselected during initialization. Otherwise the value of the native select is adopted.The value is only taken into account during the initial initialization (not for 'updateOptions').* |
-| selectAllOnInit        | [data-select-all-on-init]     | `bool`           | `false`                             | *If `true` and the select is `multiple`, all options are selected during initialization. If `value` is also set, `selectAllOnInit` takes precedence.* |
+| selectAllOnInit        | [data-select-all-on-init]     | `bool`           | `false`                             | *If `true` and the select is `multiple`, all selectable options are selected during initialization. Disabled options are excluded. If `value` is also set, `selectAllOnInit` takes precedence.* |
 | nullable               | [data-nullable]               | `bool`           | `true`                              | *Only relevant for single selects. If `false`, the select always keeps a selected option and cannot be cleared to empty.* |
 | search                 | [data-search]                 | `bool`           | `true`                              | *adds a search function to the menu. Search matches option text, option `data-subtext`, and `optgroup` labels (group label match reveals all options in that group).*                                                                                                                                                         |
 | searchText             | [data-search-text]            | `string`         | `Search..`                          | "Placeholder for search input box*                                                                                                                                                                                                                      |
@@ -145,9 +145,9 @@ Available locale files:
 | menuAppendHtml         | [data-menu-append-html]       | `null\|string`   | `null`                              | *shows the text in the menu after the selection*                                                                                                                                                                                                        |
 | showSubtext            | [data-show-subtext]           | `bool`           | `true`                              | *If this option is true, options have the data attribute data-subtext, the subtext will be displayed in the dropdown.*                                                                                                                                  |
 | showActionMenu         | [data-show-action-menu]       | `bool`           | `true`                              | *If it is a multiple selection and this option is true, two buttons are displayed above the selection for faster selection.*                                                                                                                            |
-| showMultipleCheckboxes | [data-show-action-menu]       | `bool`           | `false`                             | *If this option is true, a checkbox is displayed in front of each option instead of the check icon.*                                                                                                                                                    |
+| showMultipleCheckboxes | [data-show-multiple-checkboxes] | `bool`         | `false`                             | *If this option is true, a checkbox is displayed in front of each option instead of the check icon.*                                                                                                                                                    |
 | actionMenuBtnClass     | [data-action-menu-btn-class]  | `string`         | `btn-light`                         | *The classnames for the buttons in the action menu.*                                                                                                                                                                                                    |
-| showSelectionAsList    | [data-show-selection-as-list] | `bool`           | `true`                              | *If it is a multiple selection, all selections should be listed below each other. If the value is false, it will show how much was selected.*                                                                                                           |
+| showSelectionAsList    | [data-show-selection-as-list] | `bool`           | `false`                             | *If it is a multiple selection, all selections should be listed below each other. If the value is false, it will show how much was selected.*                                                                                                           |
 | showSelectedText       |                               | `function`       | `(selectedItems, totalItems) => {}` | *If it is a multiple selection and the selected elements are greater than 1, this function is called. This function is ignored if the showSelectionAsList option is true.*                                                                              |
 | formatSelectedText     |                               | `function`       | `(title, subtext) => {}`            | *If it is a multiple selection and the selected elements are greater than 1, this function is called. This function is ignored if the showSelectionAsList option is true.*                                                                              |
 | formatItem             |                               | `function`       | `($option, title, subtext) => {}`   | *With this function, all dropdown item can be formated.*                                                                                                                                                                                                |
@@ -171,10 +171,10 @@ $('select').bsSelect('method', param);
 | `'hide'`             | `$('select').bsSelect('hide');`                                               | Closes the dropdown menu (does not change overall control visibility)                                                    | 
 | `'val'`              | `$('select').bsSelect('val', 1);`                                             | Changes the value of the select                                                                                           | 
 | `'search'`          | `$('select').bsSelect('search', 'query');`                                    | Programmatically filters the dropdown list. If a `searchQuery` prefix is set, it will be prepended to the query.          |
-| `'selectAll'`        | `$('select').bsSelect('selectAll');`                                          | Selects all values                                                                                                        | 
+| `'selectAll'`        | `$('select').bsSelect('selectAll');`                                          | Selects all selectable values. Disabled options are excluded.                                                           |
 | `'selectFirst'`      | `$('select').bsSelect('selectFirst');`                                        | Selects the first option element                                                                                          | 
 | `'selectLast'`       | `$('select').bsSelect('selectLast');`                                         | Selects the last option element                                                                                           | 
-| `'selectNone'`       | `$('select').bsSelect('selectNone');`                                         | deselects all values                                                                                                      | 
+| `'selectNone'`       | `$('select').bsSelect('selectNone');`                                         | Deselects all selectable values. Disabled options are excluded.                                                          |
 | `'clear'`            | `$('select').bsSelect('clear');`                                              | Empties the Select                                                                                                        | 
 | `'updateOptions'`    | `$('select').bsSelect('updateOptions', {buttonClass: 'btn btn-danger',...});` | Changes the settings of the dropdown.                                                                                     |
 | `'setBtnClass'`      | `$('select').bsSelect('setBtnClass', 'btn btn-danger');`                      | Behaves like `updateOptions`. The btnClass option is overwritten.                                                         |
@@ -183,8 +183,32 @@ $('select').bsSelect('method', param);
 | `'destroy'`          | `$('select').bsSelect('destroy'[, true]);`                                    | Deletes the dropdown and restores the original select. If parameter is passed true, all data is removed from the element. |
 | `'toggleDisabled'`   | `$('select').bsSelect('toggleDisabled');`                                     | Toggles the status of the dropdown button                                                                                 |
 | `'setDisabled'`      | `$('select').bsSelect('setDisabled', true);`                                  | Set the dropdown disabled (true) otherwise enabled (false)                                                                |
+| `'setItemsDisabled'` | `$('select').bsSelect('setItemsDisabled', { value: ['2', '4'] });`             | Disables specific options by value. `enableOther: true` enables all other options first; `setSelected` can set their selected state. |
 | `'toggleVisibility'` | `$('select').bsSelect('toggleVisibility');`                                   | Toggles the visibility of the dropdown                                                                                    |
 | `'setVisible'`       | `$('select').bsSelect('setVisible', true);`                                   | Set the visibility of the dropdown (show: true, hide: false)                                                              |
+
+### Disable individual options
+
+`setItemsDisabled` disables options by their value. By default, the disabled state of
+other options is preserved. Set `enableOther: true` to first enable all options and then
+disable only the specified values.
+
+```js
+// Disable options 2 and 4. Existing disabled states are preserved.
+$('select').bsSelect('setItemsDisabled', {
+    value: ['2', '4']
+});
+
+// Enable all options first, then disable only option 2.
+$('select').bsSelect('setItemsDisabled', {
+    value: '2',
+    enableOther: true,
+    setSelected: false
+});
+```
+
+`setSelected` is optional. If set to `true` or `false`, it also changes the selected
+state of the options that are being disabled. If omitted, the current selection is kept.
 
 ## Events
 
@@ -210,6 +234,7 @@ $('select').bsSelect('method', param);
 | any.bs.select            | Fires at every event.                                                                                                            |
 | keydown.bs.select        | Fires when the pressed key is not a dropdown command (arrowUp,arrowDown,ESCAPE)                                                  |
 | toggleDisabled.bs.select | Fires when the disable status changes. Returns the new status as a parameter. fn(e, (boolean)status){}                           |
+| setItemsDisabled.bs.select | Fires after item disabled states are updated. Returns the settings object and before/after values. |
 
 ## Conclusion
 

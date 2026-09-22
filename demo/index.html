@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,127 +7,307 @@
     <link href="../vendor/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../vendor/twbs/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
-        .bs-select {
-            display: none;
-        }
+        .bs-select { display: none; }
         body {
-            background: #111827;
-            color: #e5e7eb;
+            background: var(--bs-tertiary-bg);
+            color: var(--bs-body-color);
+            min-height: 100vh;
+        }
+        .demo-nav {
+            border-right: 1px solid var(--bs-border-color);
+            height: 100vh;
+            left: 0;
+            padding: 2rem 1.25rem;
+            position: fixed;
+            top: 0;
+            width: 220px;
+        }
+        .demo-nav-brand {
+            color: var(--bs-emphasis-color);
+            font-size: .9rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+        .demo-nav-brand span { color: var(--bs-primary); }
+        .demo-nav-link {
+            align-items: center;
+            border-left: 2px solid transparent;
+            color: var(--bs-secondary-color);
+            display: flex;
+            font-size: .85rem;
+            gap: .65rem;
+            padding: .55rem .75rem;
+            text-decoration: none;
+        }
+        .demo-nav-link:hover,
+        .demo-nav-link:focus {
+            background: var(--bs-primary-bg-subtle);
+            border-left-color: var(--bs-primary);
+            color: var(--bs-primary-text-emphasis);
         }
         .demo-shell {
-            max-width: 1240px;
-            margin: 0 auto;
-            padding: 2.5rem 1rem 3rem;
+            margin-left: 220px;
+            max-width: 1020px;
+            padding: clamp(2rem, 5vw, 4.5rem) clamp(1.25rem, 5vw, 5rem) 5rem;
         }
-        .demo-topbar {
-            border-bottom: 1px solid #374151;
-            padding-bottom: 1rem;
-            margin-bottom: 1.25rem;
+        .demo-intro { margin-bottom: 2rem; }
+        .demo-kicker {
+            color: var(--bs-primary);
+            font-size: .75rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+        }
+        .demo-intro h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            letter-spacing: -.04em;
+            margin: .45rem 0 .75rem;
         }
         .demo-subtitle {
-            color: #9ca3af;
-            max-width: 900px;
+            color: var(--bs-secondary-color);
+            max-width: 680px;
             margin-bottom: 0;
+            font-size: 1.05rem;
         }
         .demo-band {
-            background: #1f2937;
-            border: 1px solid #374151;
-            padding: 1rem;
-            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--bs-border-color);
+            padding: 0 0 3.25rem;
+            margin: 0 0 3.25rem;
+            scroll-margin-top: 2rem;
         }
         .demo-title {
-            font-size: .85rem;
-            text-transform: uppercase;
-            letter-spacing: .02em;
-            color: #93c5fd;
-            margin-bottom: .5rem;
+            align-items: center;
+            color: var(--bs-emphasis-color);
+            display: flex;
+            font-size: 1.05rem;
+            font-weight: 700;
+            gap: .65rem;
+            margin-bottom: 1.5rem;
+        }
+        .demo-title::before {
+            background: var(--bs-primary);
+            border-radius: 999px;
+            content: '';
+            display: inline-block;
+            height: 1.5rem;
+            width: .25rem;
         }
         .demo-grid {
             display: grid;
-            grid-template-columns: minmax(320px, 2fr) minmax(320px, 1fr);
-            gap: 1rem;
+            grid-template-columns: minmax(0, 1.35fr) minmax(280px, .65fr);
+            gap: 1.5rem;
             align-items: start;
         }
-        .demo-control {
-            margin-bottom: 1rem;
+        .demo-console-panel {
+            grid-column: 1 / -1;
         }
-        .demo-control:last-child {
-            margin-bottom: 0;
-        }
+        .demo-control { margin-bottom: 1.75rem; }
+        .demo-control:last-child { margin-bottom: 0; }
         .demo-label {
             display: block;
-            font-size: .9rem;
-            color: #d1d5db;
-            margin-bottom: .5rem;
+            color: var(--bs-emphasis-color);
+            font-size: .85rem;
+            font-weight: 600;
+            margin-bottom: .6rem;
         }
         .demo-hint {
             display: block;
             margin-top: .5rem;
-            color: #9ca3af;
+            color: var(--bs-secondary-color);
             font-size: .8rem;
+            line-height: 1.5;
+        }
+        .demo-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .45rem;
+            margin-top: 1rem;
+        }
+        .demo-option-row {
+            align-items: center;
+            border-bottom: 1px solid var(--bs-border-color-translucent);
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: minmax(180px, .75fr) minmax(190px, .8fr) minmax(260px, 1.2fr);
+            padding: 1.25rem 0;
+        }
+        .demo-option-row:first-of-type { padding-top: 0; }
+        .demo-option-row:last-child { border-bottom: 0; padding-bottom: 0; }
+        .demo-option-name {
+            color: var(--bs-emphasis-color);
+            font-family: var(--bs-font-monospace);
+            font-size: .86rem;
+            font-weight: 600;
+        }
+        .demo-option-copy {
+            color: var(--bs-secondary-color);
+            font-size: .84rem;
+            line-height: 1.5;
+        }
+        .demo-code {
+            background: var(--bs-tertiary-bg);
+            border: 1px solid var(--bs-border-color-translucent);
+            border-radius: var(--bs-border-radius);
+            color: var(--bs-secondary-color);
+            display: block;
+            font-family: var(--bs-font-monospace);
+            font-size: .72rem;
+            line-height: 1.5;
+            padding: .55rem .7rem;
+            white-space: pre-wrap;
+        }
+        .demo-example-title {
+            color: var(--bs-emphasis-color);
+            font-size: .95rem;
+            font-weight: 600;
+            margin-bottom: .35rem;
         }
         #debug {
-            max-height: 460px;
-            min-height: 280px;
-            background: #0f172a;
-            color: #e2e8f0;
-            border: 1px solid #334155;
+            background: #300a24;
+            color: #f8f8f2;
+            font-size: .78rem;
+            line-height: 1.65;
+            max-height: 560px;
+            min-height: 360px;
+            overflow: auto;
+            padding: 1rem 1.15rem !important;
+            scrollbar-color: #6c4361 #300a24;
         }
+        .demo-terminal {
+            background: #300a24;
+            border: 1px solid color-mix(in srgb, #300a24 70%, var(--bs-border-color));
+            border-radius: .55rem;
+            box-shadow: 0 1rem 2.5rem rgba(48, 10, 36, .18);
+            overflow: hidden;
+        }
+        .demo-terminal-bar {
+            align-items: center;
+            background: #21101d;
+            color: #d8c8d3;
+            display: flex;
+            font-family: var(--bs-font-monospace);
+            font-size: .72rem;
+            gap: .8rem;
+            padding: .6rem .85rem;
+        }
+        .demo-terminal-dots {
+            display: flex;
+            gap: .35rem;
+        }
+        .demo-terminal-dots i {
+            background: #ff5f56;
+            border-radius: 50%;
+            display: block;
+            height: .65rem;
+            width: .65rem;
+        }
+        .demo-terminal-dots i:nth-child(2) { background: #ffbd2e; }
+        .demo-terminal-dots i:nth-child(3) { background: #27c93f; }
+        .demo-terminal-title { opacity: .8; }
+        .demo-terminal-prompt {
+            color: #8ae234;
+            margin-right: .45rem;
+        }
+        #debug .js-log {
+            border-bottom-color: rgba(255, 255, 255, .12) !important;
+            display: block;
+            padding: .12rem 0;
+        }
+        #debug .js-log::before {
+            color: #8ae234;
+            content: '$ ';
+        }
+        #debug .text-warning { color: #f9c74f !important; }
+        @supports not (color: color-mix(in srgb, black, white)) {
+            .demo-terminal { border-color: #6c4361; }
+        }
+        .demo-band .js-bs-select-dropdown { max-width: 100%; }
         @media (max-width: 992px) {
-            .demo-grid {
+            .demo-nav {
+                background: var(--bs-body-bg);
+                border-bottom: 1px solid var(--bs-border-color);
+                border-right: 0;
+                height: auto;
+                padding: .75rem 1rem;
+                position: sticky;
+                width: 100%;
+                z-index: 10;
+            }
+            .demo-nav-brand { margin: 0 .75rem .5rem; }
+            .demo-nav-links {
+                display: flex;
+                overflow-x: auto;
+            }
+            .demo-nav-link { white-space: nowrap; }
+            .demo-shell {
+                margin-left: 0;
+                padding-top: 2.5rem;
+            }
+            .demo-grid { grid-template-columns: 1fr; }
+            .demo-option-row {
+                align-items: start;
                 grid-template-columns: 1fr;
+                gap: .65rem;
             }
         }
     </style>
 </head>
 <body style="opacity: 0">
+<nav class="demo-nav" aria-label="Demo navigation">
+    <div class="demo-nav-brand"><span>bs</span>-select</div>
+    <div class="demo-nav-links">
+        <a class="demo-nav-link" href="#core"><i class="bi bi-grid-1x2"></i>Core examples</a>
+        <a class="demo-nav-link" href="#options"><i class="bi bi-sliders"></i>Option gallery</a>
+        <a class="demo-nav-link" href="#search"><i class="bi bi-search"></i>Search by group title</a>
+        <a class="demo-nav-link" href="#states"><i class="bi bi-slash-circle"></i>Disabled option groups</a>
+        <a class="demo-nav-link" href="#playground"><i class="bi bi-terminal"></i>Playground</a>
+    </div>
+</nav>
 <main class="demo-shell">
-    <header class="demo-topbar d-flex flex-wrap align-items-center gap-3">
-        <h1 class="h3 mb-0 d-flex align-items-center">
-            <i class="bi bi-menu-button-wide-fill me-2 text-info"></i>
-            bs-select Demo
-        </h1>
+    <div class="demo-intro">
+        <div class="demo-kicker">jQuery · Bootstrap · bs-select</div>
+        <h1>Choose with clarity.</h1>
         <p class="demo-subtitle w-100">
-            Real usage examples for single/multi select, grouped options, searchable lists and programmatic control.
+            A compact showcase of searchable selects, grouped choices, disabled states and programmatic control.
         </p>
-    </header>
+    </div>
 
     <form action="" method="get">
-        <section class="demo-band">
+        <section id="core" class="demo-band">
             <div class="demo-title">Core Examples</div>
             <div class="row g-3">
                 <div class="col-lg-6">
-                    <div class="demo-control">
+                    <div id="single" class="demo-control">
                         <label for="select1" class="demo-label">Single Select (nullable: true)</label>
-                        <select id="select1" data-btn-class="btn-primary" name="test1" class="bs-select">
+                        <select id="select1" name="test1" class="bs-select">
                             <option value="1">Item 1</option>
                             <option value="2" selected>Item 2</option>
                             <option value="3">Item 3</option>
                         </select>
                     </div>
-                    <div class="demo-control">
+                    <div id="nullable" class="demo-control">
                         <label for="select1NonNullable" class="demo-label">Single Select (nullable: false)</label>
-                        <select id="select1NonNullable" data-btn-class="btn-outline-primary" data-nullable="false" class="bs-select">
+                        <select id="select1NonNullable" data-nullable="false" class="bs-select">
                             <option value="10">Strict Item 1</option>
                             <option value="20">Strict Item 2</option>
                             <option value="30">Strict Item 3</option>
                         </select>
                     </div>
-                    <div class="demo-control">
+                    <div id="multiple" class="demo-control">
                         <label for="select2" class="demo-label">Multiple Select</label>
                         <select multiple id="select2" data-show-selection-as-list="true"></select>
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <div class="demo-control">
+                    <div id="grouped" class="demo-control">
                         <label for="select3" class="demo-label">Multiple With Option Groups</label>
                         <select multiple id="select3" data-show-selection-as-list="false"
                                 data-drop-direction="dropped"
-                                data-btn-class="btn-outline-danger btn-sm"></select>
+                                ></select>
                     </div>
                     <div class="demo-control">
                         <label for="selectPresearch" class="demo-label">Fixed Search Prefix</label>
-                        <select id="selectPresearch" data-search-query="Item 1" data-btn-class="btn-outline-success">
+                        <select id="selectPresearch" data-search-query="Item 1">
                             <option value="1">Item 1</option>
                             <option value="10">Item 10</option>
                             <option value="11">Item 11</option>
@@ -139,7 +319,241 @@
             </div>
         </section>
 
-        <section class="demo-band">
+        <section id="options" class="demo-band">
+            <div class="demo-title">Option gallery</div>
+            <p class="demo-subtitle mb-4">Every row below is a live example. The short note explains the visual effect; the snippet shows the relevant configuration.</p>
+
+
+            <div class="demo-option-row">
+                <div class="demo-option-name">btnClass</div>
+                <select class="demo-option-select" data-value="Success button">
+                    <option selected>Success button</option><option>Another choice</option>
+                </select>
+                <div><div class="demo-option-copy">Apply any Bootstrap button classes to match the surrounding interface.</div><code class="demo-code">{ btnClass: 'btn-outline-success' }</code></div>
+            </div>
+            <div class="demo-option-row">
+                <div class="demo-option-name">btnEmptyText</div>
+                <select class="demo-option-select">
+                    <option selected>Nothing selected</option><option>Choose a value...</option><option>Please select..</option>
+                </select>
+                <div><div class="demo-option-copy">Set the label shown when a nullable select has no value.</div><code class="demo-code">{ btnEmptyText: 'Choose a value...' }</code></div>
+            </div>
+            <div class="demo-option-row">
+                <div class="demo-option-name">btnWidth</div>
+                <select class="demo-option-select" data-value="Fixed width" data-btn-width="240px">
+                    <option selected>Fixed width</option><option>Longer option label</option>
+                </select>
+                <div><div class="demo-option-copy">Keep controls aligned by giving the toggle a predictable width.</div><code class="demo-code">{ btnWidth: '240px' }</code></div>
+            </div>
+            <div class="demo-option-row">
+                <div class="demo-option-name">btnSplit</div>
+                <select class="demo-option-select" data-value="Split action" data-btn-split="true">
+                    <option selected>Split action</option><option>Second action</option>
+                </select>
+                <div><div class="demo-option-copy">Separate the value button from the dropdown trigger for action-heavy toolbars.</div><code class="demo-code">{ btnSplit: true }</code></div>
+            </div>
+            <div class="demo-option-row">
+                <div class="demo-option-name">dropDirection</div>
+                <select class="demo-option-select" data-value="Opens upward" data-drop-direction="dropup">
+                    <option selected>Opens upward</option><option>Another option</option>
+                </select>
+                <div><div class="demo-option-copy">Choose the opening direction when space below the control is limited.</div><code class="demo-code">{ dropDirection: 'dropup' }</code></div>
+            </div>
+            <div class="demo-option-row">
+                <div class="demo-option-name">dropIconClass</div>
+                <select class="demo-option-select" data-value="Filter choices" data-drop-icon-class="bi bi-funnel-fill">
+                    <option selected>Filter choices</option><option>More filters</option>
+                </select>
+                <div><div class="demo-option-copy">Replace the default chevron with an icon that matches the control's purpose.</div><code class="demo-code">{ dropIconClass: 'bi bi-funnel-fill' }</code></div>
+            </div>
+            <div class="demo-option-row">
+                <div class="demo-option-name">searchText</div>
+                <select class="demo-option-select" data-value="Germany" data-search-text="Find a country...">
+                    <option selected>Germany</option><option>France</option><option>Japan</option>
+                </select>
+                <div><div class="demo-option-copy">Customize the search placeholder to make the expected input obvious.</div><code class="demo-code">{ searchText: 'Find a country...' }</code></div>
+            </div>
+            <div class="demo-option-row">
+                <div class="demo-option-name">showMultipleCheckboxes</div>
+                <div>
+                    <select id="showMultipleCheckboxesControl" class="demo-action-setting">
+                        <option value="true">Checkboxes</option>
+                        <option value="false">Check icons</option>
+                    </select>
+                    <small class="demo-hint">The multi-select target below switches its selection indicator.</small>
+                    <select id="showMultipleCheckboxesTarget" multiple data-show-selection-as-list="false">
+                        <option selected>Design</option><option selected>Engineering</option><option>Research</option>
+                    </select>
+                </div>
+                <div><div class="demo-option-copy">Use checklist controls when users need to scan many selected values quickly.</div><code class="demo-code">{ showMultipleCheckboxes: true }</code></div>
+            </div>
+            <div class="demo-option-row">
+                <div class="demo-option-name">showSelectionAsList</div>
+                <div>
+                    <select id="showSelectionAsListControl" class="demo-action-setting">
+                        <option value="true">List</option>
+                        <option value="false">Count</option>
+                    </select>
+                    <small class="demo-hint">The target below switches between selected labels and a count.</small>
+                    <select id="showSelectionAsListTarget" multiple data-show-selection-as-list="true">
+                        <option selected>Berlin</option><option selected>Hamburg</option><option>Munich</option>
+                    </select>
+                </div>
+                <div><div class="demo-option-copy">Show selected labels in the button instead of only a count.</div><code class="demo-code">{ showSelectionAsList: true }</code></div>
+            </div>
+            <div class="demo-option-row">
+                <div class="demo-option-name">selectAllOnInit</div>
+                <select class="demo-option-select" multiple data-select-all-on-init="true">
+                    <option>Read</option><option>Write</option><option>Publish</option>
+                </select>
+                <div><div class="demo-option-copy">Start a multi-select with every enabled option selected.</div><code class="demo-code">{ selectAllOnInit: true }</code></div>
+            </div>
+            <div class="demo-option-row">
+                <div class="demo-option-name">menuPreHtml / menuAppendHtml</div>
+                <div>
+                    <select id="menuHtmlControl" class="demo-action-setting">
+                        <option value="plan">Plan header + VAT note</option>
+                        <option value="context">Context header + helper note</option>
+                        <option value="minimal">Minimal menu</option>
+                    </select>
+                    <small class="demo-hint">Updates both HTML insertion points on the target menu.</small>
+                    <select id="menuHtmlTarget">
+                        <option selected>Starter</option><option>Team</option><option>Enterprise</option>
+                    </select>
+                </div>
+                <div><div class="demo-option-copy">Add contextual content before or after the option list.</div><code class="demo-code">{ menuPreHtml: '&lt;strong&gt;Choose a plan&lt;/strong&gt;' }</code></div>
+            </div>
+            <div class="demo-option-row">
+                <div class="demo-option-name">menuMaxHeight</div>
+                <div>
+                    <select id="menuMaxHeightControl" class="demo-action-setting">
+                        <option value="150">150px</option>
+                        <option value="300">300px</option>
+                        <option value="450">450px</option>
+                    </select>
+                    <small class="demo-hint">The target below contains enough items to make the scroll area visible.</small>
+                    <select id="menuMaxHeightTarget">
+                    <option selected>Item 01</option><option>Item 02</option><option>Item 03</option><option>Item 04</option><option>Item 05</option><option>Item 06</option><option>Item 07</option><option>Item 08</option><option>Item 09</option><option>Item 10</option><option>Item 11</option><option>Item 12</option><option>Item 13</option><option>Item 14</option><option>Item 15</option><option>Item 16</option><option>Item 17</option><option>Item 18</option><option>Item 19</option><option>Item 20</option>
+                    </select>
+                </div>
+                <div><div class="demo-option-copy">Constrain long lists to a compact scrolling menu.</div><code class="demo-code">{ menuMaxHeight: 150 }</code></div>
+            </div>
+            <div class="demo-option-row">
+                <div class="demo-option-name">value</div>
+                <select class="demo-option-select" data-value="team">
+                    <option value="starter">Starter</option><option value="team" selected>Team</option><option value="enterprise">Enterprise</option>
+                </select>
+                <div><div class="demo-option-copy">Preselect an option during the first initialization.</div><code class="demo-code">{ value: 'team' }</code></div>
+            </div>
+            <div class="demo-option-row">
+                <div class="demo-option-name">nullable</div>
+                <select class="demo-option-select" data-value="standard" data-nullable="false">
+                    <option value="standard" selected>Standard</option><option value="pro">Pro</option>
+                </select>
+                <div><div class="demo-option-copy">Keep a single select from becoming empty when a value is required.</div><code class="demo-code">{ nullable: false }</code></div>
+            </div>
+            <div class="demo-option-row">
+                <div class="demo-option-name">showSubtext</div>
+                <select class="demo-option-select" data-value="Starter" data-show-subtext="true">
+                    <option data-subtext="Best for personal projects" selected>Starter</option><option data-subtext="For growing teams">Team</option><option data-subtext="For larger organizations">Enterprise</option>
+                </select>
+                <div><div class="demo-option-copy">Display supporting metadata below the main option label.</div><code class="demo-code">{ showSubtext: true }</code></div>
+            </div>
+            <div class="demo-option-row">
+                <div class="demo-option-name">showActionMenu</div>
+                <div>
+                    <select id="showActionMenuControl" class="demo-action-setting">
+                        <option value="true">Actions visible</option>
+                        <option value="false">Actions hidden</option>
+                    </select>
+                    <small class="demo-hint">The target below is the multi-select that receives the setting.</small>
+                    <select id="showActionMenuTarget" multiple data-show-selection-as-list="false">
+                        <option>Analytics</option><option>Billing</option><option>Members</option>
+                    </select>
+                </div>
+                <div><div class="demo-option-copy">Expose Select All and Select None actions above a multi-select.</div><code class="demo-code">{ showActionMenu: true }</code></div>
+            </div>
+            <div class="demo-option-row">
+                <div class="demo-option-name">actionMenuBtnClass</div>
+                <div>
+                    <select id="actionMenuBtnClassControl" class="demo-action-setting">
+                        <option value="btn-outline-secondary">Secondary</option>
+                        <option value="btn-outline-primary">Primary</option>
+                        <option value="btn-outline-success">Success</option>
+                    </select>
+                    <small class="demo-hint">Choose a class for the target below.</small>
+                    <select id="actionMenuBtnClassTarget" multiple data-show-selection-as-list="false">
+                        <option>Alpha</option><option>Beta</option><option>Gamma</option>
+                    </select>
+                </div>
+                <div><div class="demo-option-copy">The setting selector is single-valued; it updates the bulk-action buttons on the multi-select target.</div><code class="demo-code">{ actionMenuBtnClass: 'btn-outline-success' }</code></div>
+            </div>
+            <div class="demo-option-row">
+                <div class="demo-option-name">menuClass</div>
+                <select class="demo-option-select" data-menu-class="shadow-lg rounded-4">
+                    <option value="" selected>Default</option><option value="shadow-lg rounded-4">Shadow + rounded</option><option value="border border-primary">Primary border</option>
+                </select>
+                <div><div class="demo-option-copy">Style the outer dropdown menu container.</div><code class="demo-code">{ menuClass: 'shadow-lg rounded-4' }</code></div>
+            </div>
+            <div class="demo-option-row">
+                <div class="demo-option-name">menuInnerClass</div>
+                <select class="demo-option-select" data-menu-inner-class="p-2">
+                    <option value="" selected>Default spacing</option><option value="p-0">Compact menu</option><option value="p-3">Roomy menu</option><option value="p-2 bg-body-secondary">Tinted inner surface</option>
+                </select>
+                <div><div class="demo-option-copy">Change the spacing and surface of the scrollable menu content.</div><code class="demo-code">{ menuInnerClass: 'p-3' }</code></div>
+            </div>
+            <div class="demo-option-row">
+                <div class="demo-option-name">menuItemClass</div>
+                <select class="demo-option-select" data-value="Emphasized item" data-menu-item-class="text-primary fw-semibold">
+                    <option selected>Emphasized item</option><option>Another item</option>
+                </select>
+                <div><div class="demo-option-copy">Apply Bootstrap utility classes to every dropdown item.</div><code class="demo-code">{ menuItemClass: 'text-primary fw-semibold' }</code></div>
+            </div>
+            <div class="demo-option-row">
+                <div class="demo-option-name">search</div>
+                <select class="demo-option-select" data-search="true">
+                    <option selected>Search enabled</option><option>Search disabled</option>
+                </select>
+                <div><div class="demo-option-copy">Show or hide the search field in this dropdown.</div><code class="demo-code">{ search: true }</code></div>
+            </div>
+            <div class="demo-option-row">
+                <div class="demo-option-name">animatedMenu</div>
+                <select class="demo-option-select" data-animated-menu="true">
+                    <option selected>Animation enabled</option><option>Animation disabled</option>
+                </select>
+                <div><div class="demo-option-copy">Animate the menu when it opens.</div><code class="demo-code">{ animatedMenu: true }</code></div>
+            </div>
+            <div class="demo-option-row">
+                <div class="demo-option-name">checkedIcon</div>
+                <select class="demo-option-select" data-value="Star selection" data-checked-icon="bi bi-star-fill">
+                    <option selected>Star selection</option><option>Another choice</option>
+                </select>
+                <div><div class="demo-option-copy">Replace the selected-item icon with any Bootstrap Icons class.</div><code class="demo-code">{ checkedIcon: 'bi bi-star-fill' }</code></div>
+            </div>
+            <div class="demo-option-row">
+                <div class="demo-option-name">formatItem</div>
+                <select id="selectFormatItem" class="demo-function-select">
+                    <option data-subtext="Blue label" selected>Custom label</option><option data-subtext="Second choice">Another label</option>
+                </select>
+                <div><div class="demo-option-copy">Format each dropdown item with custom markup.</div><code class="demo-code">formatItem($option, title, subtext)</code></div>
+            </div>
+            <div class="demo-option-row">
+                <div class="demo-option-name">formatSelectedText</div>
+                <select id="selectFormatSelectedText" class="demo-function-select" multiple data-show-selection-as-list="true">
+                    <option selected>Custom label</option><option selected>Another label</option><option>Third label</option>
+                </select>
+                <div><div class="demo-option-copy">Format the selected value shown in the button.</div><code class="demo-code">formatSelectedText(title, subtext)</code></div>
+            </div>
+            <div class="demo-option-row">
+                <div class="demo-option-name">showSelectedText</div>
+                <select id="selectFormatCount" class="demo-function-select" multiple data-show-selection-as-list="false">
+                    <option>One</option><option>Two</option><option>Three</option>
+                </select>
+                <div><div class="demo-option-copy">Customize the summary shown when several values are selected.</div><code class="demo-code">showSelectedText: (count, total) =&gt; ...</code></div>
+            </div>
+        </section>
+
+        <section id="search" class="demo-band">
             <div class="demo-title">Search By Group Title</div>
             <div class="demo-control mb-0">
                 <label for="selectProjectsByLocation" class="demo-label">Projects Grouped By Location</label>
@@ -167,7 +581,26 @@
             </div>
         </section>
 
-        <section class="demo-band">
+        <section id="states" class="demo-band">
+            <div class="demo-title">Disabled Option Groups</div>
+            <div class="demo-control mb-0">
+                <label for="selectDisabledGroups" class="demo-label">Enabled and disabled options/groups</label>
+                <select id="selectDisabledGroups" multiple data-show-multiple-checkboxes="true">
+                    <optgroup label="Enabled group">
+                        <option value="enabled-1">Enabled option 1</option>
+                        <option value="enabled-2" disabled>Disabled option in enabled group</option>
+                        <option value="enabled-3">Enabled option 3</option>
+                    </optgroup>
+                    <optgroup label="Disabled group" disabled>
+                        <option value="disabled-1">Disabled group option 1</option>
+                        <option value="disabled-2">Disabled group option 2</option>
+                    </optgroup>
+                </select>
+                <small class="demo-hint">Select All and Select None affect only enabled options. The disabled group and disabled option remain unchanged.</small>
+            </div>
+        </section>
+
+        <section id="playground" class="demo-band">
             <div class="demo-title">Playground</div>
             <div class="demo-grid">
                 <div>
@@ -182,7 +615,7 @@
                             data-show-action-menu="false"
                             data-drop-direction="dropdown-center"
                             data-btn-split="true"
-                            data-btn-class="btn-info">
+                            >
                             <option value="1" data-subtext="Item 1 long description">Item 1 long description</option>
                             <option value="2">Item 2</option>
                             <option value="3">Item 3</option>
@@ -191,26 +624,33 @@
                             <option value="6">Item 6</option>
                         </select>
                     </div>
-                    <div class="d-flex flex-wrap gap-1">
-                        <button id="btnInit" class="btn btn-outline-warning btn-sm">init</button>
-                        <button id="btnShow" class="btn btn-outline-warning btn-sm">show</button>
-                        <button id="btnHide" class="btn btn-outline-warning btn-sm">hide</button>
-                        <button id="btnVal" class="btn btn-outline-warning btn-sm">val (2)</button>
-                        <button id="btnAll" class="btn btn-outline-warning btn-sm">selectAll</button>
-                        <button id="btnNone" class="btn btn-outline-warning btn-sm">selectNone</button>
-                        <button id="selectFirst" class="btn btn-outline-warning btn-sm">selectFirst</button>
-                        <button id="selectLast" class="btn btn-outline-warning btn-sm">selectLast</button>
-                        <button id="btnRefresh" class="btn btn-outline-warning btn-sm">refresh</button>
-                        <button id="btnUpdate" class="btn btn-outline-warning btn-sm">update options</button>
-                        <button id="setBtnClass" class="btn btn-outline-warning btn-sm">setBtnClass btn-primary</button>
+                    <div class="demo-actions">
+                        <button id="btnInit" class="btn btn-outline-secondary btn-sm">init</button>
+                        <button id="btnShow" class="btn btn-outline-secondary btn-sm">show</button>
+                        <button id="btnHide" class="btn btn-outline-secondary btn-sm">hide</button>
+                        <button id="btnVal" class="btn btn-outline-primary btn-sm">val (2)</button>
+                        <button id="btnAll" class="btn btn-outline-primary btn-sm">selectAll</button>
+                        <button id="btnNone" class="btn btn-outline-primary btn-sm">selectNone</button>
+                        <button id="selectFirst" class="btn btn-outline-primary btn-sm">selectFirst</button>
+                        <button id="selectLast" class="btn btn-outline-primary btn-sm">selectLast</button>
+                        <button id="setValueDisabled" class="btn btn-outline-danger btn-sm">disable 2 + 3</button>
+                        <button id="btnRefresh" class="btn btn-outline-secondary btn-sm">refresh</button>
+                        <button id="btnUpdate" class="btn btn-outline-secondary btn-sm">update options</button>
+                        <button id="setBtnClass" class="btn btn-outline-secondary btn-sm">setBtnClass</button>
                         <button id="toggleDisabled" class="btn btn-outline-warning btn-sm">toggleDisabled</button>
-                        <button id="btnDestroy" class="btn btn-outline-warning btn-sm">destroy</button>
-                        <button id="btnVisible" class="btn btn-outline-warning btn-sm">toggleVisibility</button>
+                        <button id="btnDestroy" class="btn btn-outline-secondary btn-sm">destroy</button>
+                        <button id="btnVisible" class="btn btn-outline-secondary btn-sm">toggleVisibility</button>
                     </div>
                 </div>
-                <div>
+                <div class="demo-console-panel">
                     <label for="debug" class="demo-label">Console</label>
-                    <div id="debug" class="font-monospace d-flex flex-column overflow-auto p-3"></div>
+                    <div class="demo-terminal">
+                        <div class="demo-terminal-bar">
+                            <span class="demo-terminal-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                            <span class="demo-terminal-title"><span class="demo-terminal-prompt">thomas@bs-select:~$</span> event monitor</span>
+                        </div>
+                        <div id="debug" class="font-monospace d-flex flex-column overflow-auto p-3"></div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -227,7 +667,6 @@
         (function ($) {
             $.bsSelect.setDefaults({
                 dropUpCenter: true,
-                btnClass: 'btn-dark',
                 showSubtext: true,
             });
             const select1 = $('#select1');
@@ -237,6 +676,19 @@
             const select4 = $('#select4');
             const selectPresearch = $('#selectPresearch');
             const selectProjectsByLocation = $('#selectProjectsByLocation');
+            const selectDisabledGroups = $('#selectDisabledGroups');
+            const actionMenuBtnClassControl = $('#actionMenuBtnClassControl');
+            const actionMenuBtnClassTarget = $('#actionMenuBtnClassTarget');
+            const showActionMenuControl = $('#showActionMenuControl');
+            const showActionMenuTarget = $('#showActionMenuTarget');
+            const showMultipleCheckboxesControl = $('#showMultipleCheckboxesControl');
+            const showMultipleCheckboxesTarget = $('#showMultipleCheckboxesTarget');
+            const showSelectionAsListControl = $('#showSelectionAsListControl');
+            const showSelectionAsListTarget = $('#showSelectionAsListTarget');
+            const menuMaxHeightControl = $('#menuMaxHeightControl');
+            const menuMaxHeightTarget = $('#menuMaxHeightTarget');
+            const menuHtmlControl = $('#menuHtmlControl');
+            const menuHtmlTarget = $('#menuHtmlTarget');
             const groups = [];
             let options = [];
             for (let i = 1, j = 0; i <= 100; i++) {
@@ -288,14 +740,178 @@
                 showMultipleCheckboxes: true,
                 search: true
             });
+            selectDisabledGroups.bsSelect({
+                showMultipleCheckboxes: true,
+                search: false
+            });
+            actionMenuBtnClassTarget.bsSelect({
+                showActionMenu: true,
+                showSelectionAsList: false,
+                actionMenuBtnClass: actionMenuBtnClassControl.val()
+            });
+            actionMenuBtnClassControl.bsSelect();
+            actionMenuBtnClassControl.on('change.bs.select', function () {
+                actionMenuBtnClassTarget.bsSelect('updateOptions', {
+                    actionMenuBtnClass: $(this).val()
+                });
+            });
+            showActionMenuTarget.bsSelect({
+                showActionMenu: showActionMenuControl.val() === 'true',
+                showSelectionAsList: false
+            });
+            showActionMenuControl.bsSelect();
+            showActionMenuControl.on('change.bs.select', function () {
+                showActionMenuTarget.bsSelect('updateOptions', {
+                    showActionMenu: $(this).val() === 'true'
+                });
+            });
+            showMultipleCheckboxesTarget.bsSelect({
+                showMultipleCheckboxes: showMultipleCheckboxesControl.val() === 'true',
+                showSelectionAsList: false
+            });
+            showMultipleCheckboxesControl.bsSelect();
+            showMultipleCheckboxesControl.on('change.bs.select', function () {
+                showMultipleCheckboxesTarget.bsSelect('updateOptions', {
+                    showMultipleCheckboxes: $(this).val() === 'true'
+                });
+            });
+            showSelectionAsListTarget.bsSelect({
+                showSelectionAsList: showSelectionAsListControl.val() === 'true'
+            });
+            showSelectionAsListControl.bsSelect();
+            showSelectionAsListControl.on('change.bs.select', function () {
+                showSelectionAsListTarget.bsSelect('updateOptions', {
+                    showSelectionAsList: $(this).val() === 'true'
+                });
+            });
+            menuMaxHeightTarget.bsSelect({
+                menuMaxHeight: Number(menuMaxHeightControl.val())
+            });
+            menuMaxHeightControl.bsSelect();
+            menuMaxHeightControl.on('change.bs.select', function () {
+                menuMaxHeightTarget.bsSelect('updateOptions', {
+                    menuMaxHeight: Number($(this).val())
+                });
+            });
+            const menuHtmlOptions = {
+                plan: {
+                    menuPreHtml: '<strong>Choose a plan</strong>',
+                    menuAppendHtml: '<small class="text-secondary">Prices include VAT.</small>'
+                },
+                context: {
+                    menuPreHtml: '<strong>Recommended for your team</strong>',
+                    menuAppendHtml: '<small class="text-secondary">You can change this later.</small>'
+                },
+                minimal: {
+                    menuPreHtml: null,
+                    menuAppendHtml: null
+                }
+            };
+            menuHtmlTarget.bsSelect(menuHtmlOptions.plan);
+            menuHtmlControl.bsSelect();
+            menuHtmlControl.on('change.bs.select', function () {
+                menuHtmlTarget.bsSelect('updateOptions', menuHtmlOptions[$(this).val()]);
+            });
             select4.bsSelect({
-                btnClass: 'text-nowrap btn btn-success',
                 showMultipleCheckboxes: true,
                 debug: true,
                 debugElement: '#debug',
                 // onBeforeChange: function(){
                 //     return confirm('really change?')
                 // }
+            });
+
+            const optionChoiceSets = {
+                actionMenuBtnClass: [['btn-outline-secondary', 'Secondary'], ['btn-outline-primary', 'Primary'], ['btn-outline-success', 'Success']],
+                animatedMenu: [['true', 'Animated'], ['false', 'Instant']],
+                btnClass: [['btn-outline-dark', 'Dark'], ['btn-outline-primary', 'Primary'], ['btn-outline-success', 'Success']],
+                btnEmptyText: [['Please select..', 'Please select..'], ['Choose a value...', 'Choose a value...'], ['Nothing selected', 'Nothing selected']],
+                btnSplit: [['false', 'Single button'], ['true', 'Split button']],
+                btnWidth: [['fit-content', 'Fit content'], ['180px', '180px'], ['260px', '260px']],
+                checkedIcon: [['bi bi-check-lg', 'Check'], ['bi bi-star-fill', 'Star'], ['bi bi-circle-fill', 'Circle']],
+                dropDirection: [['dropdown', 'Down'], ['dropup', 'Up'], ['dropend', 'To the right']],
+                dropIconClass: [['bi bi-chevron-down', 'Chevron'], ['bi bi-funnel-fill', 'Funnel'], ['bi bi-filter-circle', 'Filter circle']],
+                menuClass: [['', 'Default'], ['shadow-lg rounded-4', 'Shadow + rounded'], ['border border-primary', 'Primary border']],
+                menuInnerClass: [['', 'Default spacing'], ['p-0', 'Compact menu'], ['p-3', 'Roomy menu'], ['p-2 bg-body-secondary', 'Tinted inner surface']],
+                menuItemClass: [['', 'Default'], ['text-primary fw-semibold', 'Primary + bold'], ['text-uppercase', 'Uppercase']],
+                menuMaxHeight: [['150', '150px'], ['300', '300px'], ['450', '450px']],
+                nullable: [['true', 'Nullable'], ['false', 'Required']],
+                search: [['true', 'Search enabled'], ['false', 'Search disabled']],
+                searchQuery: [['', 'No prefix'], ['Filter', 'Filter'], ['Item', 'Item']],
+                searchText: [['Search..', 'Search..'], ['Find a country...', 'Find a country...'], ['Type to filter...', 'Type to filter...']],
+                showActionMenu: [['true', 'Actions visible'], ['false', 'Actions hidden']],
+                showMultipleCheckboxes: [['true', 'Checkboxes'], ['false', 'Check icons']],
+                showSelectionAsList: [['true', 'List'], ['false', 'Count']],
+                showSubtext: [['true', 'Subtext visible', 'Supporting details are shown'], ['false', 'Subtext hidden', 'Supporting details are hidden']]
+            };
+            $('.demo-option-row').each(function () {
+                const $row = $(this);
+                const key = $row.find('.demo-option-name').first().text().trim();
+                const choices = optionChoiceSets[key];
+                const $select = $row.find('.demo-option-select');
+                if (!choices || !$select.length) return;
+                $select.removeAttr('data-value').removeData('value').empty();
+                choices.forEach(function (choice, index) {
+                    $('<option>', {
+                        value: choice[0],
+                        text: choice[1],
+                        selected: index === 0,
+                        'data-subtext': choice[2] || ''
+                    }).appendTo($select);
+                });
+                const dataAttribute = key.replace(/[A-Z]/g, function (letter) { return '-' + letter.toLowerCase(); });
+                $select.removeAttr('data-' + dataAttribute).removeData(key);
+                $select.data('demo-option', key);
+            });
+
+            $('.demo-option-select').each(function () {
+                const $optionSelect = $(this);
+                $optionSelect.find('option').each(function () {
+                    if (!this.hasAttribute('value')) {
+                        this.value = $(this).text();
+                    }
+                });
+                const initialValue = $optionSelect.val();
+                const optionData = $optionSelect.data();
+                if (typeof optionData.value === 'undefined') {
+                    optionData.value = initialValue;
+                }
+                $optionSelect.bsSelect(optionData);
+                if (optionData.selectAllOnInit !== true) {
+                    $optionSelect.bsSelect('val', initialValue);
+                }
+                const demoOption = $optionSelect.data('demo-option');
+                if (demoOption && Object.prototype.hasOwnProperty.call(optionChoiceSets, demoOption)) {
+                    $optionSelect.on('change.bs.select', function () {
+                        let value = $(this).val();
+                        if (value === 'true') value = true;
+                        if (value === 'false') value = false;
+                        if (demoOption === 'menuMaxHeight') value = Number(value);
+                        $(this).bsSelect('updateOptions', { [demoOption]: value });
+                    });
+                }
+            });
+            $('#options .demo-option-row').sort(function (a, b) {
+                return $(a).find('.demo-option-name').text().localeCompare(
+                    $(b).find('.demo-option-name').text(),
+                    undefined,
+                    { sensitivity: 'base' }
+                );
+            }).appendTo('#options');
+            $('#selectFormatItem').bsSelect({
+                formatItem: function ($option, title, subtext) {
+                    return `<span class="fw-semibold">${title}</span><small class="text-secondary">${subtext || 'No additional detail'}</small>`;
+                }
+            });
+            $('#selectFormatSelectedText').bsSelect({
+                formatSelectedText: function (title, subtext) {
+                    return `<span class="d-inline-flex align-items-center gap-2"><i class="bi bi-stars"></i>${title}${subtext ? ` · ${subtext}` : ''}</span>`;
+                }
+            });
+            $('#selectFormatCount').bsSelect({
+                showSelectedText: function (count, total) {
+                    return `${count} of ${total} features`;
+                }
             });
 
             select4.on('keydown.bs.select', function (e, $select, keyEvent) {
