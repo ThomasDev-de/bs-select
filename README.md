@@ -47,8 +47,8 @@ composer require webcito/bs-select
 or use the GitHub CDN (jsDelivr):
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.40.1/dist/locale/de-DE.min.js" type="text/javascript"></script> <!-- optional -->
-<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.40.1/dist/jquery.bs-select.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.41/dist/locale/de-DE.min.js" type="text/javascript"></script> <!-- optional -->
+<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.41/dist/jquery.bs-select.min.js" type="text/javascript"></script>
 ```
 
 ## Set global defaults
@@ -139,6 +139,7 @@ Available locale files:
 | menuHeaderClass        | [data-menu-header-class]      | `string`         | `text-bg-secondary text-uppercase`  | *If option groups are present, the background class of the heading is set here.*                                                                                                                                                                        |
 | menuInnerClass         | [data-menu-inner-class]       | `null\|string`   | `null`                              | *Set classes for the content of the dropdown menu.*                                                                                                                                                                                                     |
 | menuItemClass          | [data-menu-item-class]        | `string`         | `null`                              | *The classes are added to the element `.dropdown-item`.*                                                                                                                                                                                                |
+| menuMinWidth           | [data-menu-min-width]         | `string`         | `null`                              | *Sets the minimum width of the dropdown menu, for example `220px` or `18rem`.*                                                                                                                                                                        |
 | menuMaxHeight          | [data-menu-max-height]        | `number`         | `300`                               | *maximum Height of the dropdown list before it starts scrolling.*                                                                                                                                                                                       |
 | animatedMenu           | [data-animated-menu]          | `bool`           | `true`                              | *If true, the plugin dropdown menu opens with a small top-to-bottom animation. This uses JavaScript only and does not require additional CSS.*                                                                                                           |
 | menuPreHtml            | [data-menu-pre-html]          | `null\|string`   | `null`                              | *shows a text in the menu before the selection*                                                                                                                                                                                                         |

@@ -9,7 +9,7 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.40.1
+ * @version 2.1.41
  * @date 2026-05-26
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
@@ -67,7 +67,7 @@
          * @class
          */
         $.bsSelect = {
-            version: '2.1.40.1',
+            version: '2.1.41',
             setDefaults: function (options) {
                 this.DEFAULTS = $.extend({}, this.DEFAULTS, options || {});
             },
@@ -90,6 +90,7 @@
                 search: true,
                 menuPreHtml: null,
                 menuAppendHtml: null,
+                menuMinWidth: null,
                 menuMaxHeight: 300,
                 animatedMenu: true,
                 showSubtext: true,
@@ -1093,11 +1094,17 @@
                 'width': '0'
             });
 
+            const dropdownMenuCss = {
+                maxWidth: 'calc(100vw - 1rem)'
+            };
+
+            if (settings.menuMinWidth !== null && typeof settings.menuMinWidth !== 'undefined') {
+                dropdownMenuCss.minWidth = settings.menuMinWidth;
+            }
+
             const $dropdownMenu = $('<div>', {
                 class: 'dropdown-menu pl-1 ps-1 ' + settings.menuClass ?? '',
-                css: {
-                    maxWidth: 'calc(100vw - 1rem)'
-                }
+                css: dropdownMenuCss
             }).appendTo($dropdown);
 
             let searchInput = '';

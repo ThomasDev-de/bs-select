@@ -510,6 +510,13 @@
                 <div><div class="demo-option-copy">Apply Bootstrap utility classes to every dropdown item.</div><code class="demo-code">{ menuItemClass: 'text-primary fw-semibold' }</code></div>
             </div>
             <div class="demo-option-row">
+                <div class="demo-option-name">menuMinWidth</div>
+                <select class="demo-option-select" data-search="false">
+                    <option selected>180px</option><option>240px</option><option>320px</option>
+                </select>
+                <div><div class="demo-option-copy">Set a minimum menu width independently of the button width.</div><code class="demo-code">{ menuMinWidth: '240px' }</code></div>
+            </div>
+            <div class="demo-option-row">
                 <div class="demo-option-name">search</div>
                 <select class="demo-option-select" data-search="true">
                     <option selected>Search enabled</option><option>Search disabled</option>
@@ -834,6 +841,7 @@
                 menuClass: [['', 'Default'], ['shadow-lg rounded-4', 'Shadow + rounded'], ['border border-primary', 'Primary border']],
                 menuInnerClass: [['', 'Default spacing'], ['p-0', 'Compact menu'], ['p-3', 'Roomy menu'], ['p-2 bg-body-secondary', 'Tinted inner surface']],
                 menuItemClass: [['', 'Default'], ['text-primary fw-semibold', 'Primary + bold'], ['text-uppercase', 'Uppercase']],
+                menuMinWidth: [['180px', '180px'], ['240px', '240px'], ['320px', '320px']],
                 menuMaxHeight: [['150', '150px'], ['300', '300px'], ['450', '450px']],
                 nullable: [['true', 'Nullable'], ['false', 'Required']],
                 search: [['true', 'Search enabled'], ['false', 'Search disabled']],

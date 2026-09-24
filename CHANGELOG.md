@@ -2,9 +2,13 @@
 
 All important changes to this project are documented in this file.
 
-## [dev-main]
+## [2.1.41] - 2026-09-22
 
-## [2.1.40.1] - 2026-09-22
+### Added
+- New `menuMinWidth` option to set the minimum width of the dropdown menu independently of the button width.
+- Demo example for changing `menuMinWidth` interactively.
+
+## [2.1.40] - 2026-09-22
 
 ### Changed
 - `selectAll` and `selectNone` now leave disabled options unchanged, including options in disabled optgroups.
