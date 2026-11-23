@@ -47,8 +47,8 @@ composer require webcito/bs-select
 or use the GitHub CDN (jsDelivr):
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.41/dist/locale/de-DE.min.js" type="text/javascript"></script> <!-- optional -->
-<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.41/dist/jquery.bs-select.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.42/dist/locale/de-DE.min.js" type="text/javascript"></script> <!-- optional -->
+<script src="https://cdn.jsdelivr.net/gh/ThomasDev-de/bs-select@2.1.42/dist/jquery.bs-select.min.js" type="text/javascript"></script>
 ```
 
 ## Set global defaults
@@ -100,6 +100,24 @@ All selects with the attribute `[data-bs-toggle="select"]` or `[data-toggle="sel
 <script src="dist/jquery.bs-select.js" type="text/javascript">
     <script>
         $('select').bsSelect();
+</script>
+```
+
+### Bootstrap floating labels
+
+The generated control supports Bootstrap floating labels. Keep the select and label in the usual `.form-floating` structure; the label stays associated with the select and opens the dropdown when clicked.
+
+```html
+<div class="form-floating">
+    <select id="country" class="form-select">
+        <option value="de">Germany</option>
+        <option value="fr">France</option>
+    </select>
+    <label for="country">Country</label>
+</div>
+
+<script>
+    $('#country').bsSelect();
 </script>
 ```
 

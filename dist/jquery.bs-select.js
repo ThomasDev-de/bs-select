@@ -9,8 +9,8 @@
  * @file jquery.bs-select.js
  * @author Thomas Kirsch
  * @license MIT
- * @version 2.1.41
- * @date 2026-05-26
+ * @version 2.1.42
+ * @date 2026-11-23
  * @desc This script defines a Bootstrap dropdown select plugin that's customizable with various options/settings.
  * It extends off jQuery ($) and adds its plugin methods / properties to $.bsSelect.
  * @fileOverview README.md
@@ -67,7 +67,7 @@
          * @class
          */
         $.bsSelect = {
-            version: '2.1.41',
+            version: '2.1.42',
             setDefaults: function (options) {
                 this.DEFAULTS = $.extend({}, this.DEFAULTS, options || {});
             },
@@ -990,11 +990,15 @@
             }
 
             const revealInitializedSelect = shouldRevealAfterInit($select);
+            // Bootstrap's floating-label selectors require a direct .form-select
+            // child before the label. The plugin moves the native select into its
+            // wrapper, so make that wrapper the visible form-select control.
+            const isFloatingLabel = $select.parent().hasClass('form-floating');
 
             // Create a new div element to serve as the dropdown wrapper and insert it after the original select element.
             // The wrapper is assigned the classes 'js-bs-select-dropdown' and 'position-relative'.
             const dropdownCss = {
-                width: settings.btnWidth // Set the width of the dropdown based on the provided settings.
+                width: isFloatingLabel ? '100%' : settings.btnWidth // Floating controls fill their form-floating parent.
             };
 
             if (revealInitializedSelect) {
@@ -1002,9 +1006,18 @@
             }
 
             $dropdown = $('<div>', {
-                class: `${WRAPPER_CLASS} position-relative`,
+                class: `${WRAPPER_CLASS} position-relative${isFloatingLabel ? ' form-select' : ''}`,
                 css: dropdownCss
             }).insertAfter($select);
+
+            if (isFloatingLabel) {
+                // Keep the Bootstrap select frame while displaying the plugin's
+                // own arrow and selected text inside it.
+                $dropdown.css({
+                    backgroundImage: 'none',
+                    paddingRight: '.75rem'
+                });
+            }
 
             // If a dropDirection is specified in the settings, add the corresponding class to the dropdown wrapper.
             if (settings.dropDirection !== null) {
@@ -1029,9 +1042,20 @@
                     'data-bs-auto-close': multiple ? 'outside' : true, // Configure the dropdown's auto-close behavior. If multiple selections are allowed, close only when clicking outside. Otherwise, close when clicking anywhere.
                     html: `<div class="js-selected-text">${settings.btnEmptyText}</div>${dropIcon}`, // Set the HTML content of the button, including the placeholder text and the dropdown icon.
                     css: {
-                        width: settings.btnWidth // Set the width of the button according to the settings.
+                        width: isFloatingLabel ? '100%' : settings.btnWidth // Fill the floating-label control.
                     }
                 }).appendTo($dropdown); // Append the created button to the dropdown wrapper.
+                if (isFloatingLabel) {
+                    $dropdown.find('.js-dropdown-header').css({
+                        height: '100%',
+                        padding: 0,
+                        margin: 0,
+                        border: 0,
+                        borderRadius: 0,
+                        background: 'transparent',
+                        color: 'inherit'
+                    });
+                }
             } else {
                 // If btnSplit is true, create a split button group, where one button displays the selected value(s) and another button triggers the dropdown.
                 $dropdown.addClass('btn-group'); // Add the 'btn-group' class to the dropdown wrapper to create a button group.
@@ -1043,9 +1067,20 @@
                     disabled: isDisabled,  // Set the disabled state to match the original select element.
                     html: `<div class="js-selected-text">${settings.btnEmptyText}</div>`, // Set the HTML content, including the placeholder text.
                     css: {
-                        width: settings.btnWidth // Set the width according to the settings.
+                        width: isFloatingLabel ? 'calc(100% - 2.25rem)' : settings.btnWidth // Leave room for the split toggle in floating controls.
                     }
                 }).appendTo($dropdown); // Append the button to the dropdown wrapper.
+                if (isFloatingLabel) {
+                    $dropdown.find('.js-dropdown-header').css({
+                        height: '100%',
+                        padding: 0,
+                        margin: 0,
+                        border: 0,
+                        borderRadius: 0,
+                        background: 'transparent',
+                        color: 'inherit'
+                    });
+                }
 
 
                 // Create the button that triggers the dropdown.
@@ -1056,6 +1091,18 @@
                     'aria-expanded': false, // Set aria-expanded to "false".
                     'data-bs-auto-close': multiple ? 'outside' : true // Set auto-close behavior similar to the non-split button.
                 }).appendTo($dropdown); // Append the toggle button to the dropdown wrapper.
+                if (isFloatingLabel) {
+                    $dropdown.find('.dropdown-toggle-split').css({
+                        width: '2.25rem',
+                        height: '100%',
+                        padding: 0,
+                        margin: 0,
+                        border: 0,
+                        borderRadius: 0,
+                        background: 'transparent',
+                        color: 'inherit'
+                    });
+                }
             }
 
             // Apply a fix for overflow issues that may occur when the dropdown is placed inside a Bootstrap table with fixed height.
@@ -1076,10 +1123,12 @@
             if ($select.attr('id')) {
                 const selectId = $select.attr('id');
                 const label = $(`label[for="${selectId}"]`);
-                if (label.length) {
-                    label.on('click', function () {
+                if (label.length && isFloatingLabel) {
+                    label.off('click.bsSelect').on('click.bsSelect', function (event) {
+                        event.preventDefault();
                         const closestDropDown = getDropDown($(`select[id="${selectId}"]`));
-                        closestDropDown.trigger('click');
+                        const $toggle = closestDropDown.find('[data-bs-toggle="dropdown"], [data-toggle="dropdown"]').first();
+                        $toggle.trigger('click');
                     });
                 }
             }

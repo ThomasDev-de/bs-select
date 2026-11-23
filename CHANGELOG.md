@@ -2,6 +2,11 @@
 
 All important changes to this project are documented in this file.
 
+## [2.1.42] - 2026-11-23
+
+### Changed
+- Bootstrap floating labels now work with the generated select control, including full-width layout and opening the dropdown when the label is clicked.
+
 ## [2.1.41] - 2026-09-22
 
 ### Added
